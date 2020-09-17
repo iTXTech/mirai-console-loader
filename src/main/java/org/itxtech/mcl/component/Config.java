@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class Config {
     @SerializedName("mirai_repo")
-    public String miraiRepo = "https://raw.githubusercontent.com/project-mirai/mirai-repo/master/shadow";
+    public String miraiRepo = "https://raw.githubusercontent.com/iTXTech/mirai-repo/master";
     public ArrayList<Package> packages = new ArrayList<>() {{
         add(new Package("mirai-console", "beta"));
         add(new Package("mirai-console-pure", "beta"));
@@ -38,10 +38,10 @@ public class Config {
         writer.close();
     }
 
-    //TODO: 插件中心可以复用
     public static class Package {
         public String name;
         public String channel;
+        public String localVersion = "";
 
         public Package(String name, String channel) {
             this.name = name;

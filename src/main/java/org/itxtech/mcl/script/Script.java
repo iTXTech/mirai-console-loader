@@ -37,7 +37,7 @@ public class Script {
     private Context cx;
     private org.mozilla.javascript.Script sc;
     private ImporterTopLevel scope;
-    private final Phase phase = new Phase();
+    public final Phase phase = new Phase();
 
     public Script(Loader loader, File file) throws Exception {
         this.file = file;
@@ -49,7 +49,6 @@ public class Script {
         ScriptableObject.putProperty(scope, "loader", Context.javaToJS(loader, scope));
         ScriptableObject.putProperty(scope, "logger", Context.javaToJS(loader.logger, scope));
         ScriptableObject.putProperty(scope, "phase", Context.javaToJS(phase, scope));
-        cx.evaluateString(scope, "importPackage(java.io)", "mclImports", 1, null);
     }
 
     public void load() throws Exception {
@@ -63,11 +62,4 @@ public class Script {
         sc = cx.compileReader(reader, file.getName(), 1, null);
         sc.exec(cx, scope);
     }
-
-    public void cli() {
-        if (phase.cli != null) {
-            phase.cli.run();
-        }
-    }
-
 }

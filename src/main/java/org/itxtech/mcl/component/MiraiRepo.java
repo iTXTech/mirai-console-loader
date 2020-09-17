@@ -2,8 +2,9 @@ package org.itxtech.mcl.component;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.itxtech.mcl.Loader;
 
-import java.io.IOException;
+import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -37,18 +38,33 @@ import java.util.Map;
  *
  */
 public class MiraiRepo {
-    public HttpClient client = HttpClient.newBuilder().build();
+    public HttpClient client;
 
     private final String baseUrl;
+    private final Loader loader;
 
-    public MiraiRepo(String baseUrl) {
+    public MiraiRepo(Loader loader, String baseUrl) {
         this.baseUrl = baseUrl;
+        this.loader = loader;
+        client = loader.proxy == null ? HttpClient.newBuilder().build() : HttpClient.newBuilder().proxy(ProxySelector.of(loader.proxy)).build();
     }
 
-    public HashMap<String, PackageInfo> fetchPackages() throws IOException, InterruptedException {
-        var response = client.send(HttpRequest.newBuilder(URI.create(baseUrl + "/packages.json")).timeout(Duration.ofMinutes(1)).build(), HttpResponse.BodyHandlers.ofString());
-        return new Gson().fromJson(response.body(), new TypeToken<Map<String, PackageInfo>>() {
+    public HashMap<String, PackageInfo> fetchPackages() throws Exception {
+        return new Gson().fromJson(httpGet("/packages.json"), new TypeToken<Map<String, PackageInfo>>() {
         }.getType());
+    }
+
+    public Package fetchPackage(String identifier) throws Exception {
+        return new Gson().fromJson(httpGet("/" + identifier + "/package.json"), new TypeToken<Package>() {
+        }.getType());
+    }
+
+    public String getDownloadUrl(String id, String ver, String type) {
+        return baseUrl + "/" + id + "/" + id + "-" + ver + "." + type;
+    }
+
+    private String httpGet(String url) throws Exception {
+        return client.send(HttpRequest.newBuilder(URI.create(baseUrl + url)).timeout(Duration.ofSeconds(30)).build(), HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public static class PackageInfo {

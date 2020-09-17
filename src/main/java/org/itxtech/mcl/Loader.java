@@ -10,6 +10,7 @@ import org.itxtech.mcl.impl.DefaultLogger;
 import org.itxtech.mcl.script.ScriptManager;
 
 import java.io.File;
+import java.net.InetSocketAddress;
 
 /*
  *
@@ -35,7 +36,7 @@ import java.io.File;
  *
  */
 public class Loader {
-    public Downloader downloader = new DefaultDownloader();
+    public Downloader downloader;
     public Logger logger = new DefaultLogger();
     public File configFile = new File("config.json");
     public Config config;
@@ -43,6 +44,7 @@ public class Loader {
     public MiraiRepo repo;
     public Options options = new Options();
     public CommandLine cli;
+    public InetSocketAddress proxy;
 
     public static void main(String[] args) {
         new Loader().start(args);
@@ -56,12 +58,12 @@ public class Loader {
         logger.info("https://github.com/iTXTech/mirai-console-loader");
         logger.info("Licensed under AGPLv3");
 
-
         try {
             config = Config.load(configFile);
-            repo = new MiraiRepo(config.miraiRepo);
             manager = new ScriptManager(this, new File("scripts"));
             manager.readAllScripts();
+            repo = new MiraiRepo(this, config.miraiRepo);
+            downloader = new DefaultDownloader(this);
             manager.phaseCli();
             try {
                 cli = new DefaultParser().parse(options, args);
@@ -70,6 +72,7 @@ public class Loader {
                 new HelpFormatter().printHelp("mcl", options);
                 System.exit(1);
             }
+            manager.phaseLoad();
             config.save(configFile);
         } catch (Throwable e) {
             logger.logException(e);

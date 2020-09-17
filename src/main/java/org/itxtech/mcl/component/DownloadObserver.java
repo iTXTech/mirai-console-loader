@@ -1,5 +1,5 @@
 package org.itxtech.mcl.component;
 
 public interface DownloadObserver {
-    void updateProgress(double newProgress);
+    void updateProgress(int total, int current);
 }

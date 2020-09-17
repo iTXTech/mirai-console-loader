@@ -49,8 +49,17 @@ public class ScriptManager {
 
     public void phaseCli() {
         for (var script : scripts) {
-            script.cli();
+            if (script.phase.cli != null) {
+                script.phase.cli.run();
+            }
         }
     }
 
+    public void phaseLoad() {
+        for (var script : scripts) {
+            if (script.phase.load != null) {
+                script.phase.load.run();
+            }
+        }
+    }
 }

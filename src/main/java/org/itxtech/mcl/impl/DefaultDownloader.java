@@ -1,10 +1,13 @@
 package org.itxtech.mcl.impl;
 
+import org.itxtech.mcl.Loader;
 import org.itxtech.mcl.component.DownloadObserver;
 import org.itxtech.mcl.component.Downloader;
 
 import java.io.File;
-import java.net.http.HttpClient;
+import java.io.FileOutputStream;
+import java.net.Proxy;
+import java.net.URL;
 
 /*
  *
@@ -30,11 +33,33 @@ import java.net.http.HttpClient;
  *
  */
 public class DefaultDownloader implements Downloader {
+    private final Loader loader;
 
-    public HttpClient client = HttpClient.newBuilder().build();
+    public DefaultDownloader(Loader loader) {
+        this.loader = loader;
+    }
 
     @Override
     public void download(String url, File file, DownloadObserver observer) {
-
+        try {
+            var connection = loader.proxy == null ? new URL(url).openConnection() : new URL(url).openConnection(new Proxy(Proxy.Type.HTTP, loader.proxy));
+            var totalLen = connection.getContentLength();
+            var is = connection.getInputStream();
+            var os = new FileOutputStream(file);
+            var len = 0;
+            var buff = new byte[1024];
+            var current = 0;
+            while ((len = is.read(buff)) != -1) {
+                os.write(buff, 0, len);
+                current += len;
+                observer.updateProgress(totalLen, current);
+            }
+            if (current != totalLen) {
+                observer.updateProgress(totalLen, totalLen);
+            }
+            os.close();
+        } catch (Throwable e) {
+            loader.logger.logException(e);
+        }
     }
 }
