@@ -4,30 +4,28 @@ importPackage(org.itxtech.mcl);
 importPackage(java.lang);
 
 phase.cli = () => {
-    let update = Option.builder("u").desc("ç¦ç”¨è‡ªåŠ¨æ›´æ–°").longOpt("disable-update").build();
+    let update = Option.builder("u").desc("½ûÓÃ×Ô¶¯¸üĞÂ").longOpt("disable-update").build();
     loader.options.addOption(update);
 };
 
 phase.load = () => {
-    let dir = new File("libs");
-    dir.mkdirs();
     let packages = loader.config.packages;
     for (let i in packages) {
-        check(packages[i], dir);
+        check(packages[i]);
     }
 };
 
-function checkLocalFile(pack, dir) {
+function checkLocalFile(pack) {
     let baseName = pack.name + "-" + pack.localVersion;
-    return FileUtil.check(new File(dir, baseName + ".jar"), new File(dir, baseName + ".md5"));
+    return FileUtil.check(new File(loader.libDir, baseName + ".jar"), new File(loader.libDir, baseName + ".md5"));
 }
 
-function check(pack, dir) {
-    logger.info("æ­£åœ¨éªŒè¯ " + pack.name + " ç‰ˆæœ¬ï¼š" + pack.localVersion);
+function check(pack) {
+    logger.info("ÕıÔÚÑéÖ¤ " + pack.name + " °æ±¾£º" + pack.localVersion);
     let download = false;
     let force = false;
-    if (!checkLocalFile(pack, dir)) {
-        logger.info(pack.name + " æ–‡ä»¶æ ¡éªŒå¤±è´¥ï¼Œå¼€å§‹ä¸‹è½½ã€‚");
+    if (!checkLocalFile(pack)) {
+        logger.info(pack.name + " ÎÄ¼şĞ£ÑéÊ§°Ü£¬¿ªÊ¼ÏÂÔØ¡£");
         download = true;
         force = true;
     }
@@ -37,24 +35,24 @@ function check(pack, dir) {
     if (download) {
         let info = loader.repo.fetchPackage(pack.name);
         if (!info.channels.containsKey(pack.channel)) {
-            logger.error("éæ³•çš„æ›´æ–°é¢‘é“ï¼š" + pack.channel + " åŒ…ï¼š" + pack.name);
+            logger.error("·Ç·¨µÄ¸üĞÂÆµµÀ£º" + pack.channel + " °ü£º" + pack.name);
         } else {
             let target = info.channels[pack.channel];
             let ver = target[target.size() - 1];
-            if (force || ver != pack.localVersion) {
-                downloadFile(pack.name, ver, dir);
+            if (force || !pack.localVersion.equals(ver)) {
+                downloadFile(pack.name, ver);
                 pack.localVersion = ver;
-                if (!checkLocalFile(pack, dir)) {
-                    logger.warning(pack.name + " æœ¬åœ°æ–‡ä»¶ä»ç„¶æ ¡éªŒå¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œã€‚");
+                if (!checkLocalFile(pack)) {
+                    logger.warning(pack.name + " ±¾µØÎÄ¼şÈÔÈ»Ğ£ÑéÊ§°Ü£¬Çë¼ì²éÍøÂç¡£");
                 }
             }
         }
     }
 }
 
-function downloadFile(name, ver, dir) {
-    down(loader.repo.getDownloadUrl(name, ver, "jar"), new File(dir, name + "-" + ver + ".jar"));
-    down(loader.repo.getDownloadUrl(name, ver, "md5"), new File(dir, name + "-" + ver + ".md5"));
+function downloadFile(name, ver) {
+    down(loader.repo.getDownloadUrl(name, ver, "jar"), new File(loader.libDir, name + "-" + ver + ".jar"));
+    down(loader.repo.getDownloadUrl(name, ver, "md5"), new File(loader.libDir, name + "-" + ver + ".md5"));
 }
 
 function down(url, file) {

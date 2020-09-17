@@ -45,6 +45,7 @@ public class Loader {
     public Options options = new Options();
     public CommandLine cli;
     public InetSocketAddress proxy;
+    public File libDir = new File("libs");
 
     public static void main(String[] args) {
         new Loader().start(args);
@@ -61,10 +62,11 @@ public class Loader {
         try {
             config = Config.load(configFile);
             manager = new ScriptManager(this, new File("scripts"));
-            manager.readAllScripts();
+            manager.readAllScripts(); //此阶段脚本只能修改loader中变量
+            libDir.mkdirs();
             repo = new MiraiRepo(this, config.miraiRepo);
             downloader = new DefaultDownloader(this);
-            manager.phaseCli();
+            manager.phaseCli(); //此阶段脚本注册命令行参数
             try {
                 cli = new DefaultParser().parse(options, args);
             } catch (ParseException e) {
@@ -72,8 +74,9 @@ public class Loader {
                 new HelpFormatter().printHelp("mcl", options);
                 System.exit(1);
             }
-            manager.phaseLoad();
+            manager.phaseLoad(); //此阶段脚本下载包
             config.save(configFile);
+            manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
         } catch (Throwable e) {
             logger.logException(e);
         }

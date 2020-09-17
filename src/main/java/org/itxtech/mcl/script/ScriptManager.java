@@ -62,4 +62,12 @@ public class ScriptManager {
             }
         }
     }
+
+    public void phaseBoot() {
+        for (var script : scripts) {
+            if (script.phase.boot != null) {
+                script.phase.boot.run();
+            }
+        }
+    }
 }
