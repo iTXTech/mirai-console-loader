@@ -1,4 +1,7 @@
-package org.itxtech.mcl.component;
+package org.itxtech.mcl.impl;
+
+import org.itxtech.mcl.component.DownloadObserver;
+import org.itxtech.mcl.component.Downloader;
 
 import java.io.File;
 import java.net.http.HttpClient;
@@ -31,7 +34,7 @@ public class DefaultDownloader implements Downloader {
     public HttpClient client = HttpClient.newBuilder().build();
 
     @Override
-    public void download(String url, File file) {
+    public void download(String url, File file, DownloadObserver observer) {
 
     }
 }

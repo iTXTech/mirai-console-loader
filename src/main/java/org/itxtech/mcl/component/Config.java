@@ -22,17 +22,23 @@ public class Config {
 
     public static Config load(File file) {
         try {
-            return new Gson().fromJson(new JsonReader(new FileReader(file)), new TypeToken<Config>() {
+            Config conf = new Gson().fromJson(new JsonReader(new FileReader(file)), new TypeToken<Config>() {
             }.getType());
-        } catch (Exception e) {
-            return new Config();
+            if (conf != null) {
+                return conf;
+            }
+        } catch (Exception ignored) {
         }
+        return new Config();
     }
 
     public void save(File file) throws IOException {
-        new Gson().toJson(this, new FileWriter(file));
+        var writer = new FileWriter(file);
+        new Gson().toJson(this, writer);
+        writer.close();
     }
 
+    //TODO: 插件中心可以复用
     public static class Package {
         public String name;
         public String channel;

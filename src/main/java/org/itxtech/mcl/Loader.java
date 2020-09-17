@@ -1,6 +1,12 @@
 package org.itxtech.mcl;
 
-import org.itxtech.mcl.component.*;
+import org.apache.commons.cli.*;
+import org.itxtech.mcl.component.Config;
+import org.itxtech.mcl.component.Downloader;
+import org.itxtech.mcl.component.Logger;
+import org.itxtech.mcl.component.MiraiRepo;
+import org.itxtech.mcl.impl.DefaultDownloader;
+import org.itxtech.mcl.impl.DefaultLogger;
 import org.itxtech.mcl.script.ScriptManager;
 
 import java.io.File;
@@ -34,31 +40,39 @@ public class Loader {
     public File configFile = new File("config.json");
     public Config config;
     public ScriptManager manager;
+    public MiraiRepo repo;
+    public Options options = new Options();
+    public CommandLine cli;
 
     public static void main(String[] args) {
-        new Loader().start();
+        new Loader().start(args);
     }
 
     /**
      * 启动 Mirai Console Loader，并加载脚本
      */
-    public void start() {
+    public void start(String[] args) {
+        logger.info("Mirai Console Loader by iTX Technologies");
+        logger.info("https://github.com/iTXTech/mirai-console-loader");
+        logger.info("Licensed under AGPLv3");
+
+
         try {
             config = Config.load(configFile);
+            repo = new MiraiRepo(config.miraiRepo);
             manager = new ScriptManager(this, new File("scripts"));
-            manager.loadAllScripts();
-            //TODO
+            manager.readAllScripts();
+            manager.phaseCli();
+            try {
+                cli = new DefaultParser().parse(options, args);
+            } catch (ParseException e) {
+                logger.error(e.getMessage());
+                new HelpFormatter().printHelp("mcl", options);
+                System.exit(1);
+            }
             config.save(configFile);
         } catch (Throwable e) {
             logger.logException(e);
         }
     }
-
-    /**
-     * 支持启动 Mirai Console
-     */
-    public void boot() {
-
-    }
-
 }

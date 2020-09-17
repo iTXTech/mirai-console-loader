@@ -24,23 +24,13 @@ packages.json
 ```
 `packages.json`内容
 ```JSON
-{
-    "mirai-console": {
-        "name": "Mirai Console",
-        "description": "Mirai Console后端"
-    },
-    "mirai-console-pure": {
-        "name": "Mirai Console Pure",
-        "description": "Mirai Console Pure前端实现"
-    }
-}
+
 ```
 
 * 添加`package.json`
 
 ```JSON
 {
-    "name": "mirai-console",
     "channels": {
         "stable": ["1.0.0"],
         "beta": ["1.0-M4"],

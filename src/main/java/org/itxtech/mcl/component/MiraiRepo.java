@@ -1,5 +1,18 @@
 package org.itxtech.mcl.component;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /*
  *
  * Mirai Console Loader
@@ -24,11 +37,26 @@ package org.itxtech.mcl.component;
  *
  */
 public class MiraiRepo {
-    private String baseUrl;
+    public HttpClient client = HttpClient.newBuilder().build();
+
+    private final String baseUrl;
 
     public MiraiRepo(String baseUrl) {
         this.baseUrl = baseUrl;
     }
 
+    public HashMap<String, PackageInfo> fetchPackages() throws IOException, InterruptedException {
+        var response = client.send(HttpRequest.newBuilder(URI.create(baseUrl + "/packages.json")).timeout(Duration.ofMinutes(1)).build(), HttpResponse.BodyHandlers.ofString());
+        return new Gson().fromJson(response.body(), new TypeToken<Map<String, PackageInfo>>() {
+        }.getType());
+    }
 
+    public static class PackageInfo {
+        public String name;
+        public String description;
+    }
+
+    public static class Package {
+        public HashMap<String, ArrayList<String>> channels;
+    }
 }

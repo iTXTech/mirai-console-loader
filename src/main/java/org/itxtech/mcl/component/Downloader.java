@@ -26,5 +26,5 @@ import java.io.File;
  *
  */
 public interface Downloader {
-    void download(String url, File file);
+    void download(String url, File file, DownloadObserver observer);
 }

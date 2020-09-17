@@ -3,6 +3,7 @@ package org.itxtech.mcl.script;
 import org.itxtech.mcl.Loader;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /*
  *
@@ -28,17 +29,28 @@ import java.io.File;
  *
  */
 public class ScriptManager {
-    public static final String SCOPE_BEFORE_START = "before_start";
-
     private final Loader loader;
     private final File baseDir;
+    private final ArrayList<Script> scripts = new ArrayList<>();
 
     public ScriptManager(Loader loader, File baseDir) {
         this.loader = loader;
         this.baseDir = baseDir;
+        this.baseDir.mkdirs();
     }
 
-    public void loadAllScripts() {
-        loader.logger.info("Mirai Console Loader 运行于 " + baseDir.getAbsolutePath());
+    public void readAllScripts() throws Exception {
+        for (var file : baseDir.listFiles()) {
+            if (file.isFile()) {
+                scripts.add(new Script(loader, file));
+            }
+        }
     }
+
+    public void phaseCli() {
+        for (var script : scripts) {
+            script.cli();
+        }
+    }
+
 }
