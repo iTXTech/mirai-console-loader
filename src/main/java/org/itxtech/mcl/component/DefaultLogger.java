@@ -24,4 +24,32 @@ package org.itxtech.mcl.component;
  *
  */
 public class DefaultLogger implements Logger {
+    @Override
+    public void log(String info, int level) {
+
+    }
+
+    @Override
+    public void info(String info) {
+
+    }
+
+    @Override
+    public void debug(String info) {
+
+    }
+
+    @Override
+    public void warning(String warning) {
+    }
+
+    @Override
+    public void error(String error) {
+
+    }
+
+    @Override
+    public void logException(Throwable e) {
+
+    }
 }

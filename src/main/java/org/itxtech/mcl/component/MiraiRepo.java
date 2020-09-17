@@ -1,8 +1,4 @@
-package org.itxtech.mcl.script;
-
-import org.itxtech.mcl.Loader;
-
-import java.io.File;
+package org.itxtech.mcl.component;
 
 /*
  *
@@ -27,18 +23,12 @@ import java.io.File;
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-public class ScriptManager {
-    public static final String SCOPE_BEFORE_START = "before_start";
+public class MiraiRepo {
+    private String baseUrl;
 
-    private final Loader loader;
-    private final File baseDir;
-
-    public ScriptManager(Loader loader, File baseDir) {
-        this.loader = loader;
-        this.baseDir = baseDir;
+    public MiraiRepo(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
-    public void loadAllScripts() {
-        loader.logger.info("Mirai Console Loader 运行于 " + baseDir.getAbsolutePath());
-    }
+
 }

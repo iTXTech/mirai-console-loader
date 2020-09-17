@@ -1,5 +1,8 @@
 package org.itxtech.mcl.component;
 
+import java.io.File;
+import java.net.http.HttpClient;
+
 /*
  *
  * Mirai Console Loader
@@ -24,4 +27,11 @@ package org.itxtech.mcl.component;
  *
  */
 public class DefaultDownloader implements Downloader {
+
+    public HttpClient client = HttpClient.newBuilder().build();
+
+    @Override
+    public void download(String url, File file) {
+
+    }
 }

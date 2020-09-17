@@ -1,5 +1,7 @@
 package org.itxtech.mcl.component;
 
+import java.io.File;
+
 /*
  *
  * Mirai Console Loader
@@ -24,4 +26,5 @@ package org.itxtech.mcl.component;
  *
  */
 public interface Downloader {
+    void download(String url, File file);
 }

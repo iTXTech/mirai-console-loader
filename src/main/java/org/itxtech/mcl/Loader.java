@@ -1,5 +1,10 @@
 package org.itxtech.mcl;
 
+import org.itxtech.mcl.component.*;
+import org.itxtech.mcl.script.ScriptManager;
+
+import java.io.File;
+
 /*
  *
  * Mirai Console Loader
@@ -24,7 +29,36 @@ package org.itxtech.mcl;
  *
  */
 public class Loader {
+    public Downloader downloader = new DefaultDownloader();
+    public Logger logger = new DefaultLogger();
+    public File configFile = new File("config.json");
+    public Config config;
+    public ScriptManager manager;
+
     public static void main(String[] args) {
+        new Loader().start();
+    }
+
+    /**
+     * 启动 Mirai Console Loader，并加载脚本
+     */
+    public void start() {
+        try {
+            config = Config.load(configFile);
+            manager = new ScriptManager(this, new File("scripts"));
+            manager.loadAllScripts();
+            //TODO
+            config.save(configFile);
+        } catch (Throwable e) {
+            logger.logException(e);
+        }
+    }
+
+    /**
+     * 支持启动 Mirai Console
+     */
+    public void boot() {
 
     }
+
 }

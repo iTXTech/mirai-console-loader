@@ -24,4 +24,20 @@ package org.itxtech.mcl.component;
  *
  */
 public interface Logger {
+    int LOG_DEBUG = 0;
+    int LOG_INFO = 1;
+    int LOG_WARNING = 2;
+    int LOG_ERROR = 3;
+
+    void log(String info, int level);
+
+    void debug(String info);
+
+    void info(String info);
+
+    void warning(String warning);
+
+    void error(String error);
+
+    void logException(Throwable e);
 }
