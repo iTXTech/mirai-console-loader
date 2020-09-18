@@ -79,9 +79,42 @@ function downloadFile(name, ver) {
     down(loader.repo.getDownloadUrl(name, ver, "md5"), new File(loader.libDir, name + "-" + ver + ".md5"));
 }
 
+let emptyString = (function () {
+    let buffer = "", counter = 1024;
+    while (counter-- > 0) buffer += ' ';
+    return buffer
+})()
+
+function alignRight(current, total) {
+    let cStr = current.toString();
+    let max = Math.max(cStr.length, total.toString().length);
+    return emptyString.substring(0, max - cStr.length) + cStr;
+}
+
+function buildDownloadBar(total, current) {
+    let length = 30;
+    let bar = Math.floor((current / total) * length);
+    let buffer = "[";
+    for (let i = 0; i < bar; i++) {
+        buffer += '=';
+    }
+    if (bar < length) {
+        buffer += '>';
+        for (let i = bar; i < length; i++) {
+            buffer += ' ';
+        }
+    }
+    return buffer + "]";
+}
+
 function down(url, file) {
+    let name = file.name
+    var size = 0
     loader.downloader.download(url, file, (total, current) => {
-        System.out.print("total: " + total + " cur: " + current + "\r");
+        let line = "Download " + name + " " + buildDownloadBar(total, current) + " " + (alignRight(current, total) + " / " + total) + " (" + (Math.floor(current * 1000 / total) / 10) + "%)" + "\r";
+        System.out.print(line);
+        size = line.length
     });
-    System.out.println();
+    System.out.print(emptyString.substr(0, size + 5) + '\r');
+    System.out.println("Download " + name + " " + buildDownloadBar(1, 1) + " Completed.");
 }
