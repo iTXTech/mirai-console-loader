@@ -70,9 +70,12 @@ public class ScriptManager {
         for (var file : baseDir.listFiles()) {
             if (file.isFile() && file.getName().endsWith(".js") &&
                     !loader.config.disabledScripts.contains(file.getName().replace(".js", ""))) {
-                loader.logger.debug("Loading script: " + file.getAbsolutePath());
+                loader.logger.debug("Loading script: " + file.getName());
                 scripts.add(new Script(loader, file));
             }
+        }
+        if (scripts.size() == 0) {
+            loader.logger.warning("No script has been loaded. Exiting.");
         }
     }
 

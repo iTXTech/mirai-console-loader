@@ -18,6 +18,7 @@ dependencies {
 jar {
     manifest {
         attributes "Main-Class": "org.itxtech.mcl.Loader"
+        attributes "Version": version + "-" + "git rev-parse --short HEAD".execute().text.trim()
     }
 
     from {

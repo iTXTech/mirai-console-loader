@@ -11,6 +11,7 @@ import org.itxtech.mcl.script.ScriptManager;
 
 import java.io.File;
 import java.net.InetSocketAddress;
+import java.util.jar.Manifest;
 
 /*
  *
@@ -90,29 +91,37 @@ public class Loader {
         return null;
     }
 
+    public String getVersion() throws Exception {
+        var version = "unknown";
+        var mf = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
+        while (mf.hasMoreElements()) {
+            var manifest = new Manifest(mf.nextElement().openStream());
+            if ("org.itxtech.mcl.Loader".equals(manifest.getMainAttributes().getValue("Main-Class"))) {
+                version = manifest.getMainAttributes().getValue("Version");
+            }
+        }
+        return version;
+    }
+
     /**
      * 启动 Mirai Console Loader，并加载脚本
      */
-    public void start(String[] args) {
-        logger.info("Mirai Console Loader by iTX Technologies");
+    public void start(String[] args) throws Exception {
+        logger.info("Mirai Console Loader version " + getVersion());
         logger.info("https://github.com/iTXTech/mirai-console-loader");
         logger.info("This program is licensed under GNU AGPL v3");
 
-        try {
-            proxy = getProxy();
-            manager = new ScriptManager(this, new File("scripts"));
-            parseCli(args, false);
-            manager.readAllScripts(); //此阶段脚本只能修改loader中变量
-            libDir.mkdirs();
-            parseCli(args, true);
-            manager.phaseCli(); //此阶段脚本处理命令行参数
-            repo = new MiraiRepo(this, config.miraiRepo);
-            downloader = new DefaultDownloader(this);
-            manager.phaseLoad(); //此阶段脚本下载包
-            config.save(configFile);
-            manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
-        } catch (Throwable e) {
-            logger.logException(e);
-        }
+        proxy = getProxy();
+        manager = new ScriptManager(this, new File("scripts"));
+        parseCli(args, false);
+        manager.readAllScripts(); //此阶段脚本只能修改loader中变量
+        libDir.mkdirs();
+        parseCli(args, true);
+        manager.phaseCli(); //此阶段脚本处理命令行参数
+        repo = new MiraiRepo(this, config.miraiRepo);
+        downloader = new DefaultDownloader(this);
+        manager.phaseLoad(); //此阶段脚本下载包
+        config.save(configFile);
+        manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
     }
 }
