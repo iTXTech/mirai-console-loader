@@ -54,9 +54,6 @@ public class DefaultDownloader implements Downloader {
                 current += len;
                 observer.updateProgress(totalLen, current);
             }
-            if (current != totalLen) {
-                observer.updateProgress(totalLen, totalLen);
-            }
             os.close();
         } catch (Throwable e) {
             loader.logger.logException(e);
