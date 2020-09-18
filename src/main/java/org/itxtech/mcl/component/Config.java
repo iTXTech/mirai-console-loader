@@ -37,6 +37,8 @@ import java.util.ArrayList;
  *
  */
 public class Config {
+    @SerializedName("js_optimization_level")
+    public int jsOptimizationLevel = -1;
     @SerializedName("mirai_repo")
     public String miraiRepo = "https://raw.githubusercontent.com/iTXTech/mirai-repo/master";
     public ArrayList<Package> packages = new ArrayList<>() {{
