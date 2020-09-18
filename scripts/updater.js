@@ -28,7 +28,7 @@ importPackage(org.itxtech.mcl);
 importPackage(java.lang);
 
 phase.cli = () => {
-    let update = Option.builder("u").desc("½ûÓÃ×Ô¶¯¸üĞÂ").longOpt("disable-update").build();
+    let update = Option.builder("u").desc("ç¦ç”¨è‡ªåŠ¨æ›´æ–°").longOpt("disable-update").build();
     loader.options.addOption(update);
 };
 
@@ -45,11 +45,11 @@ function checkLocalFile(pack) {
 }
 
 function check(pack) {
-    logger.info("ÕıÔÚÑéÖ¤ " + pack.name + " °æ±¾£º" + pack.localVersion);
+    logger.info("æ­£åœ¨éªŒè¯ " + pack.name + " ç‰ˆæœ¬ï¼š" + pack.localVersion);
     let download = false;
     let force = false;
     if (!checkLocalFile(pack)) {
-        logger.info(pack.name + " ÎÄ¼şĞ£ÑéÊ§°Ü£¬¿ªÊ¼ÏÂÔØ¡£");
+        logger.info(pack.name + " æ–‡ä»¶æ ¡éªŒå¤±è´¥ï¼Œå¼€å§‹ä¸‹è½½ã€‚");
         download = true;
         force = true;
     }
@@ -59,7 +59,7 @@ function check(pack) {
     if (download) {
         let info = loader.repo.fetchPackage(pack.name);
         if (!info.channels.containsKey(pack.channel)) {
-            logger.error("·Ç·¨µÄ¸üĞÂÆµµÀ£º" + pack.channel + " °ü£º" + pack.name);
+            logger.error("éæ³•çš„æ›´æ–°é¢‘é“ï¼š" + pack.channel + " åŒ…ï¼š" + pack.name);
         } else {
             let target = info.channels[pack.channel];
             let ver = target[target.size() - 1];
@@ -67,7 +67,7 @@ function check(pack) {
                 downloadFile(pack.name, ver);
                 pack.localVersion = ver;
                 if (!checkLocalFile(pack)) {
-                    logger.warning(pack.name + " ±¾µØÎÄ¼şÈÔÈ»Ğ£ÑéÊ§°Ü£¬Çë¼ì²éÍøÂç¡£");
+                    logger.warning(pack.name + " æœ¬åœ°æ–‡ä»¶ä»ç„¶æ ¡éªŒå¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œã€‚");
                 }
             }
         }
