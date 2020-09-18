@@ -48,6 +48,8 @@ public class Config {
     @SerializedName("disabled_scripts")
     public ArrayList<String> disabledScripts = new ArrayList<>();
     public String proxy = "";
+    @SerializedName("log_level")
+    public int logLevel = Logger.LOG_DEBUG;
 
     public static Config load(File file) {
         try {

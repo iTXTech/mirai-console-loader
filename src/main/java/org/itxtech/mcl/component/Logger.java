@@ -29,6 +29,8 @@ public interface Logger {
     int LOG_WARNING = 2;
     int LOG_ERROR = 3;
 
+    void setLogLevel(int level);
+
     void log(String info, int level);
 
     void debug(String info);

@@ -49,7 +49,7 @@ public class ScriptManager {
 
     public void readAllScripts() throws Exception {
         if (loader.cli.hasOption("l")) {
-            loader.logger.info("Disabled scrips: " + String.join(", ", loader.config.disabledScripts));
+            loader.logger.info("Disabled scripts: " + String.join(", ", loader.config.disabledScripts));
             return;
         }
         if (loader.cli.hasOption("d")) {
@@ -70,6 +70,7 @@ public class ScriptManager {
         for (var file : baseDir.listFiles()) {
             if (file.isFile() && file.getName().endsWith(".js") &&
                     !loader.config.disabledScripts.contains(file.getName().replace(".js", ""))) {
+                loader.logger.debug("Loading script: " + file.getAbsolutePath());
                 scripts.add(new Script(loader, file));
             }
         }

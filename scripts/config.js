@@ -26,12 +26,18 @@ importPackage(org.apache.commons.cli);
 importPackage(java.net);
 importPackage(java.lang);
 
-let proxy = Option.builder("p").desc("Specify HTTP proxy for current instance").longOpt("proxy").hasArg().argName("address").build();
-loader.options.addOption(proxy);
+loader.options.addOption(Option.builder("p").desc("Specify HTTP proxy for current instance")
+    .longOpt("proxy").hasArg().argName("address").build());
+loader.options.addOption(Option.builder("c").desc("Set log level")
+    .longOpt("log-level").hasArg().argName("level").build());
 
 phase.cli = () => {
     if (loader.cli.hasOption("p")) {
         let addr = loader.cli.getOptionValue("p").split(":");
         loader.proxy = new InetSocketAddress(addr[0], Integer.parseInt(addr[1]));
+    }
+    if (loader.cli.hasOption("c")) {
+        let lvl = Integer.parseInt(loader.cli.getOptionValue("c"));
+        loader.logger.setLogLevel(lvl);
     }
 }

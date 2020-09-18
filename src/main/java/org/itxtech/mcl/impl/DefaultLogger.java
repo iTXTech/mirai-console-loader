@@ -31,8 +31,18 @@ import java.util.Date;
  *
  */
 public class DefaultLogger implements Logger {
+    private int logLevel = LOG_DEBUG;
+
+    @Override
+    public void setLogLevel(int logLevel) {
+        this.logLevel = logLevel;
+    }
+
     @Override
     public void log(String info, int level) {
+        if (level < logLevel) {
+            return;
+        }
         var date = new SimpleDateFormat("HH:mm:ss").format(new Date());
         var prefix = "INFO";
         switch (level) {

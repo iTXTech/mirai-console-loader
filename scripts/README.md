@@ -1,7 +1,6 @@
 # 官方提供的脚本
 
-* `proxy.js` - 可通过命令行传入代理参数，覆盖`config.json`中的相关设置，但不会写入`config.json`
-
+* `config.js` - 可通过命令行传入配置，覆盖`config.json`中的相关设置，但不会写入`config.json`
 * `updater.js` - 用于检验、下载和更新`mirai`文件
 * `boot.js` - 用于启动`mirai console`
 
