@@ -29,10 +29,10 @@ phase.boot = () => {
     let files = [];
     let packages = loader.config.packages;
     for (let i in packages) {
-        files.push(new File(loader.libDir, packages[i].name + "-" + packages[i].localVersion + ".jar"));
+        files.push(new File(loader.libDir, packages[i].name + "-" + packages[i].version + ".jar"));
     }
 
     let launchArgs = [];
 
-    FileUtil.bootMirai(files, "net.mamoe.mirai.console.pure.MiraiConsolePureLoader", launchArgs);
+    Utility.bootMirai(files, "net.mamoe.mirai.console.pure.MiraiConsolePureLoader", launchArgs);
 }

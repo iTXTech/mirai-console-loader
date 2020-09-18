@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 
 /*
@@ -34,7 +35,7 @@ import java.util.ArrayList;
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-public class FileUtil {
+public class Utility {
     public static String fileMd5(File file) throws Exception {
         var fis = new FileInputStream(file);
         var buffer = new byte[1024];
@@ -64,7 +65,7 @@ public class FileUtil {
         if (!baseFile.exists() || !checksumFile.exists()) {
             return false;
         }
-        var correctMd5 = FileUtil.readSmallFile(checksumFile).trim();
+        var correctMd5 = Utility.readSmallFile(checksumFile).trim();
         return fileMd5(baseFile).equals(correctMd5);
     }
 
@@ -84,5 +85,20 @@ public class FileUtil {
         }
         var method = loader.loadClass(entry).getMethod("main", String[].class);
         method.invoke(null, (Object) args.toArray(new String[0]));
+    }
+
+    public static String humanReadableFileSize(int bytes) {
+        var absB = bytes == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(bytes);
+        if (absB < 1024) {
+            return bytes + " B";
+        }
+        var value = absB;
+        var ci = new StringCharacterIterator("KMGTPE");
+        for (var i = 40; i >= 0 && absB > 0xfffccccccccccccL >> i; i -= 10) {
+            value >>= 10;
+            ci.next();
+        }
+        value *= Integer.signum(bytes);
+        return String.format("%.2f %cB", value / 1024.0, ci.current());
     }
 }

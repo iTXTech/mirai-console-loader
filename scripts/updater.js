@@ -26,6 +26,7 @@ importPackage(org.apache.commons.cli);
 importPackage(java.io);
 importPackage(org.itxtech.mcl);
 importPackage(java.lang);
+importPackage(java.math);
 
 phase.cli = () => {
     let update = Option.builder("u").desc("禁用自动更新").longOpt("disable-update").build();
@@ -40,12 +41,12 @@ phase.load = () => {
 };
 
 function checkLocalFile(pack) {
-    let baseName = pack.name + "-" + pack.localVersion;
-    return FileUtil.check(new File(loader.libDir, baseName + ".jar"), new File(loader.libDir, baseName + ".md5"));
+    let baseName = pack.name + "-" + pack.version;
+    return Utility.check(new File(loader.libDir, baseName + ".jar"), new File(loader.libDir, baseName + ".md5"));
 }
 
 function check(pack) {
-    logger.info("正在验证 " + pack.name + " 版本：" + pack.localVersion);
+    logger.info("正在验证 " + pack.name + " 版本：" + pack.version);
     let download = false;
     let force = false;
     if (!checkLocalFile(pack)) {
@@ -63,9 +64,9 @@ function check(pack) {
         } else {
             let target = info.channels[pack.channel];
             let ver = target[target.size() - 1];
-            if (force || !pack.localVersion.equals(ver)) {
+            if (force || !pack.version.equals(ver)) {
                 downloadFile(pack.name, ver);
-                pack.localVersion = ver;
+                pack.version = ver;
                 if (!checkLocalFile(pack)) {
                     logger.warning(pack.name + " 本地文件仍然校验失败，请检查网络。");
                 }
@@ -81,7 +82,7 @@ function downloadFile(name, ver) {
 
 function down(url, file) {
     loader.downloader.download(url, file, (total, current) => {
-        System.out.print("total: " + total + " cur: " + current + "\r");
+        System.out.print(" 正在下载：" + file.getName() + " | " + Utility.humanReadableFileSize(current) + " / " + Utility.humanReadableFileSize(total) + " (" + Math.round(current / total * 100.0) + "%)   \r");
     });
     System.out.println();
 }

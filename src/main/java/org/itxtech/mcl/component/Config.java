@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
 /*
@@ -42,6 +43,18 @@ public class Config {
         add(new Package("mirai-console-pure", "beta"));
         add(new Package("mirai-core-qqandroid", "stable"));
     }};
+    @SerializedName("disabled_scripts")
+    public ArrayList<String> disabledScripts = new ArrayList<>();
+    public String proxy = "";
+
+    public InetSocketAddress getProxy() {
+        var p = proxy.split(":");
+        try {
+            return new InetSocketAddress(p[0], Integer.parseInt(p[1]));
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public static Config load(File file) {
         try {
@@ -64,7 +77,7 @@ public class Config {
     public static class Package {
         public String name;
         public String channel;
-        public String localVersion = "";
+        public String version = "";
 
         public Package(String name, String channel) {
             this.name = name;
