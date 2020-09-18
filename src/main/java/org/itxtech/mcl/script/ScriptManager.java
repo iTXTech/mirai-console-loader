@@ -41,15 +41,15 @@ public class ScriptManager {
         this.baseDir.mkdirs();
 
         var group = new OptionGroup();
-        group.addOption(Option.builder("l").desc("列出禁用的脚本").longOpt("list").build());
-        group.addOption(Option.builder("r").desc("启用脚本（不需要.js扩展名）").hasArg().argName("脚本名").build());
-        group.addOption(Option.builder("d").desc("禁用脚本（不需要.js扩展名）").hasArg().argName("脚本名").build());
+        group.addOption(Option.builder("l").desc("List disabled scripts").longOpt("list").build());
+        group.addOption(Option.builder("e").desc("Enable script (exclude \".js\")").hasArg().argName("ScriptName").build());
+        group.addOption(Option.builder("d").desc("Disable script (exclude \".js\")").hasArg().argName("ScriptName").build());
         loader.options.addOptionGroup(group);
     }
 
     public void readAllScripts() throws Exception {
         if (loader.cli.hasOption("l")) {
-            loader.logger.info("禁用的脚本：" + String.join(", ", loader.config.disabledScripts));
+            loader.logger.info("Disabled scrips: " + String.join(", ", loader.config.disabledScripts));
             return;
         }
         if (loader.cli.hasOption("d")) {
@@ -57,13 +57,13 @@ public class ScriptManager {
             if (!loader.config.disabledScripts.contains(name)) {
                 loader.config.disabledScripts.add(name);
             }
-            loader.logger.info("已禁用脚本：" + name);
+            loader.logger.info("Script \"" + name + "\" has been disabled.");
             return;
         }
-        if (loader.cli.hasOption("r")) {
-            var name = loader.cli.getOptionValue("r");
+        if (loader.cli.hasOption("e")) {
+            var name = loader.cli.getOptionValue("e");
             loader.config.disabledScripts.remove(name);
-            loader.logger.info("已启用脚本：" + name);
+            loader.logger.info("Script \"" + name + "\" has been enabled.");
             return;
         }
 
