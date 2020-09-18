@@ -68,7 +68,8 @@ public class ScriptManager {
         }
 
         for (var file : baseDir.listFiles()) {
-            if (file.isFile() && !loader.config.disabledScripts.contains(file.getName().replace(".js", ""))) {
+            if (file.isFile() && file.getName().endsWith(".js") &&
+                    !loader.config.disabledScripts.contains(file.getName().replace(".js", ""))) {
                 scripts.add(new Script(loader, file));
             }
         }

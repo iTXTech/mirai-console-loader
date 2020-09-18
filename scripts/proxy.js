@@ -22,6 +22,16 @@
  *
  */
 
+importPackage(org.apache.commons.cli);
 importPackage(java.net);
+importPackage(java.lang);
 
-loader.proxy = new InetSocketAddress("localhost", "1082");
+let proxy = Option.builder("p").desc("Specify HTTP proxy for current instance").longOpt("proxy").hasArg().argName("address").build();
+loader.options.addOption(proxy);
+
+phase.cli = () => {
+    if (loader.cli.hasOption("p")) {
+        let addr = loader.cli.getOptionValue("p").split(":");
+        loader.proxy = new InetSocketAddress(addr[0], Integer.parseInt(addr[1]));
+    }
+}

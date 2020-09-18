@@ -1,6 +1,7 @@
 package org.itxtech.mcl.component;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -70,7 +71,7 @@ public class Config {
 
     public void save(File file) throws IOException {
         var writer = new FileWriter(file);
-        new Gson().toJson(this, writer);
+        new GsonBuilder().setPrettyPrinting().create().toJson(this, writer);
         writer.close();
     }
 

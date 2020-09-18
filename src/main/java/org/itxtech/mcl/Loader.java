@@ -48,7 +48,13 @@ public class Loader {
     public File libDir = new File("libs");
 
     public static void main(String[] args) {
-        new Loader().start(args);
+        var loader = new Loader();
+        try {
+            loader.loadConfig();
+            loader.start(args);
+        } catch (Exception e) {
+            loader.logger.logException(e);
+        }
     }
 
     public void parseCli(String[] args, boolean help) {
@@ -68,6 +74,10 @@ public class Loader {
         }
     }
 
+    public void loadConfig() {
+        config = Config.load(configFile);
+    }
+
     /**
      * 启动 Mirai Console Loader，并加载脚本
      */
@@ -77,16 +87,15 @@ public class Loader {
         logger.info("This program is licensed under GNU AGPL v3");
 
         try {
-            config = Config.load(configFile);
             proxy = config.getProxy();
             manager = new ScriptManager(this, new File("scripts"));
             parseCli(args, false);
             manager.readAllScripts(); //此阶段脚本只能修改loader中变量
             libDir.mkdirs();
+            parseCli(args, true);
+            manager.phaseCli(); //此阶段脚本处理命令行参数
             repo = new MiraiRepo(this, config.miraiRepo);
             downloader = new DefaultDownloader(this);
-            manager.phaseCli(); //此阶段脚本注册命令行参数
-            parseCli(args, true);
             manager.phaseLoad(); //此阶段脚本下载包
             config.save(configFile);
             manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
