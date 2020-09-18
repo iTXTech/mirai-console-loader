@@ -1,5 +1,7 @@
 package org.itxtech.mcl.script;
 
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
 import org.itxtech.mcl.Loader;
 
 import java.io.File;
@@ -37,11 +39,36 @@ public class ScriptManager {
         this.loader = loader;
         this.baseDir = baseDir;
         this.baseDir.mkdirs();
+
+        var group = new OptionGroup();
+        group.addOption(Option.builder("l").desc("列出禁用的脚本").longOpt("list").build());
+        group.addOption(Option.builder("r").desc("启用脚本（不需要.js扩展名）").hasArg().argName("脚本名").build());
+        group.addOption(Option.builder("d").desc("禁用脚本（不需要.js扩展名）").hasArg().argName("脚本名").build());
+        loader.options.addOptionGroup(group);
     }
 
     public void readAllScripts() throws Exception {
+        if (loader.cli.hasOption("l")) {
+            loader.logger.info("禁用的脚本：" + String.join(", ", loader.config.disabledScripts));
+            return;
+        }
+        if (loader.cli.hasOption("d")) {
+            var name = loader.cli.getOptionValue("d");
+            if (!loader.config.disabledScripts.contains(name)) {
+                loader.config.disabledScripts.add(name);
+            }
+            loader.logger.info("已禁用脚本：" + name);
+            return;
+        }
+        if (loader.cli.hasOption("r")) {
+            var name = loader.cli.getOptionValue("r");
+            loader.config.disabledScripts.remove(name);
+            loader.logger.info("已启用脚本：" + name);
+            return;
+        }
+
         for (var file : baseDir.listFiles()) {
-            if (file.isFile()) {
+            if (file.isFile() && !loader.config.disabledScripts.contains(file.getName().replace(".js", ""))) {
                 scripts.add(new Script(loader, file));
             }
         }

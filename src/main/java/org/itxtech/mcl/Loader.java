@@ -51,29 +51,42 @@ public class Loader {
         new Loader().start(args);
     }
 
+    public void parseCli(String[] args, boolean help) {
+        try {
+            cli = new DefaultParser().parse(options, args);
+        } catch (ParseException e) {
+            if (help) {
+                logger.error(e.getMessage());
+                new HelpFormatter().printHelp("mcl", options);
+                System.exit(1);
+            } else {
+                try {
+                    cli = new DefaultParser().parse(new Options(), new String[0]);
+                } catch (ParseException ignored) {
+                }
+            }
+        }
+    }
+
     /**
      * 启动 Mirai Console Loader，并加载脚本
      */
     public void start(String[] args) {
         logger.info("Mirai Console Loader by iTX Technologies");
         logger.info("https://github.com/iTXTech/mirai-console-loader");
-        logger.info("Licensed under AGPLv3");
+        logger.info("This program is licensed under GNU AGPL v3");
 
         try {
             config = Config.load(configFile);
+            proxy = config.getProxy();
             manager = new ScriptManager(this, new File("scripts"));
+            parseCli(args, false);
             manager.readAllScripts(); //此阶段脚本只能修改loader中变量
             libDir.mkdirs();
             repo = new MiraiRepo(this, config.miraiRepo);
             downloader = new DefaultDownloader(this);
             manager.phaseCli(); //此阶段脚本注册命令行参数
-            try {
-                cli = new DefaultParser().parse(options, args);
-            } catch (ParseException e) {
-                logger.error(e.getMessage());
-                new HelpFormatter().printHelp("mcl", options);
-                System.exit(1);
-            }
+            parseCli(args, true);
             manager.phaseLoad(); //此阶段脚本下载包
             config.save(configFile);
             manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
