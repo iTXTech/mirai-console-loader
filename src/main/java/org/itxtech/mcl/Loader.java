@@ -78,6 +78,18 @@ public class Loader {
         config = Config.load(configFile);
     }
 
+    public InetSocketAddress getProxy() {
+        var p = config.proxy.split(":");
+        try {
+            return new InetSocketAddress(p[0], Integer.parseInt(p[1]));
+        } catch (Exception e) {
+            if (!"".equals(config.proxy)) {
+                logger.error("Invalid proxy setting: " + config.proxy);
+            }
+        }
+        return null;
+    }
+
     /**
      * 启动 Mirai Console Loader，并加载脚本
      */
@@ -87,7 +99,7 @@ public class Loader {
         logger.info("This program is licensed under GNU AGPL v3");
 
         try {
-            proxy = config.getProxy();
+            proxy = getProxy();
             manager = new ScriptManager(this, new File("scripts"));
             parseCli(args, false);
             manager.readAllScripts(); //此阶段脚本只能修改loader中变量
