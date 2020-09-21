@@ -41,9 +41,9 @@ public class ScriptManager {
         this.baseDir.mkdirs();
 
         var group = new OptionGroup();
-        group.addOption(Option.builder("l").desc("List disabled scripts").longOpt("list").build());
-        group.addOption(Option.builder("e").desc("Enable script (exclude \".js\")").hasArg().argName("ScriptName").build());
-        group.addOption(Option.builder("d").desc("Disable script (exclude \".js\")").hasArg().argName("ScriptName").build());
+        group.addOption(Option.builder("l").longOpt("list-disabled-scripts").desc("List disabled scripts").build());
+        group.addOption(Option.builder("e").longOpt("enable-script").desc("Enable script (exclude \".js\")").hasArg().argName("ScriptName").build());
+        group.addOption(Option.builder("d").longOpt("disable-script").desc("Disable script (exclude \".js\")").hasArg().argName("ScriptName").build());
         loader.options.addOptionGroup(group);
     }
 

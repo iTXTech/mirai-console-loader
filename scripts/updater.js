@@ -28,8 +28,7 @@ importPackage(org.itxtech.mcl);
 importPackage(java.lang);
 importPackage(java.math);
 
-let update = Option.builder("u").desc("Disable auto update").longOpt("disable-update").build();
-loader.options.addOption(update);
+loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt("disable-update").build());
 
 phase.load = () => {
     let packages = loader.config.packages;
