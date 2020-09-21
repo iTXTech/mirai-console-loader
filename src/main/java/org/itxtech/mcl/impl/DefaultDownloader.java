@@ -42,7 +42,8 @@ public class DefaultDownloader implements Downloader {
     @Override
     public void download(String url, File file, DownloadObserver observer) {
         try {
-            var connection = loader.proxy == null ? new URL(url).openConnection() : new URL(url).openConnection(new Proxy(Proxy.Type.HTTP, loader.proxy));
+            var proxy = loader.getProxy();
+            var connection = proxy == null ? new URL(url).openConnection() : new URL(url).openConnection(new Proxy(Proxy.Type.HTTP, proxy));
             var totalLen = connection.getContentLength();
             var is = connection.getInputStream();
             var os = new FileOutputStream(file);

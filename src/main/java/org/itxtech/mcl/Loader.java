@@ -45,7 +45,6 @@ public class Loader {
     public MiraiRepo repo;
     public Options options = new Options();
     public CommandLine cli;
-    public InetSocketAddress proxy;
     public File libDir = new File("libs");
 
     public static void main(String[] args) {
@@ -111,7 +110,6 @@ public class Loader {
         logger.info("https://github.com/iTXTech/mirai-console-loader");
         logger.info("This program is licensed under GNU AGPL v3");
 
-        proxy = getProxy();
         manager = new ScriptManager(this, new File("scripts"));
         parseCli(args, false);
         manager.readAllScripts(); //此阶段脚本只能修改loader中变量

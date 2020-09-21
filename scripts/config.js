@@ -27,8 +27,14 @@ importPackage(java.net);
 importPackage(java.lang);
 importPackage(org.itxtech.mcl.component);
 
-loader.options.addOption(Option.builder("p").desc("Specify HTTP proxy for current instance")
-    .longOpt("proxy").hasArg().argName("address").build());
+loader.options.addOption(Option.builder("p").desc("Set HTTP proxy")
+    .longOpt("proxy").optionalArg(true).hasArg().argName("address").build());
+loader.options.addOption(Option.builder("o").desc("Show Mirai Repo and Maven Repo")
+    .longOpt("show-repos").build());
+loader.options.addOption(Option.builder("m").desc("Set Mirai Repo address")
+    .longOpt("set-mirai-repo").hasArg().argName("Address").build());
+loader.options.addOption(Option.builder("v").desc("Set Maven Repo address")
+    .longOpt("set-maven-repo").hasArg().argName("Address").build());
 loader.options.addOption(Option.builder("c").desc("Set log level")
     .longOpt("log-level").hasArg().argName("level").build());
 loader.options.addOption(Option.builder("s").desc("List configured packages")
@@ -42,8 +48,21 @@ loader.options.addOption(Option.builder("n").desc("Set update channel of specifi
 
 phase.cli = () => {
     if (loader.cli.hasOption("p")) {
-        let addr = loader.cli.getOptionValue("p").split(":");
-        loader.proxy = new InetSocketAddress(addr[0], Integer.parseInt(addr[1]));
+        loader.config.proxy = loader.cli.getOptionValue("p", "");
+        loader.config.save();
+    }
+    if (loader.cli.hasOption("o")) {
+        logger.info("Mirai Repo: " + loader.config.miraiRepo);
+        logger.info("Maven Repo: " + loader.config.mavenRepo);
+        System.exit(0);
+    }
+    if (loader.cli.hasOption("m")) {
+        loader.config.miraiRepo = loader.cli.getOptionValue("m");
+        loader.config.save();
+    }
+    if (loader.cli.hasOption("v")) {
+        loader.config.mavenRepo = loader.cli.getOptionValue("v");
+        loader.config.save();
     }
     if (loader.cli.hasOption("c")) {
         let lvl = Integer.parseInt(loader.cli.getOptionValue("c"));

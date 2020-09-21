@@ -44,7 +44,7 @@ public class MiraiRepo {
 
     public MiraiRepo(Loader loader) {
         this.loader = loader;
-        client = loader.proxy == null ? HttpClient.newBuilder().build() : HttpClient.newBuilder().proxy(ProxySelector.of(loader.proxy)).build();
+        client = loader.getProxy() == null ? HttpClient.newBuilder().build() : HttpClient.newBuilder().proxy(ProxySelector.of(loader.getProxy())).build();
     }
 
     public HashMap<String, PackageInfo> fetchPackages() throws Exception {
