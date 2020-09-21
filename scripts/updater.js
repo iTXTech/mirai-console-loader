@@ -74,8 +74,8 @@ function check(pack) {
 }
 
 function downloadFile(name, ver) {
-    down(loader.repo.getDownloadUrl(name, ver, "jar"), new File(loader.libDir, name + "-" + ver + ".jar"));
-    down(loader.repo.getDownloadUrl(name, ver, "md5"), new File(loader.libDir, name + "-" + ver + ".md5"));
+    down(loader.repo.getMavenJarUrl(name, ver), new File(loader.libDir, name + "-" + ver + ".jar"));
+    down(loader.repo.getMavenMd5Url(name, ver), new File(loader.libDir, name + "-" + ver + ".md5"));
 }
 
 

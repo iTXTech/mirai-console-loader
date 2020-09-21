@@ -39,10 +39,12 @@ public class Config {
     @SerializedName("js_optimization_level")
     public int jsOptimizationLevel = -1;
     @SerializedName("mirai_repo")
-    public String miraiRepo = "https://raw.githubusercontent.com/iTXTech/mirai-repo/master";
+    public String miraiRepo = "https://gitee.com/peratx/mirai-repo/raw/master";
+    @SerializedName("maven_repo")
+    public String mavenRepo = "https://maven.aliyun.com/repository/public";
     public ArrayList<Package> packages = new ArrayList<>() {{
-        add(new Package("mirai-console", "beta"));
-        add(new Package("mirai-console-pure", "beta"));
+        add(new Package("mirai-console", "nightly"));
+        add(new Package("mirai-console-terminal", "nightly"));
         add(new Package("mirai-core-qqandroid", "stable"));
     }};
     @SerializedName("disabled_scripts")

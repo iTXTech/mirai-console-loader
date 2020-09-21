@@ -65,7 +65,7 @@ public class Utility {
         if (!baseFile.exists() || !checksumFile.exists()) {
             return false;
         }
-        var correctMd5 = Utility.readSmallFile(checksumFile).trim();
+        var correctMd5 = Utility.readSmallFile(checksumFile).trim().replace(" ", "").toLowerCase();
         return fileMd5(baseFile).equals(correctMd5);
     }
 

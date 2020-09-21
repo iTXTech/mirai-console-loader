@@ -118,7 +118,7 @@ public class Loader {
         libDir.mkdirs();
         parseCli(args, true);
         manager.phaseCli(); //此阶段脚本处理命令行参数
-        repo = new MiraiRepo(this, config.miraiRepo);
+        repo = new MiraiRepo(this);
         downloader = new DefaultDownloader(this);
         manager.phaseLoad(); //此阶段脚本下载包
         config.save(configFile);

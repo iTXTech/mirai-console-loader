@@ -40,11 +40,9 @@ import java.util.Map;
 public class MiraiRepo {
     public HttpClient client;
 
-    private final String baseUrl;
     private final Loader loader;
 
-    public MiraiRepo(Loader loader, String baseUrl) {
-        this.baseUrl = baseUrl;
+    public MiraiRepo(Loader loader) {
         this.loader = loader;
         client = loader.proxy == null ? HttpClient.newBuilder().build() : HttpClient.newBuilder().proxy(ProxySelector.of(loader.proxy)).build();
     }
@@ -59,12 +57,22 @@ public class MiraiRepo {
         }.getType());
     }
 
-    public String getDownloadUrl(String id, String ver, String type) {
-        return baseUrl + "/" + id + "/" + id + "-" + ver + "." + type;
+    public String getMavenJarUrl(String id, String ver) {
+        return loader.config.mavenRepo + "/net/mamoe/" + id + "/" + ver + "/" + id + "-" + ver + "-all.jar";
+    }
+
+    public String getMavenMd5Url(String id, String ver) {
+        return loader.config.mavenRepo + "/net/mamoe/" + id + "/" + ver + "/" + id + "-" + ver + ".md5";
     }
 
     private String httpGet(String url) throws Exception {
-        return client.send(HttpRequest.newBuilder(URI.create(baseUrl + url)).timeout(Duration.ofSeconds(30)).build(), HttpResponse.BodyHandlers.ofString()).body();
+        return client.send(
+                HttpRequest.newBuilder(URI.create(loader.config.miraiRepo + url))
+                        .timeout(Duration.ofSeconds(30))
+                        .setHeader("User-Agent", "iTX Technologies Mirai Console Loader")
+                        .build(),
+                HttpResponse.BodyHandlers.ofString()
+        ).body();
     }
 
     public static class PackageInfo {
