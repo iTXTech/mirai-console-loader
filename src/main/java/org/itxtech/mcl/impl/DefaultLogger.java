@@ -59,7 +59,12 @@ public class DefaultLogger implements Logger {
                 prefix = "ERROR";
                 break;
         }
-        System.out.println(" " + date + " [" + prefix + "] " + info);
+        var log = " " + date + " [" + prefix + "] " + info;
+        if (level == LOG_ERROR) {
+            System.err.println(log);
+        } else {
+            System.out.println(log);
+        }
     }
 
     @Override
