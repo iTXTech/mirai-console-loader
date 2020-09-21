@@ -37,19 +37,21 @@ loader.options.addOption(Option.builder("v").desc("Set Maven Repo address")
     .longOpt("set-maven-repo").hasArg().argName("Address").build());
 loader.options.addOption(Option.builder("c").desc("Set log level")
     .longOpt("log-level").hasArg().argName("level").build());
-loader.options.addOption(Option.builder("s").desc("List configured packages")
+let group = new OptionGroup();
+group.addOption(Option.builder("s").desc("List configured packages")
     .longOpt("list-packages").build());
-loader.options.addOption(Option.builder("r").desc("Remove package")
+group.addOption(Option.builder("r").desc("Remove package")
     .longOpt("remove-package").hasArg().argName("PackageName").build());
-loader.options.addOption(Option.builder("a").desc("Add package")
+group.addOption(Option.builder("a").desc("Add package")
     .longOpt("add-package").hasArg().argName("PackageName").build());
+loader.options.addOptionGroup(group);
 loader.options.addOption(Option.builder("n").desc("Set update channel of specified package")
     .longOpt("set-channel").hasArg().argName("Channel").build());
 
 phase.cli = () => {
     if (loader.cli.hasOption("p")) {
         loader.config.proxy = loader.cli.getOptionValue("p", "");
-        loader.config.save();
+        loader.saveConfig();
     }
     if (loader.cli.hasOption("o")) {
         logger.info("Mirai Repo: " + loader.config.miraiRepo);
@@ -58,11 +60,11 @@ phase.cli = () => {
     }
     if (loader.cli.hasOption("m")) {
         loader.config.miraiRepo = loader.cli.getOptionValue("m");
-        loader.config.save();
+        loader.saveConfig();
     }
     if (loader.cli.hasOption("v")) {
         loader.config.mavenRepo = loader.cli.getOptionValue("v");
-        loader.config.save();
+        loader.saveConfig();
     }
     if (loader.cli.hasOption("c")) {
         let lvl = Integer.parseInt(loader.cli.getOptionValue("c"));
@@ -84,7 +86,7 @@ phase.cli = () => {
             if (pkg.name.equals(name)) {
                 pkgs.remove(pkg);
                 logger.info("Package \"" + pkg.name + "\" has been removed.");
-                loader.config.save();
+                loader.saveConfig();
                 System.exit(0);
             }
         }
@@ -103,14 +105,14 @@ phase.cli = () => {
             if (pkg.name.equals(name)) {
                 pkg.channel = channel;
                 logger.info("Package \"" + pkg.name + "\" has been updated.");
-                loader.config.save();
+                loader.saveConfig();
                 System.exit(0);
             }
         }
         let pkg = new Config.Package(name, channel);
         pkgs.add(pkg);
         logger.info("Package \"" + pkg.name + "\" has been added.");
-        loader.config.save();
+        loader.saveConfig();
         System.exit(0);
     }
 }

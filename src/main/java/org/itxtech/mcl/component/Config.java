@@ -2,7 +2,6 @@ package org.itxtech.mcl.component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -37,9 +36,6 @@ import java.util.ArrayList;
  *
  */
 public class Config {
-    @Expose(deserialize = false, serialize = false)
-    public File file;
-
     @SerializedName("js_optimization_level")
     public int jsOptimizationLevel = -1;
     @SerializedName("mirai_repo")
@@ -62,7 +58,6 @@ public class Config {
             Config conf = new Gson().fromJson(new JsonReader(new FileReader(file)), new TypeToken<Config>() {
             }.getType());
             if (conf != null) {
-                conf.file = file;
                 return conf;
             }
         } catch (Exception ignored) {
@@ -70,7 +65,7 @@ public class Config {
         return new Config();
     }
 
-    public void save() throws IOException {
+    public void save(File file) throws IOException {
         var writer = new FileWriter(file);
         new GsonBuilder().setPrettyPrinting().create().toJson(this, writer);
         writer.close();
