@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  *
@@ -52,6 +53,8 @@ public class Config {
     public String proxy = "";
     @SerializedName("log_level")
     public int logLevel = Logger.LOG_DEBUG;
+    @SerializedName("script_props")
+    public HashMap<String, String> scriptProps = new HashMap<>();
 
     public static Config load(File file) {
         try {
