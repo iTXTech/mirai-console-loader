@@ -37,12 +37,12 @@ import java.util.Map;
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-public class MiraiRepo {
+public class Repository {
     public HttpClient client;
 
     private final Loader loader;
 
-    public MiraiRepo(Loader loader) {
+    public Repository(Loader loader) {
         this.loader = loader;
         client = loader.getProxy() == null ? HttpClient.newBuilder().build() : HttpClient.newBuilder().proxy(ProxySelector.of(loader.getProxy())).build();
     }
@@ -65,8 +65,8 @@ public class MiraiRepo {
         }.getType());
     }
 
-    public String getMavenJarUrl(String id, String ver) {
-        return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + "-all.jar";
+    public String getMavenJarUrl(String id, String ver, String verSuffix) {
+        return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + "-" + verSuffix + ".jar";
     }
 
     public String getMavenMd5Url(String id, String ver) {

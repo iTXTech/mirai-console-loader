@@ -4,7 +4,7 @@ import org.apache.commons.cli.*;
 import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.component.Downloader;
 import org.itxtech.mcl.component.Logger;
-import org.itxtech.mcl.component.MiraiRepo;
+import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.impl.DefaultDownloader;
 import org.itxtech.mcl.impl.DefaultLogger;
 import org.itxtech.mcl.script.ScriptManager;
@@ -42,7 +42,7 @@ public class Loader {
     public File configFile = new File("config.json");
     public Config config;
     public ScriptManager manager;
-    public MiraiRepo repo;
+    public Repository repo;
     public Options options = new Options();
     public CommandLine cli;
     public File libDir = new File("libs");
@@ -120,7 +120,7 @@ public class Loader {
         libDir.mkdirs();
         parseCli(args, true);
         manager.phaseCli(); //此阶段脚本处理命令行参数
-        repo = new MiraiRepo(this);
+        repo = new Repository(this);
         downloader = new DefaultDownloader(this);
         manager.phaseLoad(); //此阶段脚本下载包
         saveConfig();

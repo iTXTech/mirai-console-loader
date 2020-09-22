@@ -72,7 +72,7 @@ function check(pack) {
 }
 
 function downloadFile(pack, ver) {
-    down(loader.repo.getMavenJarUrl(pack.id, ver), new File(loader.libDir, pack.getName() + "-" + ver + ".jar"));
+    down(loader.repo.getMavenJarUrl(pack.id, ver, pack.id.startsWith("net.mamoe") ? "all" : ""), new File(loader.libDir, pack.getName() + "-" + ver + ".jar"));
     down(loader.repo.getMavenMd5Url(pack.id, ver), new File(loader.libDir, pack.getName() + "-" + ver + ".md5"));
 }
 
