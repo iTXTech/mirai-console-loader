@@ -33,7 +33,7 @@ group.addOption(Option.builder("b").desc("Show Mirai Console boot properties")
 group.addOption(Option.builder("f").desc("Set Mirai Console boot entry")
     .longOpt("set-boot-entry").hasArg().argName("EntryClass").build());
 group.addOption(Option.builder("g").desc("Set Mirai Console boot arguments")
-    .longOpt("set-boot-args").hasArg().argName("Arguments").build());
+    .longOpt("set-boot-args").optionalArg(true).hasArg().argName("Arguments").build());
 loader.options.addOptionGroup(group);
 
 phase.cli = () => {
@@ -47,7 +47,7 @@ phase.cli = () => {
         loader.saveConfig();
     }
     if (loader.cli.hasOption("g")) {
-        loader.config.scriptProps.put("boot.args", loader.cli.getOptionValue("g"));
+        loader.config.scriptProps.put("boot.args", loader.cli.getOptionValue("g", ""));
         loader.saveConfig();
     }
 }

@@ -46,7 +46,7 @@ public class Config {
     public ArrayList<Package> packages = new ArrayList<>() {{
         add(new Package("net.mamoe:mirai-console", "nightly"));
         add(new Package("net.mamoe:mirai-console-terminal", "nightly"));
-        add(new Package("net.mamoe:mirai-core-qqandroid", "stable"));
+        add(new Package("net.mamoe:mirai-core-all", "stable"));
     }};
     @SerializedName("disabled_scripts")
     public ArrayList<String> disabledScripts = new ArrayList<>();
