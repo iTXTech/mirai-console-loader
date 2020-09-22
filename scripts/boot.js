@@ -23,7 +23,42 @@
  */
 
 importPackage(java.io);
+importPackage(java.lang);
 importPackage(org.itxtech.mcl);
+importPackage(org.apache.commons.cli);
+
+let group = new OptionGroup();
+group.addOption(Option.builder("b").desc("Show Mirai Console boot properties")
+    .longOpt("show-boot-props").build());
+group.addOption(Option.builder("f").desc("Set Mirai Console boot entry")
+    .longOpt("set-boot-entry").hasArg().argName("EntryClass").build());
+group.addOption(Option.builder("g").desc("Set Mirai Console boot arguments")
+    .longOpt("set-boot-args").hasArg().argName("Arguments").build());
+loader.options.addOptionGroup(group);
+
+phase.cli = () => {
+    if (loader.cli.hasOption("b")) {
+        logger.info("Mirai Console boot entry: " + getBootEntry());
+        logger.info("Mirai Console boot arguments: " + getBootArgs());
+        System.exit(0);
+    }
+    if (loader.cli.hasOption("f")) {
+        loader.config.scriptProps.put("boot.entry", loader.cli.getOptionValue("f"));
+        loader.saveConfig();
+    }
+    if (loader.cli.hasOption("g")) {
+        loader.config.scriptProps.put("boot.args", loader.cli.getOptionValue("g"));
+        loader.saveConfig();
+    }
+}
+
+function getBootEntry() {
+    return loader.config.scriptProps.getOrDefault("boot.entry", "net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader");
+}
+
+function getBootArgs() {
+    return loader.config.scriptProps.getOrDefault("boot.args", "");
+}
 
 phase.boot = () => {
     let files = [];
@@ -32,7 +67,5 @@ phase.boot = () => {
         files.push(new File(loader.libDir, pkgs[i].getName() + "-" + pkgs[i].version + ".jar"));
     }
 
-    let launchArgs = [];
-
-    Utility.bootMirai(files, "net.mamoe.mirai.console.pure.MiraiConsolePureLoader", launchArgs);
+    Utility.bootMirai(files, getBootEntry(), getBootArgs());
 }

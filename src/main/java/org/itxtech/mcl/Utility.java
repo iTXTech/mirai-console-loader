@@ -69,7 +69,7 @@ public class Utility {
         return fileMd5(baseFile).equals(correctMd5);
     }
 
-    public static void bootMirai(NativeArray files, String entry, NativeArray launchArgs) throws Exception {
+    public static void bootMirai(NativeArray files, String entry, String args) throws Exception {
         var list = new ArrayList<URL>();
         for (var file : files) {
             if (file instanceof File) {
@@ -77,14 +77,8 @@ public class Utility {
             }
         }
         var loader = new URLClassLoader(list.toArray(new URL[0]));
-        var args = new ArrayList<String>();
-        for (var arg : launchArgs) {
-            if (arg instanceof String) {
-                args.add((String) arg);
-            }
-        }
         var method = loader.loadClass(entry).getMethod("main", String[].class);
-        method.invoke(null, (Object) args.toArray(new String[0]));
+        method.invoke(null, (Object) args.split(" "));
     }
 
     public static String humanReadableFileSize(int bytes) {
