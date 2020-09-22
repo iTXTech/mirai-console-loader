@@ -44,9 +44,9 @@ public class Config {
     @SerializedName("maven_repo")
     public String mavenRepo = "https://maven.aliyun.com/repository/public";
     public ArrayList<Package> packages = new ArrayList<>() {{
-        add(new Package("mirai-console", "nightly"));
-        add(new Package("mirai-console-terminal", "nightly"));
-        add(new Package("mirai-core-qqandroid", "stable"));
+        add(new Package("net.mamoe:mirai-console", "nightly"));
+        add(new Package("net.mamoe:mirai-console-terminal", "nightly"));
+        add(new Package("net.mamoe:mirai-core-qqandroid", "stable"));
     }};
     @SerializedName("disabled_scripts")
     public ArrayList<String> disabledScripts = new ArrayList<>();
@@ -75,13 +75,21 @@ public class Config {
     }
 
     public static class Package {
-        public String name;
+        public String id;
         public String channel;
         public String version = "";
 
-        public Package(String name, String channel) {
-            this.name = name;
+        public Package(String id, String channel) {
+            this.id = id;
             this.channel = channel;
+        }
+
+        public String getName() {
+            return id.split(":", 2)[1];
+        }
+
+        public String getBasename() {
+            return getName() + "-" + version;
         }
     }
 }

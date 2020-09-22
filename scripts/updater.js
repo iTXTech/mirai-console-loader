@@ -38,16 +38,15 @@ phase.load = () => {
 };
 
 function checkLocalFile(pack) {
-    let baseName = pack.name + "-" + pack.version;
-    return Utility.check(new File(loader.libDir, baseName + ".jar"), new File(loader.libDir, baseName + ".md5"));
+    return Utility.check(new File(loader.libDir, pack.getBasename() + ".jar"), new File(loader.libDir, pack.getBasename() + ".md5"));
 }
 
 function check(pack) {
-    logger.info("Verifying \"" + pack.name + "\" version " + pack.version);
+    logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
     let download = false;
     let force = false;
     if (!checkLocalFile(pack)) {
-        logger.info("\"" + pack.name + "\" is corrupted. Start downloading...");
+        logger.info("\"" + pack.id + "\" is corrupted. Start downloading...");
         download = true;
         force = true;
     }
@@ -55,26 +54,26 @@ function check(pack) {
         download = true;
     }
     if (download) {
-        let info = loader.repo.fetchPackage(pack.name);
+        let info = loader.repo.fetchPackage(pack.id);
         if (!info.channels.containsKey(pack.channel)) {
             logger.error("Invalid update channel \"" + pack.channel + "\" for Package \"" + pack.name + "\"");
         } else {
             let target = info.channels[pack.channel];
             let ver = target[target.size() - 1];
             if (force || !pack.version.equals(ver)) {
-                downloadFile(pack.name, ver);
+                downloadFile(pack, ver);
                 pack.version = ver;
                 if (!checkLocalFile(pack)) {
-                    logger.warning("The local file \"" + pack.name + "\" is still corrupted, please check the network.");
+                    logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
                 }
             }
         }
     }
 }
 
-function downloadFile(name, ver) {
-    down(loader.repo.getMavenJarUrl(name, ver), new File(loader.libDir, name + "-" + ver + ".jar"));
-    down(loader.repo.getMavenMd5Url(name, ver), new File(loader.libDir, name + "-" + ver + ".md5"));
+function downloadFile(pack, ver) {
+    down(loader.repo.getMavenJarUrl(pack.id, ver), new File(loader.libDir, pack.getName() + "-" + ver + ".jar"));
+    down(loader.repo.getMavenMd5Url(pack.id, ver), new File(loader.libDir, pack.getName() + "-" + ver + ".md5"));
 }
 
 

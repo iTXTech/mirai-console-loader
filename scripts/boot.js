@@ -27,9 +27,9 @@ importPackage(org.itxtech.mcl);
 
 phase.boot = () => {
     let files = [];
-    let packages = loader.config.packages;
-    for (let i in packages) {
-        files.push(new File(loader.libDir, packages[i].name + "-" + packages[i].version + ".jar"));
+    let pkgs = loader.config.packages;
+    for (let i in pkgs) {
+        files.push(new File(loader.libDir, pkgs[i].getName() + "-" + pkgs[i].version + ".jar"));
     }
 
     let launchArgs = [];

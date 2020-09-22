@@ -52,17 +52,25 @@ public class MiraiRepo {
         }.getType());
     }
 
-    public Package fetchPackage(String identifier) throws Exception {
-        return new Gson().fromJson(httpGet("/" + identifier + "/package.json"), new TypeToken<Package>() {
+    private static String transformId(String id) {
+        return id.replace(".", "/").replace(":", "/");
+    }
+
+    private static String getPackageFromId(String id) {
+        return id.split(":", 2)[1];
+    }
+
+    public Package fetchPackage(String id) throws Exception {
+        return new Gson().fromJson(httpGet("/" + transformId(id) + "/package.json"), new TypeToken<Package>() {
         }.getType());
     }
 
     public String getMavenJarUrl(String id, String ver) {
-        return loader.config.mavenRepo + "/net/mamoe/" + id + "/" + ver + "/" + id + "-" + ver + "-all.jar";
+        return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + "-all.jar";
     }
 
     public String getMavenMd5Url(String id, String ver) {
-        return loader.config.mavenRepo + "/net/mamoe/" + id + "/" + ver + "/" + id + "-" + ver + ".md5";
+        return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + ".md5";
     }
 
     private String httpGet(String url) throws Exception {

@@ -74,7 +74,7 @@ phase.cli = () => {
         let pkgs = loader.config.packages;
         for (let i in pkgs) {
             let pkg = pkgs[i];
-            logger.info("Package: " + pkg.name + "  Channel: " + pkg.channel + "  Version: " + pkg.version);
+            logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Version: " + pkg.version);
         }
         System.exit(0);
     }
@@ -83,9 +83,9 @@ phase.cli = () => {
         let pkgs = loader.config.packages;
         for (let i in pkgs) {
             let pkg = pkgs[i];
-            if (pkg.name.equals(name)) {
+            if (pkg.id.equals(name)) {
                 pkgs.remove(pkg);
-                logger.info("Package \"" + pkg.name + "\" has been removed.");
+                logger.info("Package \"" + pkg.id + "\" has been removed.");
                 loader.saveConfig();
                 System.exit(0);
             }
@@ -102,16 +102,16 @@ phase.cli = () => {
         let pkgs = loader.config.packages;
         for (let i in pkgs) {
             let pkg = pkgs[i];
-            if (pkg.name.equals(name)) {
+            if (pkg.id.equals(name)) {
                 pkg.channel = channel;
-                logger.info("Package \"" + pkg.name + "\" has been updated.");
+                logger.info("Package \"" + pkg.id + "\" has been updated.");
                 loader.saveConfig();
                 System.exit(0);
             }
         }
         let pkg = new Config.Package(name, channel);
         pkgs.add(pkg);
-        logger.info("Package \"" + pkg.name + "\" has been added.");
+        logger.info("Package \"" + pkg.id + "\" has been added.");
         loader.saveConfig();
         System.exit(0);
     }
