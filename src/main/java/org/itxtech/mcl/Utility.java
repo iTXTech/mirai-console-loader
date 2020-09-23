@@ -78,11 +78,7 @@ public class Utility {
         }
         var loader = new URLClassLoader(list.toArray(new URL[0]));
         var method = loader.loadClass(entry).getMethod("main", String[].class);
-        if (args.trim().equals("")) {
-            method.invoke(null, (Object) new String[0]);
-        } else {
-            method.invoke(null, (Object) args.split(" "));
-        }
+        method.invoke(null, (Object) (args.trim().equals("") ? new String[0] : args.split(" ")));
     }
 
     public static String humanReadableFileSize(int bytes) {
