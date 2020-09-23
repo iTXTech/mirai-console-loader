@@ -36,10 +36,10 @@ import java.util.ArrayList;
  *
  */
 public class Utility {
-    public static String fileMd5(File file) throws Exception {
+    public static String fileSha1(File file) throws Exception {
         var fis = new FileInputStream(file);
         var buffer = new byte[1024];
-        var digest = MessageDigest.getInstance("MD5");
+        var digest = MessageDigest.getInstance("sHA");
         int numRead;
 
         do {
@@ -65,8 +65,8 @@ public class Utility {
         if (!baseFile.exists() || !checksumFile.exists()) {
             return false;
         }
-        var correctMd5 = Utility.readSmallFile(checksumFile).trim().replace(" ", "").toLowerCase();
-        return fileMd5(baseFile).equals(correctMd5);
+        var checksum = Utility.readSmallFile(checksumFile).trim().replace(" ", "").toLowerCase();
+        return fileSha1(baseFile).equals(checksum);
     }
 
     public static void bootMirai(NativeArray files, String entry, String args) throws Exception {

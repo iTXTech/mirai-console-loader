@@ -69,10 +69,6 @@ public class Repository {
         return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + "-" + verSuffix + ".jar";
     }
 
-    public String getMavenMd5Url(String id, String ver) {
-        return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + ".md5";
-    }
-
     private String httpGet(String url) throws Exception {
         return client.send(
                 HttpRequest.newBuilder(URI.create(loader.config.miraiRepo + url))

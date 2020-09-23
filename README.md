@@ -11,9 +11,16 @@
 * `Downloader` 下载器模块，用于下载文件，并实时返回进度。
 * `Logger` 日志模块，用于向控制台输出日志。
 
------
+## `Mirai Repo` 列表
 
-从某种程度上来说，`MCL`可以被称为一个平台，如果没有任何脚本被加载，`MCL`会直接退出。
+* [Gitee](https://gitee.com/peratx/mirai-repo/raw/master) - **默认**，如要镜像请完整拷贝该仓库文件即可
+
+## `Maven Repo` 列表
+
+* [Bintray - Him188moe](https://dl.bintray.com/him188moe/mirai) - `mamoe` 官方仓库，仅包含`mirai`相关包
+* [JCenter](https://jcenter.bintray.com/) - `mamoe` 官方仓库会自动同步到 `JCenter`
+* [Aliyun](https://maven.aliyun.com/repository/public) - **默认**，阿里云`JCenter`镜像，国内访问速度快
+* [HuaweiCloud](https://mirrors.huaweicloud.com/repository/maven) - 华为云`JCenter`镜像，阿里云不可用时的备选方案
 
 ## 开源许可证
 
