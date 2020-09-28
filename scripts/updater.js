@@ -38,7 +38,9 @@ phase.load = () => {
 };
 
 function checkLocalFile(pack) {
-    return Utility.check(new File(loader.libDir, pack.getBasename() + ".jar"), new File(loader.libDir, pack.getBasename() + ".sha1"));
+    let dir = new File(pack.type);
+    dir.mkdirs();
+    return Utility.check(new File(dir, pack.getBasename() + ".jar"), new File(dir, pack.getBasename() + ".sha1"));
 }
 
 function check(pack) {
@@ -72,9 +74,11 @@ function check(pack) {
 }
 
 function downloadFile(pack, ver) {
+    let dir = new File(pack.type);
+    dir.mkdirs();
     let jarUrl = loader.repo.getMavenJarUrl(pack.id, ver, pack.id.startsWith("net.mamoe") ? "all" : "");
-    down(jarUrl, new File(loader.libDir, pack.getName() + "-" + ver + ".jar"));
-    down(jarUrl + ".sha1", new File(loader.libDir, pack.getName() + "-" + ver + ".sha1"));
+    down(jarUrl, new File(dir, pack.getName() + "-" + ver + ".jar"));
+    down(jarUrl + ".sha1", new File(dir, pack.getName() + "-" + ver + ".sha1"));
 }
 
 let emptyString = (function () {

@@ -45,7 +45,6 @@ public class Loader {
     public Repository repo;
     public Options options = new Options();
     public CommandLine cli;
-    public File libDir = new File("libs");
 
     public static void main(String[] args) {
         var loader = new Loader();
@@ -117,7 +116,6 @@ public class Loader {
         manager = new ScriptManager(this, new File("scripts"));
         parseCli(args, false);
         manager.readAllScripts(); //此阶段脚本只能修改loader中变量
-        libDir.mkdirs();
         parseCli(args, true);
         manager.phaseCli(); //此阶段脚本处理命令行参数
         repo = new Repository(this);

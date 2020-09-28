@@ -75,9 +75,13 @@ public class Config {
     }
 
     public static class Package {
+        public static final String TYPE_CORE = "libs";
+        public static final String TYPE_PLUGIN = "plugins";
+
         public String id;
         public String channel;
         public String version = "";
+        public String type = TYPE_CORE;
 
         public Package(String id, String channel) {
             this.id = id;

@@ -42,11 +42,13 @@ group.addOption(Option.builder("s").desc("List configured packages")
     .longOpt("list-packages").build());
 group.addOption(Option.builder("r").desc("Remove package")
     .longOpt("remove-package").hasArg().argName("PackageName").build());
-group.addOption(Option.builder("a").desc("Add package")
-    .longOpt("add-package").hasArg().argName("PackageName").build());
+group.addOption(Option.builder("a").desc("Add or update package")
+    .longOpt("update-package").hasArg().argName("PackageName").build());
 loader.options.addOptionGroup(group);
-loader.options.addOption(Option.builder("n").desc("Set update channel of specified package")
+loader.options.addOption(Option.builder("n").desc("Set update channel of package")
     .longOpt("set-channel").hasArg().argName("Channel").build());
+loader.options.addOption(Option.builder("t").desc("Set type of package")
+    .longOpt("set-type").hasArg().argName("Type").build());
 
 phase.cli = () => {
     if (loader.cli.hasOption("p")) {
@@ -74,7 +76,7 @@ phase.cli = () => {
         let pkgs = loader.config.packages;
         for (let i in pkgs) {
             let pkg = pkgs[i];
-            logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Version: " + pkg.version);
+            logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type + "  Version: " + pkg.version);
         }
         System.exit(0);
     }
@@ -98,18 +100,24 @@ phase.cli = () => {
         if (loader.cli.hasOption("n")) {
             channel = loader.cli.getOptionValue("n");
         }
+        let type = Config.Package.TYPE_CORE;
+        if (loader.cli.hasOption("t")) {
+            type = loader.cli.getOptionValue("t");
+        }
         let name = loader.cli.getOptionValue("a");
         let pkgs = loader.config.packages;
         for (let i in pkgs) {
             let pkg = pkgs[i];
             if (pkg.id.equals(name)) {
                 pkg.channel = channel;
+                pkg.type = type;
                 logger.info("Package \"" + pkg.id + "\" has been updated.");
                 loader.saveConfig();
                 System.exit(0);
             }
         }
         let pkg = new Config.Package(name, channel);
+        pkg.type = type;
         pkgs.add(pkg);
         logger.info("Package \"" + pkg.id + "\" has been added.");
         loader.saveConfig();
