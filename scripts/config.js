@@ -96,31 +96,31 @@ phase.cli = () => {
         System.exit(1);
     }
     if (loader.cli.hasOption("a")) {
-        let channel = "stable";
-        if (loader.cli.hasOption("n")) {
-            channel = loader.cli.getOptionValue("n");
-        }
-        let type = Config.Package.TYPE_CORE;
-        if (loader.cli.hasOption("t")) {
-            type = loader.cli.getOptionValue("t");
-        }
         let name = loader.cli.getOptionValue("a");
         let pkgs = loader.config.packages;
         for (let i in pkgs) {
             let pkg = pkgs[i];
             if (pkg.id.equals(name)) {
-                pkg.channel = channel;
-                pkg.type = type;
+                updatePackage(pkg)
                 logger.info("Package \"" + pkg.id + "\" has been updated.");
                 loader.saveConfig();
                 System.exit(0);
             }
         }
-        let pkg = new Config.Package(name, channel);
-        pkg.type = type;
+        let pkg = new Config.Package(name, "stable");
+        updatePackage(pkg);
         pkgs.add(pkg);
         logger.info("Package \"" + pkg.id + "\" has been added.");
         loader.saveConfig();
         System.exit(0);
+    }
+}
+
+function updatePackage(pkg) {
+    if (loader.cli.hasOption("n")) {
+        pkg.channel = loader.cli.getOptionValue("n");
+    }
+    if (loader.cli.hasOption("t")) {
+        pkg.type = loader.cli.getOptionValue("t");
     }
 }

@@ -76,7 +76,7 @@ function check(pack) {
 function downloadFile(pack, ver) {
     let dir = new File(pack.type);
     dir.mkdirs();
-    let jarUrl = loader.repo.getMavenJarUrl(pack.id, ver, pack.id.startsWith("net.mamoe") ? "all" : "");
+    let jarUrl = loader.repo.getMavenJarUrl(pack.id, ver, pack.id.startsWith("net.mamoe") ? "-all" : "");
     down(jarUrl, new File(dir, pack.getName() + "-" + ver + ".jar"));
     down(jarUrl + ".sha1", new File(dir, pack.getName() + "-" + ver + ".sha1"));
 }

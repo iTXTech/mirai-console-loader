@@ -25,6 +25,7 @@
 importPackage(java.io);
 importPackage(java.lang);
 importPackage(org.itxtech.mcl);
+importPackage(org.itxtech.mcl.component);
 importPackage(org.apache.commons.cli);
 
 let group = new OptionGroup();
@@ -64,7 +65,10 @@ phase.boot = () => {
     let files = [];
     let pkgs = loader.config.packages;
     for (let i in pkgs) {
-        files.push(new File(loader.libDir, pkgs[i].getName() + "-" + pkgs[i].version + ".jar"));
+        let pkg = pkgs[i];
+        if (pkg.type.equals(Config.Package.TYPE_CORE)) {
+            files.push(new File(new File(pkg.type), pkg.getName() + "-" + pkg.version + ".jar"));
+        }
     }
 
     Utility.bootMirai(files, getBootEntry(), getBootArgs());

@@ -66,7 +66,7 @@ public class Repository {
     }
 
     public String getMavenJarUrl(String id, String ver, String verSuffix) {
-        return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + "-" + verSuffix + ".jar";
+        return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + verSuffix + ".jar";
     }
 
     private String httpGet(String url) throws Exception {
