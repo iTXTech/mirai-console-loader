@@ -23,9 +23,9 @@
  */
 
 importPackage(org.apache.commons.cli);
+importPackage(org.itxtech.mcl.component);
 importPackage(java.net);
 importPackage(java.lang);
-importPackage(org.itxtech.mcl.component);
 
 loader.options.addOption(Option.builder("p").desc("Set HTTP proxy")
     .longOpt("proxy").optionalArg(true).hasArg().argName("address").build());
@@ -46,9 +46,11 @@ group.addOption(Option.builder("a").desc("Add or update package")
     .longOpt("update-package").hasArg().argName("PackageName").build());
 loader.options.addOptionGroup(group);
 loader.options.addOption(Option.builder("n").desc("Set update channel of package")
-    .longOpt("set-channel").hasArg().argName("Channel").build());
+    .longOpt("channel").hasArg().argName("Channel").build());
 loader.options.addOption(Option.builder("t").desc("Set type of package")
-    .longOpt("set-type").hasArg().argName("Type").build());
+    .longOpt("type").hasArg().argName("Type").build());
+loader.options.addOption(Option.builder("w").desc("Set version of package")
+    .longOpt("version").hasArg().argName("Version").build());
 
 phase.cli = () => {
     if (loader.cli.hasOption("p")) {
@@ -122,5 +124,8 @@ function updatePackage(pkg) {
     }
     if (loader.cli.hasOption("t")) {
         pkg.type = loader.cli.getOptionValue("t");
+    }
+    if (loader.cli.hasOption("w")) {
+        pkg.version = loader.cli.getOptionValue("w");
     }
 }

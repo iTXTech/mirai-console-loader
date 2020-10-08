@@ -23,8 +23,8 @@
  */
 
 importPackage(org.apache.commons.cli);
-importPackage(java.io);
 importPackage(org.itxtech.mcl);
+importPackage(java.io);
 importPackage(java.lang);
 importPackage(java.math);
 
@@ -45,37 +45,32 @@ function checkLocalFile(pack) {
 
 function check(pack) {
     logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
-    let download = false;
-    let force = false;
+    let update = loader.cli.hasOption("u");
     if (!checkLocalFile(pack)) {
         logger.info("\"" + pack.id + "\" is corrupted. Start downloading...");
-        download = true;
-        force = true;
+    } else if (!update) {
+        return;
     }
-    if (!loader.cli.hasOption("u")) {
-        download = true;
-    }
-    if (download) {
-        let info = loader.repo.fetchPackage(pack.id);
-        if (!info.channels.containsKey(pack.channel)) {
-            logger.error("Invalid update channel \"" + pack.channel + "\" for Package \"" + pack.name + "\"");
-        } else {
-            let target = info.channels[pack.channel];
-            let ver = target[target.size() - 1];
-            if (force || !pack.version.equals(ver)) {
-                downloadFile(pack, ver);
-                pack.version = ver;
-                if (!checkLocalFile(pack)) {
-                    logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
-                }
-            }
+    let info = loader.repo.fetchPackage(pack.id);
+    if (!info.channels.containsKey(pack.channel)) {
+        logger.error("Invalid update channel \"" + pack.channel + "\" for Package \"" + pack.name + "\"");
+    } else {
+        let target = info.channels[pack.channel];
+        let ver = target[target.size() - 1];
+        if ((update && !pack.version.equals(ver)) || (!update && !target.contains(pack.version))) {
+            pack.version = ver;
+        }
+        downloadFile(pack);
+        if (!checkLocalFile(pack)) {
+            logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
         }
     }
 }
 
-function downloadFile(pack, ver) {
+function downloadFile(pack) {
     let dir = new File(pack.type);
     dir.mkdirs();
+    let ver = pack.version;
     let jarUrl = loader.repo.getMavenJarUrl(pack.id, ver, pack.id.startsWith("net.mamoe") ? "-all" : "");
     down(jarUrl, new File(dir, pack.getName() + "-" + ver + ".jar"));
     down(jarUrl + ".sha1", new File(dir, pack.getName() + "-" + ver + ".sha1"));
@@ -109,8 +104,8 @@ function buildDownloadBar(total, current) {
 }
 
 function down(url, file) {
-    let name = file.name
-    var size = 0
+    let name = file.name;
+    var size = 0;
     let ttl = "";
     loader.downloader.download(url, file, (total, current) => {
         ttl = Utility.humanReadableFileSize(total);

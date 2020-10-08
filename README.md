@@ -2,12 +2,14 @@
 
 模块化、轻量级且支持完全自定义的 [mirai](https://github.com/mamoe/mirai) 加载器。
 
+欢迎阅读自带脚本的[说明](scripts/README.md)
+
 ## 简介
 
 `iTX Technologies Mirai Console Loader`（下简称`MCL`）采用模块化设计，包含以下几个基础模块：
 
 * `Script` 脚本执行模块，用于加载和执行脚本，`MCL`的主要功能均由脚本实现。脚本执行有各个阶段，详见注释。
-* `Config` 配置文件模块，用于配置的持久化，暂不支持脚本写入。
+* `Config` 配置文件模块，用于配置的持久化。
 * `Downloader` 下载器模块，用于下载文件，并实时返回进度。
 * `Logger` 日志模块，用于向控制台输出日志。
 
