@@ -46,10 +46,10 @@ function checkLocalFile(pack) {
 function check(pack) {
     logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
     let update = loader.cli.hasOption("u");
+    let down = false;
     if (!checkLocalFile(pack)) {
         logger.info("\"" + pack.id + "\" is corrupted. Start downloading...");
-    } else if (!update) {
-        return;
+        down = true;
     }
     let info = loader.repo.fetchPackage(pack.id);
     if (!info.channels.containsKey(pack.channel)) {
@@ -57,12 +57,15 @@ function check(pack) {
     } else {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
-        if ((update && !pack.version.equals(ver)) || (!update && !target.contains(pack.version))) {
+        if ((!update && !pack.version.equals(ver)) || (update && !target.contains(pack.version))) {
             pack.version = ver;
+            down = true;
         }
-        downloadFile(pack);
-        if (!checkLocalFile(pack)) {
-            logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
+        if (down) {
+            downloadFile(pack);
+            if (!checkLocalFile(pack)) {
+                logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
+            }
         }
     }
 }
