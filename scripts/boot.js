@@ -64,6 +64,10 @@ function getBootArgs() {
 }
 
 phase.boot = () => {
+    if (loader.cli.hasOption("z")) {
+        return;
+    }
+
     let files = [];
     let pkgs = loader.config.packages;
     for (let i in pkgs) {
@@ -73,7 +77,5 @@ phase.boot = () => {
         }
     }
     
-    if (!loader.cli.hasOption("z")) {
-        Utility.bootMirai(files, getBootEntry(), getBootArgs());
-    }
+    Utility.bootMirai(files, getBootEntry(), getBootArgs());
 }
