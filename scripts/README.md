@@ -22,6 +22,10 @@
 
 `.\mcl --enable-script updater`
 
+* 更新运行库但不启动
+
+`.\mcl --dry-run`
+
 * 查看帮助
 
 ```
@@ -46,6 +50,8 @@ usage: mcl
  -u,--disable-update                 Disable auto update
  -v,--set-maven-repo <Address>       Set Maven Repo address
  -w,--version <Version>              Set version of package
+ -z,--dry-run                        Only download libraries without
+                                     running them
 ```
 
 ## 开源许可证
