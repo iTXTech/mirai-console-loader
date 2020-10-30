@@ -35,6 +35,8 @@ group.addOption(Option.builder("f").desc("Set Mirai Console boot entry")
     .longOpt("set-boot-entry").hasArg().argName("EntryClass").build());
 group.addOption(Option.builder("g").desc("Set Mirai Console boot arguments")
     .longOpt("set-boot-args").optionalArg(true).hasArg().argName("Arguments").build());
+group.addOption(Option.builder("z").desc("Only download libraries without running them")
+    .longOpt("dry-run").build());
 loader.options.addOptionGroup(group);
 
 phase.cli = () => {
@@ -62,6 +64,10 @@ function getBootArgs() {
 }
 
 phase.boot = () => {
+    if (loader.cli.hasOption("z")) {
+        return;
+    }
+
     let files = [];
     let pkgs = loader.config.packages;
     for (let i in pkgs) {
@@ -70,6 +76,6 @@ phase.boot = () => {
             files.push(new File(new File(pkg.type), pkg.getName() + "-" + pkg.version + ".jar"));
         }
     }
-
+    
     Utility.bootMirai(files, getBootEntry(), getBootArgs());
 }
