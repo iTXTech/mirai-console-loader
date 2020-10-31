@@ -50,7 +50,9 @@ public class Utility {
         } while (numRead != -1);
 
         fis.close();
-        return new BigInteger(1, digest.digest()).toString(16);
+        byte[] bytes = digest.digest();
+        BigInteger b = new BigInteger(1, bytes);
+        return String.format("%0" + (bytes.length << 1) + "x", b);
     }
 
     public static String readSmallFile(File file) throws Exception {
