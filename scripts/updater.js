@@ -59,7 +59,7 @@ function check(pack) {
     } else {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
-        if ((!update && !pack.version.equals(ver)) || (update && !target.contains(ver) && !force)) {
+        if ((!update && !pack.version.equals(ver)) || (update && !target.contains(pack.version) && !force)) {
             pack.version = ver;
             down = true;
         }
