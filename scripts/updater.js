@@ -29,6 +29,7 @@ importPackage(java.lang);
 importPackage(java.math);
 
 loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt("disable-update").build());
+loader.options.addOption(Option.builder("x").desc("Force downloading specified version").longOpt("force-version").build());
 
 phase.load = () => {
     let packages = loader.config.packages;
@@ -46,9 +47,10 @@ function checkLocalFile(pack) {
 function check(pack) {
     logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
     let update = loader.cli.hasOption("u");
+    let force = loader.cli.hasOption("x");
     let down = false;
     if (!checkLocalFile(pack)) {
-        logger.info("\"" + pack.id + "\" is corrupted. Start downloading...");
+        logger.info("\"" + pack.id + ":" + pack.version + "\" is corrupted. Start downloading...");
         down = true;
     }
     let info = loader.repo.fetchPackage(pack.id);
@@ -57,7 +59,7 @@ function check(pack) {
     } else {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
-        if ((!update && !pack.version.equals(ver)) || (update && !target.contains(pack.version))) {
+        if ((!update && !pack.version.equals(ver)) || (update && !target.contains(ver) && !force)) {
             pack.version = ver;
             down = true;
         }
@@ -121,3 +123,4 @@ function down(url, file) {
     System.out.print(emptyString.substr(0, size) + '\r');
     System.out.println(" Downloading " + name + " " + buildDownloadBar(1, 1) + " " + ttl);
 }
+
