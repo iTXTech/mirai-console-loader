@@ -124,7 +124,7 @@ public class Loader {
         downloader = new DefaultDownloader(this);
         manager.phaseLoad(); //此阶段脚本下载包
         saveConfig();
-        if (cli.hasOption("z")) {
+        if (!cli.hasOption("z")) {
             manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
         }
     }

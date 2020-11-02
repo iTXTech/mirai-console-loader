@@ -11,7 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -47,7 +47,7 @@ public class Repository {
         client = loader.getProxy() == null ? HttpClient.newBuilder().build() : HttpClient.newBuilder().proxy(ProxySelector.of(loader.getProxy())).build();
     }
 
-    public HashMap<String, PackageInfo> fetchPackages() throws Exception {
+    public Map<String, PackageInfo> fetchPackages() throws Exception {
         return new Gson().fromJson(httpGet("/packages.json"), new TypeToken<Map<String, PackageInfo>>() {
         }.getType());
     }
@@ -82,9 +82,11 @@ public class Repository {
     public static class PackageInfo {
         public String name;
         public String description;
+        public String website;
+        public List<String> channels;
     }
 
     public static class Package {
-        public HashMap<String, ArrayList<String>> channels;
+        public Map<String, ArrayList<String>> channels;
     }
 }

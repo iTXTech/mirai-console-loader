@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  *
@@ -96,5 +97,9 @@ public class Utility {
         }
         value *= Integer.signum(bytes);
         return String.format("%.2f %cB", value / 1024.0, ci.current());
+    }
+
+    public static String join(String d, List<String> t) {
+        return String.join(d, t);
     }
 }
