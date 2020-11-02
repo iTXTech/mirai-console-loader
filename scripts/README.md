@@ -50,6 +50,7 @@ usage: mcl
  -u,--disable-update                 Disable auto update
  -v,--set-maven-repo <Address>       Set Maven Repo address
  -w,--version <Version>              Set version of package
+ -x,--force-version                  Force downloading specified version
  -z,--dry-run                        Only download libraries without
                                      running them
 ```
