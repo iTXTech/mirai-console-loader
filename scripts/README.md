@@ -39,6 +39,8 @@ usage: mcl
  -e,--enable-script <ScriptName>     Enable script (exclude ".js")
  -f,--set-boot-entry <EntryClass>    Set Mirai Console boot entry
  -g,--set-boot-args <Arguments>      Set Mirai Console boot arguments
+ -i,--force-version <PackageName>    Fetch info for specified package
+ -j,--list-repo-packages             List available packages in Mirai Repo
  -l,--list-disabled-scripts          List disabled scripts
  -m,--set-mirai-repo <Address>       Set Mirai Repo address
  -n,--channel <Channel>              Set update channel of package
@@ -50,9 +52,8 @@ usage: mcl
  -u,--disable-update                 Disable auto update
  -v,--set-maven-repo <Address>       Set Maven Repo address
  -w,--version <Version>              Set version of package
- -x,--force-version                  Force downloading specified version
- -z,--dry-run                        Only download libraries without
-                                     running them
+ -x,--force-version                  Force download specified version
+ -z,--dry-run                        Skip boot phase
 ```
 
 ## 开源许可证

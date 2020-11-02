@@ -28,7 +28,7 @@ importPackage(org.itxtech.mcl.component);
 importPackage(org.apache.commons.cli);
 
 let group = new OptionGroup();
-group.addOption(Option.builder("i").desc("Fetch information for specified package")
+group.addOption(Option.builder("i").desc("Fetch info for specified package")
     .longOpt("force-version").hasArg().argName("PackageName").build());
 group.addOption(Option.builder("j").desc("List available packages in Mirai Repo")
     .longOpt("list-repo-packages").build());

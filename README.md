@@ -2,7 +2,7 @@
 
 模块化、轻量级且支持完全自定义的 [mirai](https://github.com/mamoe/mirai) 加载器。
 
-欢迎阅读自带脚本的[说明](scripts/README.md)
+欢迎阅读自带脚本的[说明](scripts/README.md)。
 
 ## 简介
 
