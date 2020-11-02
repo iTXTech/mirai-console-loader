@@ -113,6 +113,8 @@ public class Loader {
         logger.info("https://github.com/iTXTech/mirai-console-loader");
         logger.info("This program is licensed under GNU AGPL v3");
 
+        options.addOption(Option.builder("z").desc("Skip boot phase").longOpt("dry-run").build());
+
         manager = new ScriptManager(this, new File("scripts"));
         parseCli(args, false);
         manager.readAllScripts(); //此阶段脚本只能修改loader中变量
@@ -122,6 +124,8 @@ public class Loader {
         downloader = new DefaultDownloader(this);
         manager.phaseLoad(); //此阶段脚本下载包
         saveConfig();
-        manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
+        if (cli.hasOption("z")) {
+            manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
+        }
     }
 }

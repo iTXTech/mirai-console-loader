@@ -28,23 +28,14 @@ importPackage(org.itxtech.mcl);
 importPackage(org.itxtech.mcl.component);
 importPackage(org.apache.commons.cli);
 
-let group = new OptionGroup();
-group.addOption(Option.builder("b").desc("Show Mirai Console boot properties")
+loader.options.addOption(Option.builder("b").desc("Show Mirai Console boot properties")
     .longOpt("show-boot-props").build());
-group.addOption(Option.builder("f").desc("Set Mirai Console boot entry")
+loader.options.addOption(Option.builder("f").desc("Set Mirai Console boot entry")
     .longOpt("set-boot-entry").hasArg().argName("EntryClass").build());
-group.addOption(Option.builder("g").desc("Set Mirai Console boot arguments")
+loader.options.addOption(Option.builder("g").desc("Set Mirai Console boot arguments")
     .longOpt("set-boot-args").optionalArg(true).hasArg().argName("Arguments").build());
-group.addOption(Option.builder("z").desc("Only download libraries without running them")
-    .longOpt("dry-run").build());
-loader.options.addOptionGroup(group);
 
 phase.cli = () => {
-    if (loader.cli.hasOption("b")) {
-        logger.info("Mirai Console boot entry: " + getBootEntry());
-        logger.info("Mirai Console boot arguments: " + getBootArgs());
-        System.exit(0);
-    }
     if (loader.cli.hasOption("f")) {
         loader.config.scriptProps.put("boot.entry", loader.cli.getOptionValue("f"));
         loader.saveConfig();
@@ -52,6 +43,11 @@ phase.cli = () => {
     if (loader.cli.hasOption("g")) {
         loader.config.scriptProps.put("boot.args", loader.cli.getOptionValue("g", ""));
         loader.saveConfig();
+    }
+    if (loader.cli.hasOption("b")) {
+        logger.info("Mirai Console boot entry: " + getBootEntry());
+        logger.info("Mirai Console boot arguments: " + getBootArgs());
+        System.exit(0);
     }
 }
 
@@ -64,10 +60,6 @@ function getBootArgs() {
 }
 
 phase.boot = () => {
-    if (loader.cli.hasOption("z")) {
-        return;
-    }
-
     let files = [];
     let pkgs = loader.config.packages;
     for (let i in pkgs) {
@@ -76,6 +68,6 @@ phase.boot = () => {
             files.push(new File(new File(pkg.type), pkg.getName() + "-" + pkg.version + ".jar"));
         }
     }
-    
+
     Utility.bootMirai(files, getBootEntry(), getBootArgs());
 }

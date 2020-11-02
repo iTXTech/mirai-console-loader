@@ -22,14 +22,14 @@
  *
  */
 
-importPackage(org.apache.commons.cli);
-importPackage(org.itxtech.mcl);
 importPackage(java.io);
 importPackage(java.lang);
 importPackage(java.math);
+importPackage(org.itxtech.mcl);
+importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt("disable-update").build());
-loader.options.addOption(Option.builder("x").desc("Force downloading specified version").longOpt("force-version").build());
+loader.options.addOption(Option.builder("x").desc("Force download specified version").longOpt("force-version").build());
 
 phase.load = () => {
     let packages = loader.config.packages;

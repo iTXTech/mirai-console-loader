@@ -22,10 +22,10 @@
  *
  */
 
-importPackage(org.apache.commons.cli);
-importPackage(org.itxtech.mcl.component);
 importPackage(java.net);
 importPackage(java.lang);
+importPackage(org.itxtech.mcl.component);
+importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("p").desc("Set HTTP proxy")
     .longOpt("proxy").optionalArg(true).hasArg().argName("address").build());
