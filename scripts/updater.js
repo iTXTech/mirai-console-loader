@@ -26,6 +26,7 @@ importPackage(java.io);
 importPackage(java.lang);
 importPackage(java.math);
 importPackage(org.itxtech.mcl);
+importPackage(org.itxtech.mcl.component);
 importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt("disable-update").build());
@@ -60,6 +61,10 @@ function check(pack) {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
         if ((!update && !pack.version.equals(ver)) || (update && !target.contains(pack.version) && !force)) {
+            if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
+                let dir = new File(pack.type);
+                new File(dir, pack.getBasename() + ".jar").renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
+            }
             pack.version = ver;
             down = true;
         }
@@ -82,7 +87,7 @@ function downloadFile(pack) {
         down(jarUrl + ".sha1", new File(dir, pack.getName() + "-" + ver + ".sha1"));
         let metadata = loader.repo.getMetadataUrl(pack);
         if (!metadata.equals("")) {
-            download(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));
+            down(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));
         }
     } else {
         logger.error("Cannot download package \"" + pack.id + "\".");

@@ -29,7 +29,7 @@ importPackage(org.apache.commons.cli);
 
 let group = new OptionGroup();
 group.addOption(Option.builder("i").desc("Fetch info for specified package")
-    .longOpt("fetch-package-info").hasArg().argName("PackageName").build());
+    .longOpt("package-info").hasArg().argName("PackageName").build());
 group.addOption(Option.builder("j").desc("List available packages in Mirai Repo")
     .longOpt("list-repo-packages").build());
 loader.options.addOptionGroup(group);

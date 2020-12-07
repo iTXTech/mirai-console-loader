@@ -123,7 +123,7 @@ function updatePackage(pkg) {
         pkg.channel = loader.cli.getOptionValue("n");
     }
     if (loader.cli.hasOption("t")) {
-        pkg.type = loader.cli.getOptionValue("t");
+        pkg.type = Config.Package.getType(loader.cli.getOptionValue("t"));
     }
     if (loader.cli.hasOption("w")) {
         pkg.version = loader.cli.getOptionValue("w");

@@ -75,8 +75,17 @@ public class Config {
     }
 
     public static class Package {
+        public static final HashMap<String, String> TYPE_ALIAS = new HashMap<>() {{
+            put("core", TYPE_CORE);
+            put("plugin", TYPE_PLUGIN);
+        }};
+
         public static final String TYPE_CORE = "libs";
         public static final String TYPE_PLUGIN = "plugins";
+
+        public static String getType(String t) {
+            return TYPE_ALIAS.getOrDefault(t, t);
+        }
 
         public String id;
         public String channel;
