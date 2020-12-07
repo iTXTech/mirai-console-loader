@@ -76,9 +76,17 @@ function downloadFile(pack) {
     let dir = new File(pack.type);
     dir.mkdirs();
     let ver = pack.version;
-    let jarUrl = loader.repo.getMavenJarUrl(pack.id, ver, pack.id.startsWith("net.mamoe") ? "-all" : "");
-    down(jarUrl, new File(dir, pack.getName() + "-" + ver + ".jar"));
-    down(jarUrl + ".sha1", new File(dir, pack.getName() + "-" + ver + ".sha1"));
+    let jarUrl = loader.repo.getMavenJarUrl(pack);
+    if (!jarUrl.equals("")) {
+        down(jarUrl, new File(dir, pack.getName() + "-" + ver + ".jar"));
+        down(jarUrl + ".sha1", new File(dir, pack.getName() + "-" + ver + ".sha1"));
+        let metadata = loader.repo.getMetadataUrl(pack);
+        if (!metadata.equals("")) {
+            download(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));
+        }
+    } else {
+        logger.error("Cannot download package \"" + pack.id + "\".");
+    }
 }
 
 let emptyString = (function () {
@@ -123,4 +131,3 @@ function down(url, file) {
     System.out.print(emptyString.substr(0, size) + '\r');
     System.out.println(" Downloading " + name + " " + buildDownloadBar(1, 1) + " " + ttl);
 }
-

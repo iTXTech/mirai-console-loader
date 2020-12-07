@@ -34,10 +34,8 @@ import java.nio.charset.StandardCharsets;
  *
  */
 public class Script {
-    private Loader loader;
+    private final Loader loader;
     private final File file;
-    private Context cx;
-    private org.mozilla.javascript.Script sc;
     private ImporterTopLevel scope;
     public final Phase phase = new Phase();
 
@@ -54,7 +52,7 @@ public class Script {
     }
 
     public void load() throws Exception {
-        cx = Context.enter();
+        var cx = Context.enter();
         cx.setOptimizationLevel(loader.config.jsOptimizationLevel);
         //Android 需要禁用编译
         cx.setLanguageVersion(Context.VERSION_ES6);
@@ -65,7 +63,7 @@ public class Script {
                 var stream = new FileInputStream(file);
                 var reader = new InputStreamReader(stream, StandardCharsets.UTF_8)
         ) {
-            sc = cx.compileReader(reader, file.getName(), 1, null);
+            var sc = cx.compileReader(reader, file.getName(), 1, null);
             sc.exec(cx, scope);
         }
     }

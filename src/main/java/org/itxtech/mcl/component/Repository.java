@@ -38,6 +38,8 @@ import java.util.Map;
  *
  */
 public class Repository {
+    private static final String USER_AGENT = "iTX Technologies Mirai Console Loader";
+
     public HttpClient client;
 
     private final Loader loader;
@@ -65,15 +67,49 @@ public class Repository {
         }.getType());
     }
 
-    public String getMavenJarUrl(String id, String ver, String verSuffix) {
-        return loader.config.mavenRepo + "/" + transformId(id) + "/" + ver + "/" + getPackageFromId(id) + "-" + ver + verSuffix + ".jar";
+    public String getMavenJarUrl(Config.Package pkg) {
+        var base = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/" + getPackageFromId(pkg.id) + "-" + pkg.version;
+        for (var suf : new String[]{".mirai", "-all", ""}) {
+            var real = base + suf + ".jar";
+            try {
+                if (httpHead(real).statusCode() == 200) {
+                    return real;
+                }
+            } catch (Exception e) {
+                loader.logger.logException(e);
+            }
+        }
+        return "";
+    }
+
+    public String getMetadataUrl(Config.Package pkg) {
+        var url = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/" + getPackageFromId(pkg.id) + "-" + pkg.version + ".mirai.metadata";
+        try {
+            if (httpHead(url).statusCode() == 200) {
+                return url;
+            }
+        } catch (Exception e) {
+            loader.logger.logException(e);
+        }
+        return "";
+    }
+
+    private HttpResponse<Void> httpHead(String url) throws Exception {
+        return client.send(
+                HttpRequest.newBuilder(URI.create(url))
+                        .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                        .timeout(Duration.ofSeconds(30))
+                        .setHeader("User-Agent", USER_AGENT)
+                        .build(),
+                HttpResponse.BodyHandlers.discarding()
+        );
     }
 
     private String httpGet(String url) throws Exception {
         return client.send(
                 HttpRequest.newBuilder(URI.create(loader.config.miraiRepo + url))
                         .timeout(Duration.ofSeconds(30))
-                        .setHeader("User-Agent", "iTX Technologies Mirai Console Loader")
+                        .setHeader("User-Agent", USER_AGENT)
                         .build(),
                 HttpResponse.BodyHandlers.ofString()
         ).body();
@@ -88,5 +124,12 @@ public class Repository {
 
     public static class Package {
         public Map<String, ArrayList<String>> channels;
+    }
+
+    public static class Metadata {
+        public String groupId;
+        public String artifactId;
+        public String version;
+        public List<String> dependencies;
     }
 }
