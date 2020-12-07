@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.itxtech.mcl.Loader;
 
+import java.io.File;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +66,11 @@ public class Repository {
 
     public Package fetchPackage(String id) throws Exception {
         return new Gson().fromJson(httpGet("/" + transformId(id) + "/package.json"), new TypeToken<Package>() {
+        }.getType());
+    }
+
+    public Metadata getMetadataFromFile(File file) throws Exception {
+        return new Gson().fromJson(Files.readString(file.toPath()), new TypeToken<Metadata>() {
         }.getType());
     }
 

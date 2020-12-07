@@ -24,6 +24,7 @@
 
 importPackage(java.io);
 importPackage(java.lang);
+importPackage(java.util);
 importPackage(org.itxtech.mcl);
 importPackage(org.itxtech.mcl.component);
 importPackage(org.apache.commons.cli);
@@ -59,13 +60,37 @@ function getBootArgs() {
     return loader.config.scriptProps.getOrDefault("boot.args", "");
 }
 
+let depMap = new HashMap();
+depMap.put("net.mamoe:mirai-core", "net.mamoe:mirai-core-all");
+
 phase.boot = () => {
     let files = [];
     let pkgs = loader.config.packages;
+    let pkgMap = new HashMap();
     for (let i in pkgs) {
         let pkg = pkgs[i];
         if (pkg.type.equals(Config.Package.TYPE_CORE)) {
-            files.push(new File(new File(pkg.type), pkg.getName() + "-" + pkg.version + ".jar"));
+            files.push(new File(new File(pkg.type), pkg.getBasename() + ".jar"));
+            pkgMap.put(pkg.id, pkg.version);
+        }
+        if (pkg.type.equals(Config.Package.TYPE_PLUGIN)) {
+            let file = new File(new File(pkg.type), pkg.getBasename() + ".metadata");
+            if (file.exists()) {
+                let metadata = loader.repo.getMetadataFromFile(file).dependencies.iterator();
+                while (metadata.hasNext()) {
+                    let dep = metadata.next().split(":");
+                    let name = dep[0] + ":" + dep[1];
+                    let version = dep[2];
+                    let realPkg = depMap.getOrDefault(name, name);
+                    let it = pkgMap.entrySet().iterator();
+                    while (it.hasNext()) {
+                        let corePkg = it.next();
+                        if (corePkg.getKey().equals(realPkg) && !corePkg.getValue().equals(version)) {
+                            logger.warning("Package \"" + pkg.id + "\" requires \"" + name + " version " + version + ". Current version is " + corePkg.getValue());
+                        }
+                    }
+                }
+            }
         }
     }
 
