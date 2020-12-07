@@ -76,9 +76,9 @@ phase.boot = () => {
         if (pkg.type.equals(Config.Package.TYPE_PLUGIN)) {
             let file = new File(new File(pkg.type), pkg.getBasename() + ".metadata");
             if (file.exists()) {
-                let metadata = loader.repo.getMetadataFromFile(file).dependencies.iterator();
-                while (metadata.hasNext()) {
-                    let dep = metadata.next().split(":");
+                let deps = loader.repo.getMetadataFromFile(file).dependencies.iterator();
+                while (deps.hasNext()) {
+                    let dep = deps.next().split(":");
                     let name = dep[0] + ":" + dep[1];
                     let version = dep[2];
                     let realPkg = depMap.getOrDefault(name, name);
@@ -86,7 +86,7 @@ phase.boot = () => {
                     while (it.hasNext()) {
                         let corePkg = it.next();
                         if (corePkg.getKey().equals(realPkg) && !corePkg.getValue().equals(version)) {
-                            logger.warning("Package \"" + pkg.id + "\" requires \"" + name + " version " + version + ". Current version is " + corePkg.getValue());
+                            logger.warning("Package \"" + pkg.id + "\" requires \"" + name + "\" version " + version + ". Current version is " + corePkg.getValue());
                         }
                     }
                 }

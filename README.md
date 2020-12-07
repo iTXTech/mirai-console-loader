@@ -13,6 +13,13 @@
 * `Downloader` 下载器模块，用于下载文件，并实时返回进度。
 * `Logger` 日志模块，用于向控制台输出日志。
 
+## 启动`MCL`
+
+1. 安装 Java 运行时（版本必须 >= 11）
+1. 从 [Releases](https://github.com/iTXTech/mirai-console-loader/releases) 下载最新版本的`MCL`
+1. 解压到某处
+1. 在命令行中执行`.\mcl`以启动`MCL`
+
 ## `Mirai Repo` 列表
 
 * [Gitee](https://gitee.com/peratx/mirai-repo/raw/master) - **默认**，如要镜像请完整拷贝该仓库文件即可

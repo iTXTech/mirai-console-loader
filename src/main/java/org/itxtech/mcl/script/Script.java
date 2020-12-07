@@ -54,7 +54,6 @@ public class Script {
     public void load() throws Exception {
         var cx = Context.enter();
         cx.setOptimizationLevel(loader.config.jsOptimizationLevel);
-        //Android 需要禁用编译
         cx.setLanguageVersion(Context.VERSION_ES6);
         scope = new ImporterTopLevel();
         scope.initStandardObjects(cx, false);

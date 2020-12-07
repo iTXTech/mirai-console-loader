@@ -3,12 +3,17 @@
 * `config.js` - 通过命令行传入配置
 * `updater.js` - 用于校验和下载`mirai`文件
 * `boot.js` - 用于启动`mirai console`
+* `repo.js` - 用于获取`mirai repo`仓库中的信息
 
 ## 使用样例
 
-* 安装 `mirai-native`
+* 安装 `Mirai Native`
 
-`.\mcl --update-package org.itxtech:mirai-native --type plugins --channel stable`
+`.\mcl --update-package org.itxtech:mirai-native --type plugin --channel stable`
+
+* 安装 `Chat Command`
+
+`.\mcl --update-package net.mamoe:chat-command --type plugin --channel stable`
 
 * 指定 `mirai-console` 版本（指定的版本必须为该`Channel`中存在的版本）
 
@@ -39,7 +44,7 @@ usage: mcl
  -e,--enable-script <ScriptName>     Enable script (exclude ".js")
  -f,--set-boot-entry <EntryClass>    Set Mirai Console boot entry
  -g,--set-boot-args <Arguments>      Set Mirai Console boot arguments
- -i,--force-version <PackageName>    Fetch info for specified package
+ -i,--package-info <PackageName>     Fetch info for specified package
  -j,--list-repo-packages             List available packages in Mirai Repo
  -l,--list-disabled-scripts          List disabled scripts
  -m,--set-mirai-repo <Address>       Set Mirai Repo address
