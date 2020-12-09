@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class Utility {
     public static String fileSha1(File file) throws Exception {
         var fis = new FileInputStream(file);
         var buffer = new byte[1024];
-        var digest = MessageDigest.getInstance("sHA");
+        var digest = MessageDigest.getInstance("SHA");
         int numRead;
 
         do {
@@ -56,19 +56,11 @@ public class Utility {
         return String.format("%0" + (bytes.length << 1) + "x", b);
     }
 
-    public static String readSmallFile(File file) throws Exception {
-        var fis = new FileInputStream(file);
-        var data = new byte[(int) file.length()];
-        fis.read(data);
-        fis.close();
-        return new String(data, StandardCharsets.UTF_8);
-    }
-
     public static boolean check(File baseFile, File checksumFile) throws Exception {
         if (!baseFile.exists() || !checksumFile.exists()) {
             return false;
         }
-        var checksum = Utility.readSmallFile(checksumFile).trim().replace(" ", "").toLowerCase();
+        var checksum = Files.readString(checksumFile.toPath()).trim().replace(" ", "").toLowerCase();
         return fileSha1(baseFile).equals(checksum);
     }
 
