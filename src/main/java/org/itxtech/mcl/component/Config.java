@@ -17,7 +17,7 @@ import java.util.HashMap;
  *
  * Mirai Console Loader
  *
- * Copyright (C) 2020 iTX Technologies
+ * Copyright (C) 2020-2021 iTX Technologies
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -44,9 +44,9 @@ public class Config {
     @SerializedName("maven_repo")
     public String mavenRepo = "https://maven.aliyun.com/repository/public";
     public ArrayList<Package> packages = new ArrayList<>() {{
-        add(new Package("net.mamoe:mirai-console", "nightly"));
-        add(new Package("net.mamoe:mirai-console-terminal", "nightly"));
-        add(new Package("net.mamoe:mirai-core-all", "nightly"));
+        add(new Package("net.mamoe:mirai-console", "beta"));
+        add(new Package("net.mamoe:mirai-console-terminal", "beta"));
+        add(new Package("net.mamoe:mirai-core-all", "beta"));
     }};
     @SerializedName("disabled_scripts")
     public ArrayList<String> disabledScripts = new ArrayList<>();
