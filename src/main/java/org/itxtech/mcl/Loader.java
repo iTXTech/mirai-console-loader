@@ -75,6 +75,7 @@ public class Loader {
 
     public void loadConfig() {
         config = Config.load(configFile);
+        logger.setLogLevel(config.logLevel);
     }
 
     public InetSocketAddress getProxy() {
