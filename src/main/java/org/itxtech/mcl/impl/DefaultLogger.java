@@ -92,6 +92,16 @@ public class DefaultLogger implements Logger {
         error(getExceptionMessage(e));
     }
 
+    @Override
+    public void print(String s) {
+        System.out.print(s);
+    }
+
+    @Override
+    public void println(String s) {
+        System.out.println(s);
+    }
+
     public static String getExceptionMessage(Throwable e) {
         var stringWriter = new StringWriter();
         var printWriter = new PrintWriter(stringWriter);

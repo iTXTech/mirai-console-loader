@@ -130,9 +130,9 @@ function down(url, file) {
         var cur = Utility.humanReadableFileSize(current);
 
         let line = " Downloading " + name + " " + buildDownloadBar(total, current) + " " + (alignRight(cur, ttl) + " / " + ttl) + " (" + (Math.floor(current * 1000 / total) / 10) + "%)" + "   \r";
-        System.out.print(line);
+        logger.print(line);
         size = line.length
     });
-    System.out.print(emptyString.substr(0, size) + '\r');
-    System.out.println(" Downloading " + name + " " + buildDownloadBar(1, 1) + " " + ttl);
+    logger.print(emptyString.substr(0, size) + '\r');
+    logger.println(" Downloading " + name + " " + buildDownloadBar(1, 1) + " " + ttl);
 }

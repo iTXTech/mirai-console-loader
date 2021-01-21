@@ -130,7 +130,10 @@ public class Repository {
     }
 
     public static class Package {
+        public String announcement;
+        public String type;
         public Map<String, ArrayList<String>> channels;
+        public Map<String, String> repo;
     }
 
     public static class Metadata {

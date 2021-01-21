@@ -110,7 +110,7 @@ public class Loader {
      * 启动 Mirai Console Loader，并加载脚本
      */
     public void start(String[] args) throws Exception {
-        logger.info("Mirai Console Loader version " + getVersion());
+        logger.info("iTXTech Mirai Console Loader version " + getVersion());
         logger.info("https://github.com/iTXTech/mirai-console-loader");
         logger.info("This program is licensed under GNU AGPL v3");
 

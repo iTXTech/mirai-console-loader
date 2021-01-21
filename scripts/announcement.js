@@ -1,5 +1,3 @@
-package org.itxtech.mcl.component;
-
 /*
  *
  * Mirai Console Loader
@@ -23,27 +21,14 @@ package org.itxtech.mcl.component;
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-public interface Logger {
-    int LOG_DEBUG = 0;
-    int LOG_INFO = 1;
-    int LOG_WARNING = 2;
-    int LOG_ERROR = 3;
 
-    void setLogLevel(int level);
-
-    void log(String info, int level);
-
-    void debug(String info);
-
-    void info(String info);
-
-    void warning(String warning);
-
-    void error(String error);
-
-    void println(String s);
-
-    void print(String s);
-
-    void logException(Throwable e);
+phase.load = () => {
+    logger.info("Fetching Mirai Console Loader Announcement...");
+    try {
+        let pkg = loader.repo.fetchPackage("org.itxtech:mcl");
+        logger.info("Mirai Console Loader Announcement:");
+        logger.println(pkg.announcement);
+    } catch (e) {
+        logger.error("Failed to fetch announcement.");
+    }
 }
