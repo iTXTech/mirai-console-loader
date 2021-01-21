@@ -2,7 +2,7 @@
 
 模块化、轻量级且支持完全自定义的 [mirai](https://github.com/mamoe/mirai) 加载器。
 
-欢迎阅读自带脚本的[说明](scripts/README.md)。
+欢迎阅读自带脚本的[说明](scripts/README.md)，它将教会你如何`安装插件`，`禁用和启用脚本`，`修改包的更新频道`等基本操作。
 
 ## 简介
 
@@ -23,6 +23,7 @@
 ## `Mirai Repo` 列表
 
 * [Gitee](https://gitee.com/peratx/mirai-repo/raw/master) - **默认**，如要镜像请完整拷贝该仓库文件即可
+* [GitHub](https://github.com/project-mirai/mirai-repo-mirror) - 位于`project-mirai`的镜像，首选`Gitee`
 
 ## `Maven Repo` 列表
 

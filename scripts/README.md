@@ -7,6 +7,10 @@
 
 ## 使用样例
 
+* 修改某个包的更新频道
+
+`.\mcl --update-package 包名 --channel 频道名`
+
 * 安装 `Mirai Native`
 
 `.\mcl --update-package org.itxtech:mirai-native --type plugin --channel stable`
@@ -18,6 +22,10 @@
 * 指定 `mirai-console` 版本（指定的版本必须为该`Channel`中存在的版本）
 
 `.\mcl --update-package net.mamoe:mirai-console --channel stable --version 1.0.0`
+
+* 忽略版本更新
+
+`.\mcl -u`
 
 * 禁用`updater`脚本
 
