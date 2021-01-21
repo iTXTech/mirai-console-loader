@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'org.itxtech'
-version '1.0.3'
+version '1.0.4'
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ dependencies {
 jar {
     manifest {
         attributes "Main-Class": "org.itxtech.mcl.Loader"
-        attributes "Version": version + "-" + "git rev-parse --short HEAD".execute().text.trim()
+        attributes "Version": project.version + "-" + "git rev-parse --short HEAD".execute().text.trim()
     }
 
     from {
