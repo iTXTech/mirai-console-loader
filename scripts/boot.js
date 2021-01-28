@@ -63,9 +63,26 @@ function getBootArgs() {
 let depMap = new HashMap();
 depMap.put("net.mamoe:mirai-core", "net.mamoe:mirai-core-all");
 
+function sortPackages(pkgs) {
+    function getPriority(pkg) {
+        let pkgId = pkg.id;
+        // noinspection EqualityComparisonWithCoercionJS
+        if (pkgId == 'org.bouncycastle:bcprov-jdk15on') {
+            return -1;
+        }
+        return 0;
+    }
+
+    pkgs.sort((prev, next) => {
+        return getPriority(prev) - getPriority(next);
+    });
+
+    return pkgs;
+}
+
 phase.boot = () => {
     let files = [];
-    let pkgs = loader.config.packages;
+    let pkgs = sortPackages(loader.config.packages);
     let pkgMap = new HashMap();
     for (let i in pkgs) {
         let pkg = pkgs[i];
