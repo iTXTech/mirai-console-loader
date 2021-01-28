@@ -37,6 +37,8 @@ import java.util.HashMap;
  *
  */
 public class Config {
+    public static final Package PKG_BCPROV = new Package("org.bouncycastle:bcprov-jdk15on", "stable", "1.64");
+
     @SerializedName("js_optimization_level")
     public int jsOptimizationLevel = -1;
     @SerializedName("mirai_repo")
@@ -47,6 +49,8 @@ public class Config {
         add(new Package("net.mamoe:mirai-console", "beta"));
         add(new Package("net.mamoe:mirai-console-terminal", "beta"));
         add(new Package("net.mamoe:mirai-core-all", "beta"));
+
+        add(PKG_BCPROV);
     }};
     @SerializedName("disabled_scripts")
     public ArrayList<String> disabledScripts = new ArrayList<>();
@@ -61,6 +65,12 @@ public class Config {
             Config conf = new Gson().fromJson(new JsonReader(new FileReader(file)), new TypeToken<Config>() {
             }.getType());
             if (conf != null) {
+                if (conf.packages != null) {
+                    // Cannot missing "org.bouncycastle:bcprov-jdk15on"
+                    if (conf.packages.stream().noneMatch(it -> it.id.equals("org.bouncycastle:bcprov-jdk15on"))) {
+                        conf.packages.add(PKG_BCPROV);
+                    }
+                }
                 return conf;
             }
         } catch (Exception ignored) {
@@ -97,12 +107,27 @@ public class Config {
             this.channel = channel;
         }
 
+        public Package(String id, String channel, String version) {
+            this(id, channel);
+            this.version = version;
+        }
+
         public String getName() {
             return id.split(":", 2)[1];
         }
 
         public String getBasename() {
             return getName() + "-" + version;
+        }
+
+        @Override
+        public String toString() {
+            return "Package{" +
+                    "id='" + id + '\'' +
+                    ", channel='" + channel + '\'' +
+                    ", version='" + version + '\'' +
+                    ", type='" + type + '\'' +
+                    '}';
         }
     }
 }
