@@ -69,7 +69,7 @@ function check(pack) {
             down = true;
         }
         if (down) {
-            downloadFile(pack);
+            downloadFile(pack, info);
             if (!checkLocalFile(pack)) {
                 logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
             }
@@ -77,15 +77,15 @@ function check(pack) {
     }
 }
 
-function downloadFile(pack) {
+function downloadFile(pack, info) {
     let dir = new File(pack.type);
     dir.mkdirs();
     let ver = pack.version;
-    let jarUrl = loader.repo.getMavenJarUrl(pack);
+    let jarUrl = loader.repo.getJarUrl(pack, info);
     if (!jarUrl.equals("")) {
         down(jarUrl, new File(dir, pack.getName() + "-" + ver + ".jar"));
         down(jarUrl + ".sha1", new File(dir, pack.getName() + "-" + ver + ".sha1"));
-        let metadata = loader.repo.getMetadataUrl(pack);
+        let metadata = loader.repo.getMetadataUrl(pack, info);
         if (!metadata.equals("")) {
             down(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));
         }

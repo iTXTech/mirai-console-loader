@@ -74,10 +74,14 @@ public class Repository {
         }.getType());
     }
 
-    public String getMavenJarUrl(Config.Package pkg) {
-        var base = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/" + getPackageFromId(pkg.id) + "-" + pkg.version;
-        for (var suf : new String[]{".mirai", "-all", ""}) {
-            var real = base + suf + ".jar";
+    public String getJarUrl(Config.Package pkg, Package info) {
+        if (info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).archive.equals("")) {
+            return info.repo.get(pkg.version).archive;
+        }
+        var base = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
+                + getPackageFromId(pkg.id) + "-" + pkg.version;
+        for (var suf : new String[]{".zip", ".mirai.jar", "-all.jar", ".jar"}) {
+            var real = base + suf;
             try {
                 if (httpHead(real).statusCode() == 200) {
                     return real;
@@ -89,8 +93,12 @@ public class Repository {
         return "";
     }
 
-    public String getMetadataUrl(Config.Package pkg) {
-        var url = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/" + getPackageFromId(pkg.id) + "-" + pkg.version + ".mirai.metadata";
+    public String getMetadataUrl(Config.Package pkg, Package info) {
+        if (info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).metadata.equals("")) {
+            return info.repo.get(pkg.version).metadata;
+        }
+        var url = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
+                + getPackageFromId(pkg.id) + "-" + pkg.version + ".mirai.metadata";
         try {
             if (httpHead(url).statusCode() == 200) {
                 return url;
@@ -133,7 +141,12 @@ public class Repository {
         public String announcement;
         public String type;
         public Map<String, ArrayList<String>> channels;
-        public Map<String, String> repo;
+        public Map<String, RepoInfo> repo;
+    }
+
+    public static class RepoInfo {
+        public String archive;
+        public String metadata;
     }
 
     public static class Metadata {
