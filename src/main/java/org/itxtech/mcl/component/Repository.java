@@ -75,7 +75,7 @@ public class Repository {
     }
 
     public String getJarUrl(Config.Package pkg, Package info) {
-        if (info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).archive.equals("")) {
+        if (info.repo != null && info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).archive.equals("")) {
             return info.repo.get(pkg.version).archive;
         }
         var base = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
@@ -94,7 +94,7 @@ public class Repository {
     }
 
     public String getMetadataUrl(Config.Package pkg, Package info) {
-        if (info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).metadata.equals("")) {
+        if (info.repo != null && info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).metadata.equals("")) {
             return info.repo.get(pkg.version).metadata;
         }
         var url = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
