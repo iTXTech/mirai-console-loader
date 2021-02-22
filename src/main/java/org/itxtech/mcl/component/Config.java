@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import org.itxtech.mcl.Loader;
 
 import java.io.File;
 import java.io.FileReader;
@@ -65,7 +66,13 @@ public class Config {
             if (conf != null) {
                 return conf;
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            if (file.isFile() && file.exists()) {
+                Loader.getInstance().logger.logException(e);
+                var bak = new File(file.getAbsolutePath() + "." + System.currentTimeMillis() + ".bak");
+                file.renameTo(bak);
+                Loader.getInstance().logger.error("Invalid configuration file. It has been renamed to " + bak.getAbsolutePath());
+            }
         }
         return new Config();
     }

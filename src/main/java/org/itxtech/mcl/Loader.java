@@ -37,6 +37,12 @@ import java.util.jar.Manifest;
  *
  */
 public class Loader {
+    private static Loader instance;
+
+    public static Loader getInstance() {
+        return instance;
+    }
+
     public Downloader downloader;
     public Logger logger = new DefaultLogger();
     public File configFile = new File("config.json");
@@ -45,6 +51,10 @@ public class Loader {
     public Repository repo;
     public Options options = new Options();
     public CommandLine cli;
+
+    public Loader() {
+        instance = this;
+    }
 
     public static void main(String[] args) {
         var loader = new Loader();
