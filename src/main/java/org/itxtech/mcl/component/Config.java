@@ -42,7 +42,9 @@ public class Config {
     @SerializedName("mirai_repo")
     public String miraiRepo = "https://gitee.com/peratx/mirai-repo/raw/master";
     @SerializedName("maven_repo")
-    public String mavenRepo = "https://maven.aliyun.com/repository/public";
+    public ArrayList<String> mavenRepo = new ArrayList<>() {{
+        add("https://maven.aliyun.com/repository/public");
+    }};
     public ArrayList<Package> packages = new ArrayList<>() {{
         add(new Package("net.mamoe:mirai-console", "beta"));
         add(new Package("net.mamoe:mirai-console-terminal", "beta"));

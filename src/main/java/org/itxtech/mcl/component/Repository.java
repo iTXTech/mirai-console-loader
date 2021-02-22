@@ -78,16 +78,18 @@ public class Repository {
         if (info.repo != null && info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).archive.equals("")) {
             return info.repo.get(pkg.version).archive;
         }
-        var base = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
-                + getPackageFromId(pkg.id) + "-" + pkg.version;
-        for (var suf : new String[]{".zip", ".mirai.jar", "-all.jar", ".jar"}) {
-            var real = base + suf;
-            try {
-                if (httpHead(real).statusCode() == 200) {
-                    return real;
+        for (var repo : loader.config.mavenRepo) {
+            var base = repo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
+                    + getPackageFromId(pkg.id) + "-" + pkg.version;
+            for (var suf : new String[]{".zip", ".mirai.jar", "-all.jar", ".jar"}) {
+                var real = base + suf;
+                try {
+                    if (httpHead(real).statusCode() == 200) {
+                        return real;
+                    }
+                } catch (Exception e) {
+                    loader.logger.logException(e);
                 }
-            } catch (Exception e) {
-                loader.logger.logException(e);
             }
         }
         return "";
@@ -97,14 +99,16 @@ public class Repository {
         if (info.repo != null && info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).metadata.equals("")) {
             return info.repo.get(pkg.version).metadata;
         }
-        var url = loader.config.mavenRepo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
-                + getPackageFromId(pkg.id) + "-" + pkg.version + ".mirai.metadata";
-        try {
-            if (httpHead(url).statusCode() == 200) {
-                return url;
+        for (var repo : loader.config.mavenRepo) {
+            var url = repo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
+                    + getPackageFromId(pkg.id) + "-" + pkg.version + ".mirai.metadata";
+            try {
+                if (httpHead(url).statusCode() == 200) {
+                    return url;
+                }
+            } catch (Exception e) {
+                loader.logger.logException(e);
             }
-        } catch (Exception e) {
-            loader.logger.logException(e);
         }
         return "";
     }
