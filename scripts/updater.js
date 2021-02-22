@@ -39,18 +39,12 @@ phase.load = () => {
     }
 };
 
-function checkLocalFile(pack) {
-    let dir = new File(pack.type);
-    dir.mkdirs();
-    return Utility.check(new File(dir, pack.getBasename() + ".jar"), new File(dir, pack.getBasename() + ".sha1"));
-}
-
 function check(pack) {
     logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
     let update = loader.cli.hasOption("u");
     let force = loader.cli.hasOption("x");
     let down = false;
-    if (!checkLocalFile(pack)) {
+    if (!Utility.checkLocalFile(pack)) {
         logger.info("\"" + pack.id + ":" + pack.version + "\" is corrupted. Start downloading...");
         down = true;
     }
@@ -63,14 +57,14 @@ function check(pack) {
         if ((!update && !pack.version.equals(ver)) || (update && !target.contains(pack.version) && !force)) {
             if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
                 let dir = new File(pack.type);
-                new File(dir, pack.getBasename() + ".jar").renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
+                pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
             }
             pack.version = ver;
             down = true;
         }
         if (down) {
             downloadFile(pack, info);
-            if (!checkLocalFile(pack)) {
+            if (!Utility.checkLocalFile(pack)) {
                 logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
             }
         }

@@ -1,3 +1,9 @@
+package org.itxtech.mcl;
+
+import java.io.IOException;
+import java.lang.instrument.Instrumentation;
+import java.util.jar.JarFile;
+
 /*
  *
  * Mirai Console Loader
@@ -21,24 +27,20 @@
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
+public class Agent {
+    public static Instrumentation instrumentation;
 
-importPackage(java.lang);
-importPackage(org.itxtech.mcl.component);
-
-if (System.getProperty("java.vm.vendor").contains("Oracle")) {
-    let found = false;
-    let pkgs = loader.config.packages;
-    for (let i in pkgs) {
-        let pkg = pkgs[i];
-        if (pkg.id.equals("org.bouncycastle:bcprov-jdk15on")) {
-            found = true;
-            break;
-        }
+    public static void premain(String args, Instrumentation instrumentation) {
+        Agent.instrumentation = instrumentation;
     }
-    if (!found) {
-        let p = new Config.Package("org.bouncycastle:bcprov-jdk15on", "stable");
-        p.type = Config.Package.TYPE_CORE;
-        loader.config.packages.add(0, p);
-        logger.info("OracleJDK is detected. MCL will download BouncyCastle automatically.");
+
+    public static void agentmain(String args, Instrumentation instrumentation) {
+        Agent.instrumentation = instrumentation;
+    }
+
+    public static void appendJarFile(JarFile file) throws IOException {
+        if (instrumentation != null) {
+            instrumentation.appendToSystemClassLoaderSearch(file);
+        }
     }
 }

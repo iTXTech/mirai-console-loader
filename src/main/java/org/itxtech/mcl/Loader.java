@@ -5,12 +5,14 @@ import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.component.Downloader;
 import org.itxtech.mcl.component.Logger;
 import org.itxtech.mcl.component.Repository;
+import org.itxtech.mcl.impl.AnsiLogger;
 import org.itxtech.mcl.impl.DefaultDownloader;
 import org.itxtech.mcl.impl.DefaultLogger;
 import org.itxtech.mcl.script.ScriptManager;
 
 import java.io.File;
 import java.net.InetSocketAddress;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /*
@@ -60,6 +62,7 @@ public class Loader {
         var loader = new Loader();
         try {
             loader.loadConfig();
+            loader.detectLogger();
             loader.start(args);
         } catch (Exception e) {
             loader.logger.logException(e);
@@ -80,6 +83,20 @@ public class Loader {
                 } catch (ParseException ignored) {
                 }
             }
+        }
+    }
+
+    public void detectLogger() {
+        try {
+            for (var pkg : config.packages) {
+                if (pkg.id.equals("net.mamoe:mirai-console-terminal") && Utility.checkLocalFile(pkg)) {
+                    Agent.appendJarFile(new JarFile(pkg.getJarFile()));
+                    logger = new AnsiLogger();
+                    logger.setLogLevel(config.logLevel);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

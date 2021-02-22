@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,7 +71,11 @@ public class Config {
             if (file.isFile() && file.exists()) {
                 Loader.getInstance().logger.logException(e);
                 var bak = new File(file.getAbsolutePath() + "." + System.currentTimeMillis() + ".bak");
-                file.renameTo(bak);
+                try {
+                    Files.copy(file.toPath(), bak.toPath());
+                } catch (Exception ee) {
+                    Loader.getInstance().logger.logException(ee);
+                }
                 Loader.getInstance().logger.error("Invalid configuration file. It has been renamed to " + bak.getAbsolutePath());
             }
         }
@@ -112,6 +117,10 @@ public class Config {
 
         public String getBasename() {
             return getName() + "-" + version;
+        }
+
+        public File getJarFile() {
+            return new File(new File(type), getBasename() + ".jar");
         }
     }
 }

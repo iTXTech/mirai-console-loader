@@ -13,12 +13,16 @@ dependencies {
     implementation("org.mozilla:rhino:1.7.13")
     implementation("commons-cli:commons-cli:1.4")
     implementation("com.google.code.gson:gson:2.8.6")
+    compileOnly("org.fusesource.jansi:jansi:2.3.1")
 }
 
 jar {
     manifest {
         attributes "Main-Class": "org.itxtech.mcl.Loader"
         attributes "Version": project.version + "-" + "git rev-parse --short HEAD".execute().text.trim()
+        attributes "Launcher-Agent-Class": "org.itxtech.mcl.Agent"
+        attributes "Agent-Class": "org.itxtech.mcl.Agent"
+        attributes "Premain-Class": "org.itxtech.mcl.Agent"
     }
 
     from {
