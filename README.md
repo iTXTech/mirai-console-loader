@@ -25,6 +25,8 @@
 1. 从 [Releases](https://github.com/iTXTech/mirai-console-loader/releases) 下载最新版本的`MCL`
 1. 解压到某处
 1. 在命令行中执行`.\mcl`以启动`MCL`
+    * `Windows`: `cmd` 必须执行`.\mcl`，`powershell`接受`.\mcl`或`./mcl`
+    * `*nix`: `./mcl`
 
 ## `Mirai Repo` 列表
 

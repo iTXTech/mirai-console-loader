@@ -1,6 +1,7 @@
 package org.itxtech.mcl.impl;
 
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 import org.itxtech.mcl.component.Logger;
 
 import java.io.PrintWriter;
@@ -33,6 +34,10 @@ import java.util.Date;
  */
 public class AnsiLogger implements Logger {
     private int logLevel = LOG_DEBUG;
+
+    public AnsiLogger(){
+        AnsiConsole.systemInstall();
+    }
 
     @Override
     public void setLogLevel(int logLevel) {
