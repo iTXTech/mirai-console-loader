@@ -70,11 +70,15 @@ public class Utility {
     }
 
     public static void bootMirai(NativeArray files, String entry, String args) throws Exception {
+        var f = new StringBuilder();
         for (var file : files) {
             if (file instanceof File) {
                 Agent.appendJarFile(new JarFile((File) file));
+                f.append(((File) file).getName()).append(", ");
             }
         }
+        f.delete(f.length() - 2, f.length());
+        Loader.getInstance().logger.debug("Boot Mirai Files: " + f + "; Args: \"" + args + "\"");
         var method = Utility.class.getClassLoader().loadClass(entry).getMethod("main", String[].class);
         method.invoke(null, (Object) (args.trim().equals("") ? new String[0] : args.split(" ")));
     }

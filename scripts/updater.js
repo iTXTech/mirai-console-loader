@@ -31,6 +31,7 @@ importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt("disable-update").build());
 loader.options.addOption(Option.builder("x").desc("Force download specified version").longOpt("force-version").build());
+loader.options.addOption(Option.builder("q").desc("Remove old plugin and mirai files").longOpt("remove-old").build());
 
 phase.load = () => {
     let packages = loader.config.packages;
@@ -55,7 +56,11 @@ function check(pack) {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
         if ((!update && !pack.version.equals(ver)) || (update && !target.contains(pack.version) && !force)) {
-            if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
+            if (loader.cli.hasOption("q")) {
+                let dir = new File(pack.type);
+                deleteFile(dir, pack.getBasename() + ".jar");
+                deleteFile(dir, pack.getBasename() + ".sha1");
+            } else if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
                 let dir = new File(pack.type);
                 pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
             }
@@ -69,6 +74,12 @@ function check(pack) {
             }
         }
     }
+}
+
+function deleteFile(dir, file) {
+    let f = new File(dir, file);
+    f.delete();
+    logger.info("File \"" + f.getName() + "\" has been deleted.");
 }
 
 function downloadFile(pack, info) {
