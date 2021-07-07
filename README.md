@@ -35,10 +35,7 @@
 
 ## `Maven Repo` 列表
 
-**`Bintray`和`JCenter`即将停止服务，请慎重选择托管服务。**
-
-* [Bintray - Him188moe](https://dl.bintray.com/him188moe/mirai) - `mamoe` 官方仓库，仅包含`mirai`相关包
-* [JCenter](https://jcenter.bintray.com/) - `mamoe` 官方仓库会自动同步到 `JCenter`
+* [Maven Central](https://repo1.maven.org/maven2/) - `Maven Central`上游
 * [Aliyun](https://maven.aliyun.com/repository/public) - **默认**，阿里云`Maven`镜像，国内访问速度快
 * [HuaweiCloud](https://mirrors.huaweicloud.com/repository/maven) - 华为云`Maven`镜像，阿里云不可用时的备选方案
 
