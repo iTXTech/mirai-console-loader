@@ -60,6 +60,7 @@ function check(pack) {
                 let dir = new File(pack.type);
                 deleteFile(dir, pack.getBasename() + ".jar");
                 deleteFile(dir, pack.getBasename() + ".sha1");
+                deleteFile(dir, pack.getBasename() + ".metadata");
             } else if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
                 let dir = new File(pack.type);
                 pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
@@ -74,12 +75,14 @@ function check(pack) {
             }
         }
     }
+    loader.saveConfig();
 }
 
 function deleteFile(dir, file) {
     let f = new File(dir, file);
-    f.delete();
-    logger.info("File \"" + f.getName() + "\" has been deleted.");
+    if (f.exists() && f.delete()) {
+        logger.info("File \"" + f.getName() + "\" has been deleted.");
+    }
 }
 
 function downloadFile(pack, info) {
