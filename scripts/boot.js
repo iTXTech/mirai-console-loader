@@ -48,7 +48,7 @@ phase.cli = () => {
     if (loader.cli.hasOption("b")) {
         logger.info("Mirai Console boot entry: " + getBootEntry());
         logger.info("Mirai Console boot arguments: " + getBootArgs());
-        System.exit(0);
+        loader.exit(0);
     }
 }
 

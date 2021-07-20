@@ -49,7 +49,7 @@ phase.cli = () => {
             logger.info("Channels: " + Utility.join(", ", info.channels));
             logger.info("");
         }
-        System.exit(0);
+        loader.exit(0);
     }
 
     if (loader.cli.hasOption("i")) {
@@ -62,6 +62,6 @@ phase.cli = () => {
             logger.info("Version: " + Utility.join(", ", chan.getValue()));
             logger.info("");
         }
-        System.exit(0);
+        loader.exit(0);
     }
 }

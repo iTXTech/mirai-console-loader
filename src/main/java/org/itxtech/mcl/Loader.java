@@ -54,6 +54,8 @@ public class Loader {
     public Options options = new Options();
     public CommandLine cli;
 
+    public boolean boot = false;
+
     public Loader() {
         instance = this;
     }
@@ -69,6 +71,12 @@ public class Loader {
         }
     }
 
+    public void exit(int code) {
+        if (!boot) {
+            System.exit(code);
+        }
+    }
+
     public void parseCli(String[] args, boolean help) {
         try {
             cli = new DefaultParser().parse(options, args);
@@ -76,7 +84,7 @@ public class Loader {
             if (help) {
                 logger.error(e.getMessage());
                 new HelpFormatter().printHelp("mcl", options);
-                System.exit(1);
+                exit(1);
             } else {
                 try {
                     cli = new DefaultParser().parse(new Options(), new String[0]);
@@ -155,5 +163,6 @@ public class Loader {
         if (!cli.hasOption("z")) {
             manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
         }
+        boot = true;
     }
 }

@@ -66,7 +66,7 @@ phase.cli = () => {
     if (loader.cli.hasOption("o")) {
         logger.info("Mirai Repo: " + loader.config.miraiRepo);
         logger.info("Maven Repo: " + loader.config.mavenRepo);
-        System.exit(0);
+        loader.exit(0);
     }
     if (loader.cli.hasOption("m")) {
         loader.config.miraiRepo = loader.cli.getOptionValue("m");
@@ -88,7 +88,7 @@ phase.cli = () => {
             logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type +
                 "  Version: " + pkg.version + "  Locked: " + (pkg.versionLocked ? "true" : "false"));
         }
-        System.exit(0);
+        loader.exit(0);
     }
     if (loader.cli.hasOption("r")) {
         let name = loader.cli.getOptionValue("r");
@@ -99,11 +99,11 @@ phase.cli = () => {
                 pkgs.remove(pkg);
                 logger.info("Package \"" + pkg.id + "\" has been removed.");
                 loader.saveConfig();
-                System.exit(0);
+                loader.exit(0);
             }
         }
         logger.error("Package \"" + name + "\" not found.");
-        System.exit(1);
+        loader.exit(1);
     }
     if (loader.cli.hasOption("a")) {
         let name = loader.cli.getOptionValue("a");
@@ -114,7 +114,7 @@ phase.cli = () => {
                 updatePackage(pkg)
                 logger.info("Package \"" + pkg.id + "\" has been updated.");
                 loader.saveConfig();
-                System.exit(0);
+                loader.exit(0);
             }
         }
         let pkg = new Config.Package(name, "stable");
@@ -122,7 +122,7 @@ phase.cli = () => {
         pkgs.add(pkg);
         logger.info("Package \"" + pkg.id + "\" has been added.");
         loader.saveConfig();
-        System.exit(0);
+        loader.exit(0);
     }
 }
 
