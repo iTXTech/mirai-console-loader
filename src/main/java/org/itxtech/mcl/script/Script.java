@@ -47,7 +47,6 @@ public class Script {
 
     private void loadLibs() {
         ScriptableObject.putProperty(scope, "loader", Context.javaToJS(loader, scope));
-        ScriptableObject.putProperty(scope, "logger", Context.javaToJS(loader.logger, scope));
         ScriptableObject.putProperty(scope, "phase", Context.javaToJS(phase, scope));
     }
 

@@ -37,30 +37,30 @@ loader.options.addOptionGroup(group);
 phase.cli = () => {
     let repo = new Repository(loader);
     if (loader.cli.hasOption("j")) {
-        logger.info("Fetching packages from " + loader.config.miraiRepo);
+        loader.logger.info("Fetching packages from " + loader.config.miraiRepo);
         let pkgs = repo.fetchPackages().entrySet().iterator();
         while (pkgs.hasNext()) {
             let pkg = pkgs.next();
             let info = pkg.getValue();
-            logger.info("---------- Package: " + pkg.getKey() + " ----------");
-            logger.info("Name: " + info.name);
-            logger.info("Description: " + info.description);
-            logger.info("Website: " + info.website);
-            logger.info("Channels: " + Utility.join(", ", info.channels));
-            logger.info("");
+            loader.logger.info("---------- Package: " + pkg.getKey() + " ----------");
+            loader.logger.info("Name: " + info.name);
+            loader.logger.info("Description: " + info.description);
+            loader.logger.info("Website: " + info.website);
+            loader.logger.info("Channels: " + Utility.join(", ", info.channels));
+            loader.logger.info("");
         }
         loader.exit(0);
     }
 
     if (loader.cli.hasOption("i")) {
         let pkg = loader.cli.getOptionValue("i");
-        logger.info("Fetching channel info for package \"" + pkg + "\"");
+        loader.logger.info("Fetching channel info for package \"" + pkg + "\"");
         let info = repo.fetchPackage(pkg).channels.entrySet().iterator();
         while (info.hasNext()) {
             let chan = info.next();
-            logger.info("---------- Channel: " + chan.getKey() + " ----------");
-            logger.info("Version: " + Utility.join(", ", chan.getValue()));
-            logger.info("");
+            loader.logger.info("---------- Channel: " + chan.getKey() + " ----------");
+            loader.logger.info("Version: " + Utility.join(", ", chan.getValue()));
+            loader.logger.info("");
         }
         loader.exit(0);
     }

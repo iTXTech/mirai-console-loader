@@ -64,8 +64,8 @@ phase.cli = () => {
         loader.saveConfig();
     }
     if (loader.cli.hasOption("o")) {
-        logger.info("Mirai Repo: " + loader.config.miraiRepo);
-        logger.info("Maven Repo: " + loader.config.mavenRepo);
+        loader.logger.info("Mirai Repo: " + loader.config.miraiRepo);
+        loader.logger.info("Maven Repo: " + loader.config.mavenRepo);
         loader.exit(0);
     }
     if (loader.cli.hasOption("m")) {
@@ -78,14 +78,14 @@ phase.cli = () => {
     }
     if (loader.cli.hasOption("c")) {
         let lvl = Integer.parseInt(loader.cli.getOptionValue("c"));
-        logger.setLogLevel(lvl);
+        loader.logger.setLogLevel(lvl);
         loader.config.logLevel = lvl;
     }
     if (loader.cli.hasOption("s")) {
         let pkgs = loader.config.packages;
         for (let i in pkgs) {
             let pkg = pkgs[i];
-            logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type +
+            loader.logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type +
                 "  Version: " + pkg.version + "  Locked: " + (pkg.versionLocked ? "true" : "false"));
         }
         loader.exit(0);
@@ -97,12 +97,12 @@ phase.cli = () => {
             let pkg = pkgs[i];
             if (pkg.id.equals(name)) {
                 pkgs.remove(pkg);
-                logger.info("Package \"" + pkg.id + "\" has been removed.");
+                loader.logger.info("Package \"" + pkg.id + "\" has been removed.");
                 loader.saveConfig();
                 loader.exit(0);
             }
         }
-        logger.error("Package \"" + name + "\" not found.");
+        loader.logger.error("Package \"" + name + "\" not found.");
         loader.exit(1);
     }
     if (loader.cli.hasOption("a")) {
@@ -112,7 +112,7 @@ phase.cli = () => {
             let pkg = pkgs[i];
             if (pkg.id.equals(name)) {
                 updatePackage(pkg)
-                logger.info("Package \"" + pkg.id + "\" has been updated.");
+                loader.logger.info("Package \"" + pkg.id + "\" has been updated.");
                 loader.saveConfig();
                 loader.exit(0);
             }
@@ -120,7 +120,7 @@ phase.cli = () => {
         let pkg = new Config.Package(name, "stable");
         updatePackage(pkg);
         pkgs.add(pkg);
-        logger.info("Package \"" + pkg.id + "\" has been added.");
+        loader.logger.info("Package \"" + pkg.id + "\" has been added.");
         loader.saveConfig();
         loader.exit(0);
     }
@@ -138,7 +138,7 @@ function updatePackage(pkg) {
     }
     if (loader.cli.hasOption("x")) {
         if (pkg.version.trim().equals("")) {
-            logger.warning("Invalid version \"" + pkg.version + "\" for \"" + pkg.id + "\".")
+            loader.logger.warning("Invalid version \"" + pkg.version + "\" for \"" + pkg.id + "\".")
         }
         pkg.versionLocked = true;
     }

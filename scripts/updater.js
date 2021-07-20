@@ -40,17 +40,17 @@ phase.load = () => {
 };
 
 function check(pack) {
-    logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
+    loader.logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
     let disableUpdate = loader.cli.hasOption("u");
     let force = pack.isVersionLocked();
     let down = false;
     if (!Utility.checkLocalFile(pack)) {
-        logger.info("\"" + pack.id + ":" + pack.version + "\" is corrupted. Start downloading...");
+        loader.logger.info("\"" + pack.id + ":" + pack.version + "\" is corrupted. Start downloading...");
         down = true;
     }
     let info = loader.repo.fetchPackage(pack.id);
     if (!info.channels.containsKey(pack.channel)) {
-        logger.error("Invalid update channel \"" + pack.channel + "\" for Package \"" + pack.name + "\"");
+        loader.logger.error("Invalid update channel \"" + pack.channel + "\" for Package \"" + pack.name + "\"");
     } else {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
@@ -70,7 +70,7 @@ function check(pack) {
         if (down) {
             downloadFile(pack, info);
             if (!Utility.checkLocalFile(pack)) {
-                logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
+                loader.logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
             }
         }
     }
@@ -80,7 +80,7 @@ function check(pack) {
 function deleteFile(dir, file) {
     let f = new File(dir, file);
     if (f.exists() && f.delete()) {
-        logger.info("File \"" + f.getName() + "\" has been deleted.");
+        loader.logger.info("File \"" + f.getName() + "\" has been deleted.");
     }
 }
 
@@ -97,7 +97,7 @@ function downloadFile(pack, info) {
             down(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));
         }
     } else {
-        logger.error("Cannot download package \"" + pack.id + "\".");
+        loader.logger.error("Cannot download package \"" + pack.id + "\".");
     }
 }
 
@@ -137,9 +137,9 @@ function down(url, file) {
         var cur = Utility.humanReadableFileSize(current);
 
         let line = " Downloading " + name + " " + buildDownloadBar(total, current) + " " + (alignRight(cur, ttl) + " / " + ttl) + " (" + (Math.floor(current * 1000 / total) / 10) + "%)" + "   \r";
-        logger.print(line);
+        loader.logger.print(line);
         size = line.length
     });
-    logger.print(emptyString.substr(0, size) + '\r');
-    logger.println(" Downloading " + name + " " + buildDownloadBar(1, 1) + " " + ttl);
+    loader.logger.print(emptyString.substr(0, size) + '\r');
+    loader.logger.println(" Downloading " + name + " " + buildDownloadBar(1, 1) + " " + ttl);
 }

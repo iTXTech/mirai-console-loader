@@ -85,11 +85,10 @@ public class Loader {
                 logger.error(e.getMessage());
                 new HelpFormatter().printHelp("mcl", options);
                 exit(1);
-            } else {
-                try {
-                    cli = new DefaultParser().parse(new Options(), new String[0]);
-                } catch (ParseException ignored) {
-                }
+            }
+            try {
+                cli = new DefaultParser().parse(new Options(), new String[0]);
+            } catch (ParseException ignored) {
             }
         }
     }
@@ -160,9 +159,9 @@ public class Loader {
         downloader = new DefaultDownloader(this);
         manager.phaseLoad(); //此阶段脚本下载包
         saveConfig();
+        boot = true;
         if (!cli.hasOption("z")) {
             manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
         }
-        boot = true;
     }
 }

@@ -23,12 +23,12 @@
  */
 
 phase.load = () => {
-    logger.info("Fetching Mirai Console Loader Announcement...");
+    loader.logger.info("Fetching Mirai Console Loader Announcement...");
     try {
         let pkg = loader.repo.fetchPackage("org.itxtech:mcl");
-        logger.info("Mirai Console Loader Announcement:");
-        logger.println(pkg.announcement);
+        loader.logger.info("Mirai Console Loader Announcement:");
+        loader.logger.println(pkg.announcement);
     } catch (e) {
-        logger.error("Failed to fetch announcement.");
+        loader.logger.error("Failed to fetch announcement.");
     }
 }
