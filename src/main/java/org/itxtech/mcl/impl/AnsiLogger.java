@@ -49,33 +49,33 @@ public class AnsiLogger implements Logger {
         if (level < logLevel) {
             return;
         }
-        Ansi.Color color;
+        var ansi = Ansi.ansi();
         String prefix;
         var date = new SimpleDateFormat("HH:mm:ss").format(new Date());
         switch (level) {
             case LOG_DEBUG:
-                color = Ansi.Color.WHITE;
+                ansi = ansi.fgBrightBlack();
                 prefix = "DEBUG";
                 break;
             case LOG_WARNING:
-                color = Ansi.Color.YELLOW;
+                ansi = ansi.fgYellow();
                 prefix = "WARNING";
                 break;
             case LOG_ERROR:
-                color = Ansi.Color.RED;
+                ansi = ansi.fgRed();
                 prefix = "ERROR";
                 break;
             case LOG_INFO:
             default:
-                color = Ansi.Color.GREEN;
+                ansi = ansi.fgGreen();
                 prefix = "INFO";
                 break;
         }
         var log = " " + date + " [" + prefix + "] " + info;
         if (level == LOG_ERROR) {
-            System.err.println(Ansi.ansi().fg(color).a(log).fg(Ansi.Color.DEFAULT));
+            System.err.println(ansi.a(log).fg(Ansi.Color.DEFAULT));
         } else {
-            System.out.println(Ansi.ansi().fg(color).a(log).fg(Ansi.Color.DEFAULT));
+            System.out.println(ansi.a(log).fg(Ansi.Color.DEFAULT));
         }
     }
 

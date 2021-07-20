@@ -138,11 +138,11 @@ function updatePackage(pkg) {
     }
     if (loader.cli.hasOption("x")) {
         if (pkg.version.trim().equals("")) {
-            logger.warning("Invalid version \"" + pkg.version + " for \"" + pkg.id + "\".")
+            logger.warning("Invalid version \"" + pkg.version + "\" for \"" + pkg.id + "\".")
         }
         pkg.versionLocked = true;
     }
-    if (loader.cli.hasOption("x")) {
-        pkg.versionLocked = true;
+    if (loader.cli.hasOption("y")) {
+        pkg.versionLocked = false;
     }
 }

@@ -56,7 +56,7 @@ public class Config {
     public ArrayList<String> disabledScripts = new ArrayList<>();
     public String proxy = "";
     @SerializedName("log_level")
-    public int logLevel = Logger.LOG_DEBUG;
+    public int logLevel = Logger.LOG_INFO;
     @SerializedName("script_props")
     public HashMap<String, String> scriptProps = new HashMap<>();
 
