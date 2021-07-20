@@ -105,10 +105,15 @@ public class Config {
         public String channel;
         public String version = "";
         public String type = TYPE_CORE;
+        public boolean versionLocked = false;
 
         public Package(String id, String channel) {
             this.id = id;
             this.channel = channel;
+        }
+
+        public boolean isVersionLocked() {
+            return versionLocked;
         }
 
         public String getName() {

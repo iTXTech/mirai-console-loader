@@ -30,7 +30,6 @@ importPackage(org.itxtech.mcl.component);
 importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt("disable-update").build());
-loader.options.addOption(Option.builder("x").desc("Force download specified version").longOpt("force-version").build());
 loader.options.addOption(Option.builder("q").desc("Remove old plugin and mirai files").longOpt("remove-old").build());
 
 phase.load = () => {
@@ -42,8 +41,8 @@ phase.load = () => {
 
 function check(pack) {
     logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
-    let update = loader.cli.hasOption("u");
-    let force = loader.cli.hasOption("x");
+    let disableUpdate = loader.cli.hasOption("u");
+    let force = pack.isVersionLocked();
     let down = false;
     if (!Utility.checkLocalFile(pack)) {
         logger.info("\"" + pack.id + ":" + pack.version + "\" is corrupted. Start downloading...");
@@ -55,7 +54,7 @@ function check(pack) {
     } else {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
-        if ((!update && !pack.version.equals(ver)) || (update && !target.contains(pack.version) && !force)) {
+        if (!disableUpdate && !pack.version.equals(ver) && !force) {
             if (loader.cli.hasOption("q")) {
                 let dir = new File(pack.type);
                 deleteFile(dir, pack.getBasename() + ".jar");

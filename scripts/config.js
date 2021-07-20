@@ -51,6 +51,12 @@ loader.options.addOption(Option.builder("t").desc("Set type of package")
     .longOpt("type").hasArg().argName("Type").build());
 loader.options.addOption(Option.builder("w").desc("Set version of package")
     .longOpt("version").hasArg().argName("Version").build());
+let lockGroup = new OptionGroup();
+lockGroup.addOption(Option.builder("x").desc("Lock version of package")
+    .longOpt("lock").build());
+lockGroup.addOption(Option.builder("y").desc("Unlock version of package")
+    .longOpt("unlock").build());
+loader.options.addOptionGroup(lockGroup);
 
 phase.cli = () => {
     if (loader.cli.hasOption("p")) {
@@ -79,7 +85,8 @@ phase.cli = () => {
         let pkgs = loader.config.packages;
         for (let i in pkgs) {
             let pkg = pkgs[i];
-            logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type + "  Version: " + pkg.version);
+            logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type +
+                "  Version: " + pkg.version + "  Locked: " + (pkg.versionLocked ? "true" : "false"));
         }
         System.exit(0);
     }
@@ -128,5 +135,14 @@ function updatePackage(pkg) {
     }
     if (loader.cli.hasOption("w")) {
         pkg.version = loader.cli.getOptionValue("w");
+    }
+    if (loader.cli.hasOption("x")) {
+        if (pkg.version.trim().equals("")) {
+            logger.warning("Invalid version \"" + pkg.version + " for \"" + pkg.id + "\".")
+        }
+        pkg.versionLocked = true;
+    }
+    if (loader.cli.hasOption("x")) {
+        pkg.versionLocked = true;
     }
 }
