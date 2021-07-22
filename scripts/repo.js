@@ -50,6 +50,7 @@ phase.cli = () => {
             loader.logger.info("");
         }
         loader.exit(0);
+        return;
     }
 
     if (loader.cli.hasOption("i")) {
@@ -63,5 +64,6 @@ phase.cli = () => {
             loader.logger.info("");
         }
         loader.exit(0);
+        return;
     }
 }

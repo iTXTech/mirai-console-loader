@@ -58,6 +58,9 @@ lockGroup.addOption(Option.builder("y").desc("Unlock version of package")
     .longOpt("unlock").build());
 loader.options.addOptionGroup(lockGroup);
 
+loader.options.addOption(Option.builder("q").desc("Delete old plugin and mirai files")
+    .longOpt("delete").build());
+
 phase.cli = () => {
     if (loader.cli.hasOption("p")) {
         loader.config.proxy = loader.cli.getOptionValue("p", "");
@@ -67,6 +70,7 @@ phase.cli = () => {
         loader.logger.info("Mirai Repo: " + loader.config.miraiRepo);
         loader.logger.info("Maven Repo: " + loader.config.mavenRepo);
         loader.exit(0);
+        return;
     }
     if (loader.cli.hasOption("m")) {
         loader.config.miraiRepo = loader.cli.getOptionValue("m");
@@ -89,6 +93,7 @@ phase.cli = () => {
                 "  Version: " + pkg.version + "  Locked: " + (pkg.versionLocked ? "true" : "false"));
         }
         loader.exit(0);
+        return;
     }
     if (loader.cli.hasOption("r")) {
         let name = loader.cli.getOptionValue("r");
@@ -96,14 +101,17 @@ phase.cli = () => {
         for (let i in pkgs) {
             let pkg = pkgs[i];
             if (pkg.id.equals(name)) {
+                pkg.removeFiles();
                 pkgs.remove(pkg);
                 loader.logger.info("Package \"" + pkg.id + "\" has been removed.");
                 loader.saveConfig();
                 loader.exit(0);
+                return;
             }
         }
         loader.logger.error("Package \"" + name + "\" not found.");
         loader.exit(1);
+        return;
     }
     if (loader.cli.hasOption("a")) {
         let name = loader.cli.getOptionValue("a");
@@ -115,6 +123,7 @@ phase.cli = () => {
                 loader.logger.info("Package \"" + pkg.id + "\" has been updated.");
                 loader.saveConfig();
                 loader.exit(0);
+                return;
             }
         }
         let pkg = new Config.Package(name, "stable");
@@ -123,6 +132,7 @@ phase.cli = () => {
         loader.logger.info("Package \"" + pkg.id + "\" has been added.");
         loader.saveConfig();
         loader.exit(0);
+        return;
     }
 }
 

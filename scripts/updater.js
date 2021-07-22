@@ -30,7 +30,6 @@ importPackage(org.itxtech.mcl.component);
 importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt("disable-update").build());
-loader.options.addOption(Option.builder("q").desc("Remove old plugin and mirai files").longOpt("remove-old").build());
 
 phase.load = () => {
     let packages = loader.config.packages;
@@ -56,10 +55,7 @@ function check(pack) {
         let ver = target[target.size() - 1];
         if (!disableUpdate && !pack.version.equals(ver) && !force) {
             if (loader.cli.hasOption("q")) {
-                let dir = new File(pack.type);
-                deleteFile(dir, pack.getBasename() + ".jar");
-                deleteFile(dir, pack.getBasename() + ".sha1");
-                deleteFile(dir, pack.getBasename() + ".metadata");
+                pack.removeFiles();
             } else if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
                 let dir = new File(pack.type);
                 pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
@@ -75,13 +71,6 @@ function check(pack) {
         }
     }
     loader.saveConfig();
-}
-
-function deleteFile(dir, file) {
-    let f = new File(dir, file);
-    if (f.exists() && f.delete()) {
-        loader.logger.info("File \"" + f.getName() + "\" has been deleted.");
-    }
 }
 
 function downloadFile(pack, info) {

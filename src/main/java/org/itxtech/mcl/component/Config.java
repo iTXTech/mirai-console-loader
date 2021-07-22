@@ -127,5 +127,23 @@ public class Config {
         public File getJarFile() {
             return new File(new File(type), getBasename() + ".jar");
         }
+
+        public void removeFiles() {
+            var dir = new File(type);
+            deleteFile(dir, "jar");
+            deleteFile(dir, "sha1");
+            deleteFile(dir, "metadata");
+        }
+
+        public void deleteFile(File dir, String type) {
+            var f = new File(dir, getBasename() + "." + type);
+            if (f.exists()) {
+                if (f.delete()) {
+                    Loader.getInstance().logger.info("File \"" + f.getName() + "\" has been deleted.");
+                } else {
+                    Loader.getInstance().logger.error("Failed to delete \"" + f.getName() + "\". Please delete it manually.");
+                }
+            }
+        }
     }
 }
