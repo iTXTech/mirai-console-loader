@@ -5,7 +5,7 @@ import org.apache.commons.cli.OptionGroup;
 import org.itxtech.mcl.Loader;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  *
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class ScriptManager {
     private final Loader loader;
     private final File baseDir;
-    private final ArrayList<Script> scripts = new ArrayList<>();
+    private final HashMap<String, Script> scripts = new HashMap<>();
 
     public ScriptManager(Loader loader, File baseDir) {
         this.loader = loader;
@@ -45,6 +45,10 @@ public class ScriptManager {
         group.addOption(Option.builder("e").longOpt("enable-script").desc("Enable script (exclude \".js\")").hasArg().argName("ScriptName").build());
         group.addOption(Option.builder("d").longOpt("disable-script").desc("Disable script (exclude \".js\")").hasArg().argName("ScriptName").build());
         loader.options.addOptionGroup(group);
+    }
+
+    public Script getScript(String name) {
+        return scripts.get(name);
     }
 
     public void readAllScripts() throws Exception {
@@ -68,10 +72,11 @@ public class ScriptManager {
         }
 
         for (var file : baseDir.listFiles()) {
+            var basename = file.getName().replace(".js", "");
             if (file.isFile() && file.getName().endsWith(".js") &&
-                    !loader.config.disabledScripts.contains(file.getName().replace(".js", ""))) {
+                    !loader.config.disabledScripts.contains(basename)) {
                 loader.logger.debug("Loading script: " + file.getName());
-                scripts.add(new Script(loader, file));
+                scripts.put(basename, new Script(loader, file));
             }
         }
         if (scripts.size() == 0) {
@@ -80,7 +85,7 @@ public class ScriptManager {
     }
 
     public void phaseCli() {
-        for (var script : scripts) {
+        for (var script : scripts.values()) {
             if (script.phase.cli != null) {
                 script.phase.cli.run();
             }
@@ -88,7 +93,7 @@ public class ScriptManager {
     }
 
     public void phaseLoad() {
-        for (var script : scripts) {
+        for (var script : scripts.values()) {
             if (script.phase.load != null) {
                 script.phase.load.run();
             }
@@ -96,7 +101,7 @@ public class ScriptManager {
     }
 
     public void phaseBoot() {
-        for (var script : scripts) {
+        for (var script : scripts.values()) {
             if (script.phase.boot != null) {
                 script.phase.boot.run();
             }
