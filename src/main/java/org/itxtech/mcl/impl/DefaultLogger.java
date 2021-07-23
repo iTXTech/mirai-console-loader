@@ -31,7 +31,7 @@ import java.util.Date;
  *
  */
 public class DefaultLogger implements Logger {
-    private int logLevel = LOG_DEBUG;
+    protected int logLevel = LOG_DEBUG;
 
     @Override
     public void setLogLevel(int logLevel) {

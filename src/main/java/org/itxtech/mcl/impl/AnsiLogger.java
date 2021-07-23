@@ -2,10 +2,7 @@ package org.itxtech.mcl.impl;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import org.itxtech.mcl.component.Logger;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,16 +29,9 @@ import java.util.Date;
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-public class AnsiLogger implements Logger {
-    private int logLevel = LOG_DEBUG;
-
-    public AnsiLogger(){
+public class AnsiLogger extends DefaultLogger {
+    public AnsiLogger() {
         AnsiConsole.systemInstall();
-    }
-
-    @Override
-    public void setLogLevel(int logLevel) {
-        this.logLevel = logLevel;
     }
 
     @Override
@@ -77,47 +67,5 @@ public class AnsiLogger implements Logger {
         } else {
             System.out.println(ansi.a(log).fg(Ansi.Color.DEFAULT));
         }
-    }
-
-    @Override
-    public void info(String info) {
-        log(info, LOG_INFO);
-    }
-
-    @Override
-    public void debug(String info) {
-        log(info, LOG_DEBUG);
-    }
-
-    @Override
-    public void warning(String info) {
-        log(info, LOG_WARNING);
-    }
-
-    @Override
-    public void error(String info) {
-        log(info, LOG_ERROR);
-    }
-
-    @Override
-    public void logException(Throwable e) {
-        error(getExceptionMessage(e));
-    }
-
-    @Override
-    public void print(String s) {
-        System.out.print(s);
-    }
-
-    @Override
-    public void println(String s) {
-        System.out.println(s);
-    }
-
-    public static String getExceptionMessage(Throwable e) {
-        var stringWriter = new StringWriter();
-        var printWriter = new PrintWriter(stringWriter);
-        e.printStackTrace(printWriter);
-        return stringWriter.toString();
     }
 }

@@ -47,7 +47,7 @@ task fatJar(type: Jar) {
 assemble.dependsOn(fatJar)
 
 mavenCentralPublish {
-    singleDevGithubProject("iTXTech", "mcl")
+    singleDevGithubProject("iTXTech", "mirai-console-loader")
     licenseAGplV3()
     useCentralS01()
 }
