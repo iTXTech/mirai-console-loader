@@ -25,20 +25,19 @@
 importPackage(java.lang);
 importPackage(org.itxtech.mcl.component);
 
-if (System.getProperty("java.vm.vendor").contains("Oracle")) {
-    let found = false;
-    let pkgs = loader.config.packages;
-    for (let i in pkgs) {
-        let pkg = pkgs[i];
-        if (pkg.id.equals("org.bouncycastle:bcprov-jdk15on")) {
-            found = true;
-            break;
-        }
+let found = false;
+let pkgs = loader.config.packages;
+for (let i in pkgs) {
+    let pkg = pkgs[i];
+    if (pkg.id.equals("org.itxtech:mcl-addon")) {
+        found = true;
+        break;
     }
-    if (!found) {
-        let p = new Config.Package("org.bouncycastle:bcprov-jdk15on", "stable");
-        p.type = Config.Package.TYPE_CORE;
-        loader.config.packages.add(0, p);
-        loader.logger.info("BouncyCastle is installed because OracleJDK is detected.");
-    }
+}
+if (!found) {
+    let p = new Config.Package("org.itxtech:mcl-addon", "stable");
+    p.type = Config.Package.TYPE_PLUGIN;
+    loader.config.packages.add(p);
+    loader.logger.info("MCL Addon is installed! See https://github.com/iTXTech/mcl-addon");
+    loader.logger.info("To remove MCL Addon, run \"mcl --disable-script addon\" and \"mcl --remove-package org.itxtech:mcl-addon --delete\"");
 }
