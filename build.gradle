@@ -1,9 +1,11 @@
 plugins {
+    id 'net.mamoe.maven-central-publish' version "0.6.0-dev-2"
     id 'java'
 }
 
 group 'org.itxtech'
-version '1.1.0'
+version '1.2.0'
+description '模块化、轻量级且支持完全自定义的 mirai 加载器。'
 
 repositories {
     mavenCentral()
@@ -25,7 +27,10 @@ def getGitHash = { ->
     return stdout.toString().trim()
 }
 
-jar {
+task fatJar(type: Jar) {
+    from sourceSets.main.output
+    archiveBaseName.set("mcl")
+
     manifest {
         attributes "Main-Class": "org.itxtech.mcl.Loader"
         attributes "Version": project.version + "-" + getGitHash()
@@ -37,6 +42,14 @@ jar {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+assemble.dependsOn(fatJar)
+
+mavenCentralPublish {
+    singleDevGithubProject("iTXTech", "mcl")
+    licenseAGplV3()
+    useCentralS01()
 }
 
 java {
