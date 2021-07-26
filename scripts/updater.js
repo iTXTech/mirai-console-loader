@@ -34,7 +34,12 @@ loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt
 phase.load = () => {
     let packages = loader.config.packages;
     for (let i in packages) {
-        check(packages[i]);
+        try {
+            check(packages[i]);
+        } catch (e) {
+            loader.logger.error("Failed to verify package \"" + packages[i].id + "\"");
+            loader.logger.logException(e);
+        }
     }
 };
 

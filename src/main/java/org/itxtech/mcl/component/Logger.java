@@ -45,5 +45,5 @@ public interface Logger {
 
     void print(String s);
 
-    void logException(Throwable e);
+    void logException(Object e);
 }

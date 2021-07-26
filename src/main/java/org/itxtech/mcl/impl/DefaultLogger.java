@@ -1,6 +1,8 @@
 package org.itxtech.mcl.impl;
 
 import org.itxtech.mcl.component.Logger;
+import org.mozilla.javascript.IdScriptableObject;
+import org.mozilla.javascript.NativeJavaObject;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -88,8 +90,18 @@ public class DefaultLogger implements Logger {
     }
 
     @Override
-    public void logException(Throwable e) {
-        error(getExceptionMessage(e));
+    public void logException(Object e) {
+        if (e.getClass().getCanonicalName().equals("org.mozilla.javascript.NativeError")) {
+            e = ((IdScriptableObject) e).get("javaException");
+            if (e instanceof NativeJavaObject) {
+                e = ((NativeJavaObject) e).unwrap();
+            }
+        }
+        if (e instanceof Throwable) {
+            error(getExceptionMessage((Throwable) e));
+        } else {
+            error(e.toString());
+        }
     }
 
     @Override

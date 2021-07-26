@@ -140,6 +140,18 @@ public class Loader {
         config.save(configFile);
     }
 
+    private void tryCatching(UnsafeRunnable r) {
+        try {
+            r.run();
+        } catch (Throwable e) {
+            logger.logException(e);
+        }
+    }
+
+    private interface UnsafeRunnable {
+        void run() throws Exception;
+    }
+
     /**
      * 启动 Mirai Console Loader，并加载脚本
      */
@@ -152,16 +164,16 @@ public class Loader {
 
         manager = new ScriptManager(this, new File("scripts"));
         parseCli(args, false);
-        manager.readAllScripts(); //此阶段脚本只能修改loader中变量
+        tryCatching(() -> manager.readAllScripts()); //此阶段脚本只能修改loader中变量
         parseCli(args, true);
-        manager.phaseCli(); //此阶段脚本处理命令行参数
+        tryCatching(() -> manager.phaseCli()); //此阶段脚本处理命令行参数
         repo = new Repository(this);
         downloader = new DefaultDownloader(this);
-        manager.phaseLoad(); //此阶段脚本下载包
+        tryCatching(() -> manager.phaseLoad()); //此阶段脚本下载包
         saveConfig();
         boot = true;
         if (!cli.hasOption("z")) {
-            manager.phaseBoot(); //此阶段脚本启动mirai，且应该只有一个脚本实现
+            tryCatching(() -> manager.phaseBoot()); //此阶段脚本启动mirai，且应该只有一个脚本实现
         }
     }
 }
