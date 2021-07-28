@@ -48,24 +48,24 @@ public class AnsiLogger extends DefaultLogger {
                 prefix = "DEBUG";
                 break;
             case LOG_WARNING:
-                ansi = ansi.fgYellow();
+                ansi = ansi.fgBrightYellow();
                 prefix = "WARNING";
                 break;
             case LOG_ERROR:
-                ansi = ansi.fgRed();
+                ansi = ansi.fgBrightRed();
                 prefix = "ERROR";
                 break;
             case LOG_INFO:
             default:
-                ansi = ansi.fgGreen();
+                ansi = ansi.fgBrightGreen();
                 prefix = "INFO";
                 break;
         }
         var log = " " + date + " [" + prefix + "] " + info;
         if (level == LOG_ERROR) {
-            System.err.println(ansi.a(log).fg(Ansi.Color.DEFAULT));
+            System.err.println(ansi.a(log).fgDefault());
         } else {
-            System.out.println(ansi.a(log).fg(Ansi.Color.DEFAULT));
+            System.out.println(ansi.a(log).fgDefault());
         }
     }
 }

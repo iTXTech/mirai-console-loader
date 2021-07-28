@@ -39,5 +39,5 @@ if (!found) {
     p.type = Config.Package.TYPE_PLUGIN;
     loader.config.packages.add(p);
     loader.logger.info("MCL Addon is installed! See https://github.com/iTXTech/mcl-addon");
-    loader.logger.info("To remove MCL Addon, run \"mcl --disable-script addon\" and \"mcl --remove-package org.itxtech:mcl-addon --delete\"");
+    loader.logger.warning("To remove MCL Addon, run \"./mcl --disable-script addon\" and \"./mcl --remove-package org.itxtech:mcl-addon --delete\"");
 }

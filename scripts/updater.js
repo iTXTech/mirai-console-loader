@@ -29,7 +29,8 @@ importPackage(org.itxtech.mcl);
 importPackage(org.itxtech.mcl.component);
 importPackage(org.apache.commons.cli);
 
-loader.options.addOption(Option.builder("u").desc("Disable auto update").longOpt("disable-update").build());
+loader.options.addOption(Option.builder("u").desc("Update packages").longOpt("update").build());
+let showNotice = false;
 
 phase.load = () => {
     let packages = loader.config.packages;
@@ -41,24 +42,27 @@ phase.load = () => {
             loader.logger.logException(e);
         }
     }
+    if (showNotice) {
+        loader.logger.warning("Run ./mcl -u to update packages.");
+    }
 };
 
 function check(pack) {
     loader.logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
-    let disableUpdate = loader.cli.hasOption("u");
+    let update = loader.cli.hasOption("u");
     let force = pack.isVersionLocked();
     let down = false;
     if (!Utility.checkLocalFile(pack)) {
-        loader.logger.info("\"" + pack.id + ":" + pack.version + "\" is corrupted. Start downloading...");
+        loader.logger.error("\"" + pack.id + "\" is corrupted.");
         down = true;
     }
     let info = loader.repo.fetchPackage(pack.id);
     if (!info.channels.containsKey(pack.channel)) {
-        loader.logger.error("Invalid update channel \"" + pack.channel + "\" for Package \"" + pack.name + "\"");
+        loader.logger.error("Invalid update channel \"" + pack.channel + "\" for Package \"" + pack.id + "\"");
     } else {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
-        if (!disableUpdate && !pack.version.equals(ver) && !force) {
+        if ((update && !pack.version.equals(ver) && !force) || pack.version.trim().equals("")) {
             if (loader.cli.hasOption("q")) {
                 pack.removeFiles();
             } else if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
@@ -68,10 +72,14 @@ function check(pack) {
             pack.version = ver;
             down = true;
         }
+        if (!down && !pack.version.equals(ver)) {
+            loader.logger.warning("Package \"" + pack.id + "\" has newer version \"" + ver + "\"");
+            showNotice = true;
+        }
         if (down) {
             downloadFile(pack, info);
             if (!Utility.checkLocalFile(pack)) {
-                loader.logger.warning("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
+                loader.logger.error("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
             }
         }
     }
