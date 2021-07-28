@@ -31,19 +31,19 @@ public interface Logger {
 
     void setLogLevel(int level);
 
-    void log(String info, int level);
+    void log(Object info, int level);
 
-    void debug(String info);
+    void debug(Object info);
 
-    void info(String info);
+    void info(Object info);
 
-    void warning(String warning);
+    void warning(Object warning);
 
-    void error(String error);
+    void error(Object error);
 
-    void println(String s);
+    void println(Object s);
 
-    void print(String s);
+    void print(Object s);
 
     void logException(Object e);
 }

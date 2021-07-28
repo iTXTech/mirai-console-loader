@@ -2,6 +2,7 @@ package org.itxtech.mcl.impl;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.itxtech.mcl.utils.AnsiMsg;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,11 +36,11 @@ public class AnsiLogger extends DefaultLogger {
     }
 
     @Override
-    public void log(String info, int level) {
+    public void log(Object info, int level) {
         if (level < logLevel) {
             return;
         }
-        var ansi = Ansi.ansi();
+        var ansi = Ansi.ansi().a(" ");
         String prefix;
         var date = new SimpleDateFormat("HH:mm:ss").format(new Date());
         switch (level) {
@@ -61,11 +62,24 @@ public class AnsiLogger extends DefaultLogger {
                 prefix = "INFO";
                 break;
         }
-        var log = " " + date + " [" + prefix + "] " + info;
+        ansi.a(" ").a(date).a(" [").a(prefix).a("] ");
+        if (level == LOG_INFO) ansi.reset();
+        ansi.a(AnsiMsg.renderWithAnsi(info));
+        ansi.reset();
         if (level == LOG_ERROR) {
-            System.err.println(ansi.a(log).fgDefault());
+            System.err.println(ansi);
         } else {
-            System.out.println(ansi.a(log).fgDefault());
+            System.out.println(ansi);
         }
+    }
+
+    @Override
+    public void print(Object s) {
+        System.out.print(AnsiMsg.renderWithAnsi(s));
+    }
+
+    @Override
+    public void println(Object s) {
+        System.out.println(AnsiMsg.renderWithAnsi(s));
     }
 }

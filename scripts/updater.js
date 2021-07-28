@@ -27,6 +27,7 @@ importPackage(java.lang);
 importPackage(java.math);
 importPackage(org.itxtech.mcl);
 importPackage(org.itxtech.mcl.component);
+importPackage(org.itxtech.mcl.utils);
 importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("u").desc("Update packages").longOpt("update").build());
@@ -43,12 +44,24 @@ phase.load = () => {
         }
     }
     if (showNotice) {
-        loader.logger.warning("Run ./mcl -u to update packages.");
+        loader.logger.warning(AnsiMsg.newMsg()
+            .lightYellow()
+            .a("Run ")
+            .reset().gold()
+            .a("./mcl -u")
+            .reset().lightYellow()
+            .a(" to update packages.")
+        );
     }
 };
 
 function check(pack) {
-    loader.logger.info("Verifying \"" + pack.id + "\" version " + pack.version);
+    // "Verifying \"" + pack.id + "\" version " + pack.version
+    loader.logger.info(AnsiMsg.newMsg()
+        .a("Verifying ")
+        .gold().a("\"").a(pack.id).a("\"").reset()
+        .a(" v").gold().a(pack.version)
+    );
     let update = loader.cli.hasOption("u");
     let force = pack.isVersionLocked();
     let down = false;
@@ -58,7 +71,14 @@ function check(pack) {
     }
     let info = loader.repo.fetchPackage(pack.id);
     if (!info.channels.containsKey(pack.channel)) {
-        loader.logger.error("Invalid update channel \"" + pack.channel + "\" for Package \"" + pack.id + "\"");
+        loader.logger.error(AnsiMsg.newMsg()
+            .lightRed()
+            .a("Invalid update channel ")
+            .lightBlue().append("\"").a(pack.channel).a("\"")
+            .lightRed()
+            .a(" for package ")
+            .gold().a("\"").a(pack.id).a("\"")
+        );
     } else {
         let target = info.channels[pack.channel];
         let ver = target[target.size() - 1];
@@ -73,13 +93,25 @@ function check(pack) {
             down = true;
         }
         if (!down && !pack.version.equals(ver)) {
-            loader.logger.warning("Package \"" + pack.id + "\" has newer version \"" + ver + "\"");
+            loader.logger.warning(AnsiMsg.newMsg()
+                .lightRed()
+                .a("Package ")
+                .reset().gold().a("\"").a(pack.id).a("\"")
+                .reset().lightRed().a(" has newer version ")
+                .reset().gold().a("\"").a(pack.id).a("\"")
+            );
             showNotice = true;
         }
         if (down) {
             downloadFile(pack, info);
             if (!Utility.checkLocalFile(pack)) {
-                loader.logger.error("The local file \"" + pack.id + "\" is still corrupted, please check the network.");
+                loader.logger.error(AnsiMsg.newMsg()
+                    .lightRed()
+                    .a("The local file ")
+                    .gold().a("\"").a(pack.id).a("\"")
+                    .lightRed()
+                    .a(" is still corrupted, please check the network.")
+                );
             }
         }
     }
@@ -99,7 +131,10 @@ function downloadFile(pack, info) {
             down(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));
         }
     } else {
-        loader.logger.error("Cannot download package \"" + pack.id + "\".");
+        loader.logger.error(AnsiMsg.newMsg()
+            .a("Cannot download package ")
+            .gold().a("\"").a(pack.id).a("\"")
+        );
     }
 }
 

@@ -1,6 +1,7 @@
 package org.itxtech.mcl.impl;
 
 import org.itxtech.mcl.component.Logger;
+import org.itxtech.mcl.utils.AnsiMsg;
 import org.mozilla.javascript.IdScriptableObject;
 import org.mozilla.javascript.NativeJavaObject;
 
@@ -51,7 +52,7 @@ public class DefaultLogger implements Logger {
     }
 
     @Override
-    public void log(String info, int level) {
+    public void log(Object info, int level) {
         if (level < logLevel) {
             return;
         }
@@ -80,48 +81,50 @@ public class DefaultLogger implements Logger {
     }
 
     @Override
-    public void info(String info) {
+    public void info(Object info) {
         log(info, LOG_INFO);
     }
 
     @Override
-    public void debug(String info) {
+    public void debug(Object info) {
         log(info, LOG_DEBUG);
     }
 
     @Override
-    public void warning(String info) {
+    public void warning(Object info) {
         log(info, LOG_WARNING);
     }
 
     @Override
-    public void error(String info) {
+    public void error(Object info) {
         log(info, LOG_ERROR);
     }
 
     @Override
     public void logException(Object e) {
+        Object oe = e;
         if (C$NativeError.isInstance(e)) {
             e = ((IdScriptableObject) e).get("javaException");
             if (e instanceof NativeJavaObject) {
                 e = ((NativeJavaObject) e).unwrap();
             }
         }
+        if (e == null) e = oe;
         if (e instanceof Throwable) {
             error(getExceptionMessage((Throwable) e));
         } else {
-            error(e.toString());
+            error(String.valueOf(e));
         }
     }
 
     @Override
-    public void print(String s) {
-        System.out.print(s);
+    public void print(Object s) {
+        System.out.print(AnsiMsg.renderNoAnsi(s));
     }
 
     @Override
-    public void println(String s) {
-        System.out.println(s);
+    public void println(Object s) {
+        System.out.println(AnsiMsg.renderNoAnsi(s));
     }
 
     public static String getExceptionMessage(Throwable e) {
