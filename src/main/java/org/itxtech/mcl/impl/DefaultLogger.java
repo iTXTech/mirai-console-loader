@@ -33,6 +33,16 @@ import java.util.Date;
  *
  */
 public class DefaultLogger implements Logger {
+    private static final Class<?> C$NativeError;
+
+    static {
+        try {
+            C$NativeError = Class.forName("org.mozilla.javascript.NativeError");
+        } catch (Throwable throwable) {
+            throw new ExceptionInInitializerError(throwable);
+        }
+    }
+
     protected int logLevel = LOG_DEBUG;
 
     @Override
@@ -91,7 +101,7 @@ public class DefaultLogger implements Logger {
 
     @Override
     public void logException(Object e) {
-        if (e.getClass().getCanonicalName().equals("org.mozilla.javascript.NativeError")) {
+        if (C$NativeError.isInstance(e)) {
             e = ((IdScriptableObject) e).get("javaException");
             if (e instanceof NativeJavaObject) {
                 e = ((NativeJavaObject) e).unwrap();
