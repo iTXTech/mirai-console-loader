@@ -19,7 +19,7 @@ package org.itxtech.mcl.utils;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author PeratX
+ * @author Karlatemp
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
