@@ -50,7 +50,7 @@ public class AnsiLogger extends DefaultLogger {
                 break;
             case LOG_WARNING:
                 ansi = ansi.fgBrightYellow();
-                prefix = "WARNING";
+                prefix = "WARN";
                 break;
             case LOG_ERROR:
                 ansi = ansi.fgBrightRed();

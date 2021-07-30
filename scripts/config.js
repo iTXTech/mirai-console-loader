@@ -84,6 +84,7 @@ phase.cli = () => {
         let lvl = Integer.parseInt(loader.cli.getOptionValue("c"));
         loader.logger.setLogLevel(lvl);
         loader.config.logLevel = lvl;
+        loader.saveConfig();
     }
     if (loader.cli.hasOption("s")) {
         let pkgs = loader.config.packages;

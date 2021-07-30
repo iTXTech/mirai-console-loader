@@ -98,7 +98,7 @@ function check(pack) {
                 .a("Package ")
                 .reset().gold().a("\"").a(pack.id).a("\"")
                 .reset().lightRed().a(" has newer version ")
-                .reset().gold().a("\"").a(pack.id).a("\"")
+                .reset().gold().a("\"").a(ver).a("\"")
             );
             showNotice = true;
         }

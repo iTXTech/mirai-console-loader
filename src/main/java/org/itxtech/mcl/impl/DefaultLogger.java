@@ -66,7 +66,7 @@ public class DefaultLogger implements Logger {
                 prefix = "INFO";
                 break;
             case LOG_WARNING:
-                prefix = "WARNING";
+                prefix = "WARN";
                 break;
             case LOG_ERROR:
                 prefix = "ERROR";
