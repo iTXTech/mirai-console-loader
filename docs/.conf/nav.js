@@ -2,8 +2,8 @@ module.exports = {
     text: 'mirai-console-loader',
     link: '/',
     items: [
-        { text: 'Index', link: '/' },
-        { text: 'Script', link: '/Script.html' },
-        { text: 'Plugin', link: '/Plugin.html' },
+        {text: '主页', link: '/'},
+        {text: 'MCL脚本', link: '/Script.html'},
+        {text: 'MCL插件', link: '/Plugin.html'},
     ],
 };

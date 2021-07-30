@@ -4,6 +4,8 @@
 
 欢迎阅读自带脚本的[说明](scripts/README.md)，它将教会你如何`安装插件`，`禁用和启用脚本`，`修改包的更新频道`等基本操作。
 
+开发者请参见 [MCL 开发文档](docs/README.md)
+
 ## 简介
 
 `iTX Technologies Mirai Console Loader`（下简称`MCL`）采用模块化设计，包含以下几个基础模块：
@@ -25,8 +27,6 @@
 1. 从 [Releases](https://github.com/iTXTech/mirai-console-loader/releases) 下载最新版本的`MCL`
 1. 解压到某处
 1. 在命令行中执行`.\mcl`以启动`MCL`
-    * `Windows`: `cmd` 必须执行`.\mcl`，`powershell`接受`.\mcl`或`./mcl`
-    * `*nix`: `./mcl`
 
 ## `Mirai Repo` 列表
 
