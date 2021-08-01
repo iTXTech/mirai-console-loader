@@ -5,10 +5,12 @@ import org.mozilla.javascript.NativeArray;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.StringCharacterIterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarFile;
 
@@ -69,18 +71,36 @@ public class Utility {
         return Utility.check(pkg.getJarFile(), new File(dir, pkg.getBasename() + ".sha1"));
     }
 
+    public interface GetMain {
+        Method run() throws Exception;
+    }
+
+    public static void bootJars(File[] files, String entry, String args) throws Exception {
+        bootJars(files, entry, args, () ->
+                Utility.class.getClassLoader().loadClass(entry)
+                        .getMethod("main", String[].class));
+    }
+
+    public static void bootJars(File[] files, String entry, String args, GetMain getMain) throws Exception {
+        for (var file : files) {
+            Agent.appendJarFile(new JarFile(file));
+        }
+        var method = getMain.run();
+        method.invoke(null, (Object) (args.trim().equals("") ? new String[0] : args.split(" ")));
+    }
+
     public static void bootMirai(NativeArray files, String entry, String args) throws Exception {
         var f = new StringBuilder();
+        var arr = new ArrayList<File>();
         for (var file : files) {
             if (file instanceof File) {
-                Agent.appendJarFile(new JarFile((File) file));
+                arr.add((File) file);
                 f.append(((File) file).getName()).append(", ");
             }
         }
         f.delete(f.length() - 2, f.length());
         Loader.getInstance().logger.debug("Boot Mirai Files: " + f + "; Args: \"" + args + "\"");
-        var method = Utility.class.getClassLoader().loadClass(entry).getMethod("main", String[].class);
-        method.invoke(null, (Object) (args.trim().equals("") ? new String[0] : args.split(" ")));
+        bootJars(arr.toArray(new File[0]), entry, args);
     }
 
     public static String humanReadableFileSize(int bytes) {
