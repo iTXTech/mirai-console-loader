@@ -70,6 +70,12 @@ function check(pack) {
         down = true;
     }
     let info = loader.repo.fetchPackage(pack.id);
+    if (pack.type.equals("")) {
+        pack.type = Config.Package.getType(info.type);
+    }
+    if (pack.channel.equals("")) {
+        pack.channel = Config.Package.getChannel(info.defaultChannel);
+    }
     if (!info.channels.containsKey(pack.channel)) {
         loader.logger.error(AnsiMsg.newMsg()
             .lightRed()

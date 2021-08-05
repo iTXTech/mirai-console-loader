@@ -127,7 +127,7 @@ phase.cli = () => {
                 return;
             }
         }
-        let pkg = new Config.Package(name, "stable");
+        let pkg = new Config.Package(name);
         updatePackage(pkg);
         pkgs.add(pkg);
         loader.logger.info("Package \"" + pkg.id + "\" has been added.");

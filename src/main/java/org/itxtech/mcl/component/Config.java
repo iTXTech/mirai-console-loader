@@ -48,9 +48,9 @@ public class Config {
         add("https://maven.aliyun.com/repository/public");
     }};
     public ArrayList<Package> packages = new ArrayList<>() {{
-        add(new Package("net.mamoe:mirai-console", "beta"));
-        add(new Package("net.mamoe:mirai-console-terminal", "beta"));
-        add(new Package("net.mamoe:mirai-core-all", "beta"));
+        add(new Package("net.mamoe:mirai-console"));
+        add(new Package("net.mamoe:mirai-console-terminal"));
+        add(new Package("net.mamoe:mirai-core-all"));
     }};
     @SerializedName("disabled_scripts")
     public ArrayList<String> disabledScripts = new ArrayList<>();
@@ -97,15 +97,33 @@ public class Config {
         public static final String TYPE_CORE = "libs";
         public static final String TYPE_PLUGIN = "plugins";
 
+        public static final String CHAN_STABLE = "stable";
+        public static final String CHAN_BETA = "beta";
+        public static final String CHAN_NIGHTLY = "nightly";
+
         public static String getType(String t) {
+            if (t == null) {
+                return TYPE_PLUGIN;
+            }
+            if (t.contains("-")) {
+                t = t.split("-")[0];
+            }
             return TYPE_ALIAS.getOrDefault(t, t);
+        }
+
+        public static String getChannel(String c) {
+            return c == null ? CHAN_STABLE : c;
         }
 
         public String id;
         public String channel;
         public String version = "";
-        public String type = TYPE_CORE;
+        public String type = "";
         public boolean versionLocked = false;
+
+        public Package(String id) {
+            this(id, "");
+        }
 
         public Package(String id, String channel) {
             this.id = id;

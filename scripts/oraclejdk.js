@@ -36,7 +36,7 @@ if (System.getProperty("java.vm.vendor").contains("Oracle")) {
         }
     }
     if (!found) {
-        let p = new Config.Package("org.bouncycastle:bcprov-jdk15on", "stable");
+        let p = new Config.Package("org.bouncycastle:bcprov-jdk15on");
         p.type = Config.Package.TYPE_CORE;
         pkgs.add(0, p);
         loader.logger.info("BouncyCastle is installed because OracleJDK is detected.");

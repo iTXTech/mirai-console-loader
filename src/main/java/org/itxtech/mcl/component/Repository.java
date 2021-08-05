@@ -144,6 +144,7 @@ public class Repository {
     public static class Package {
         public String announcement;
         public String type;
+        public String defaultChannel;
         public Map<String, ArrayList<String>> channels;
         public Map<String, RepoInfo> repo;
     }
