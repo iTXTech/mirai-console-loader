@@ -31,6 +31,7 @@ importPackage(org.itxtech.mcl.utils);
 importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("u").desc("Update packages").longOpt("update").build());
+loader.options.addOption(Option.builder("k").desc("Disable progress bar").longOpt("--disable-progress-bar").build());
 let showNotice = false;
 
 phase.load = () => {
@@ -175,7 +176,7 @@ function down(url, file) {
     let name = file.name;
     var size = 0;
     let ttl = "";
-    loader.downloader.download(url, file, (total, current) => {
+    loader.downloader.download(url, file, loader.cli.hasOption("k") ? null : (total, current) => {
         ttl = Utility.humanReadableFileSize(total);
         var cur = Utility.humanReadableFileSize(current);
 
@@ -183,6 +184,8 @@ function down(url, file) {
         loader.logger.print(line);
         size = line.length
     });
-    loader.logger.print(emptyString.substr(0, size) + '\r');
+    if (!loader.cli.hasOption("k")) {
+        loader.logger.print(emptyString.substr(0, size) + '\r');
+    }
     loader.logger.println(" Downloading " + name + " " + buildDownloadBar(1, 1) + " " + ttl);
 }

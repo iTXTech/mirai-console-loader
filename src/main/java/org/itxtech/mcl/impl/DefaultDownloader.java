@@ -53,7 +53,9 @@ public class DefaultDownloader implements Downloader {
             while ((len = is.read(buff)) != -1) {
                 os.write(buff, 0, len);
                 current += len;
-                observer.updateProgress(totalLen, current);
+                if (observer != null) {
+                    observer.updateProgress(totalLen, current);
+                }
             }
             os.close();
         } catch (Throwable e) {
