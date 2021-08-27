@@ -130,9 +130,9 @@ function downloadFile(pack, info) {
     dir.mkdirs();
     let ver = pack.version;
     let jarUrl = loader.repo.getJarUrl(pack, info);
-    if (!jarUrl.equals("")) {
+    if (!jarUrl.isEmpty()) {
         down(jarUrl, new File(dir, pack.getName() + "-" + ver + ".jar"));
-        down(jarUrl + ".sha1", new File(dir, pack.getName() + "-" + ver + ".sha1"));
+        down(loader.repo.getSha1Url(pack, info, jarUrl), new File(dir, pack.getName() + "-" + ver + ".sha1"));
         let metadata = loader.repo.getMetadataUrl(pack, info);
         if (!metadata.equals("")) {
             down(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));

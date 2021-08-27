@@ -74,9 +74,22 @@ public class Repository {
         }.getType());
     }
 
+    public String getSha1Url(Config.Package pkg, Package info, String jarUrl) {
+        if (info.repo != null) {
+            RepoInfo repoInfo = info.repo.get(pkg.version);
+            if (repoInfo != null && repoInfo.sha1 != null && !repoInfo.sha1.isBlank()) {
+                return repoInfo.sha1;
+            }
+        }
+        return jarUrl + ".sha1";
+    }
+
     public String getJarUrl(Config.Package pkg, Package info) {
-        if (info.repo != null && info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).archive.equals("")) {
-            return info.repo.get(pkg.version).archive;
+        if (info.repo != null) {
+            RepoInfo repoInfo = info.repo.get(pkg.version);
+            if (repoInfo != null && repoInfo.archive != null && !repoInfo.archive.isBlank()) {
+                return repoInfo.archive;
+            }
         }
         for (var repo : loader.config.mavenRepo) {
             var base = repo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
@@ -96,8 +109,11 @@ public class Repository {
     }
 
     public String getMetadataUrl(Config.Package pkg, Package info) {
-        if (info.repo != null && info.repo.containsKey(pkg.version) && !info.repo.get(pkg.version).metadata.equals("")) {
-            return info.repo.get(pkg.version).metadata;
+        if (info.repo != null) {
+            RepoInfo repoInfo = info.repo.get(pkg.version);
+            if (repoInfo != null && repoInfo.metadata != null && !repoInfo.metadata.isBlank()) {
+                return repoInfo.metadata;
+            }
         }
         for (var repo : loader.config.mavenRepo) {
             var url = repo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
@@ -152,6 +168,7 @@ public class Repository {
     public static class RepoInfo {
         public String archive;
         public String metadata;
+        public String sha1;
     }
 
     public static class Metadata {
