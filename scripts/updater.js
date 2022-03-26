@@ -70,56 +70,64 @@ function check(pack) {
         loader.logger.error("\"" + pack.id + "\" is corrupted.");
         down = true;
     }
-    let info = loader.repo.fetchPackage(pack.id);
-    if (pack.type.equals("")) {
-        pack.type = Config.Package.getType(info.type);
-    }
-    if (pack.channel.equals("")) {
-        pack.channel = Config.Package.getChannel(info.defaultChannel);
-    }
-    if (!info.channels.containsKey(pack.channel)) {
-        loader.logger.error(AnsiMsg.newMsg()
-            .lightRed()
-            .a("Invalid update channel ")
-            .lightBlue().append("\"").a(pack.channel).a("\"")
-            .lightRed()
-            .a(" for package ")
-            .gold().a("\"").a(pack.id).a("\"")
-        );
+    let ver = "";
+    let info = null;
+    if (pack.channel.equals("maven")) {
+        ver = loader.repo.getLatestVersionFromMaven(pack.id);
     } else {
-        let target = info.channels[pack.channel];
-        let ver = target[target.size() - 1];
-        if ((update && !pack.version.equals(ver) && !force) || pack.version.trim().equals("")) {
-            if (loader.cli.hasOption("q")) {
-                pack.removeFiles();
-            } else if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
-                let dir = new File(pack.type);
-                pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
-            }
-            pack.version = ver;
-            down = true;
+        info = loader.repo.fetchPackage(pack.id);
+        if (pack.type.equals("")) {
+            pack.type = Config.Package.getType(info.type);
         }
-        if (!down && !pack.version.equals(ver)) {
-            loader.logger.warning(AnsiMsg.newMsg()
+        if (pack.channel.equals("")) {
+            pack.channel = Config.Package.getChannel(info.defaultChannel);
+        }
+        if (!info.channels.containsKey(pack.channel)) {
+            loader.logger.error(AnsiMsg.newMsg()
                 .lightRed()
-                .a("Package ")
-                .reset().gold().a("\"").a(pack.id).a("\"")
-                .reset().lightRed().a(" has newer version ")
-                .reset().gold().a("\"").a(ver).a("\"")
+                .a("Invalid update channel ")
+                .lightBlue().append("\"").a(pack.channel).a("\"")
+                .lightRed()
+                .a(" for package ")
+                .gold().a("\"").a(pack.id).a("\"")
             );
-            showNotice = true;
+            loader.saveConfig();
+            return;
         }
-        if (down) {
-            downloadFile(pack, info);
-            if (!Utility.checkLocalFile(pack)) {
-                loader.logger.error(AnsiMsg.newMsg()
-                    .lightRed()
-                    .a("The local file ")
-                    .gold().a("\"").a(pack.id).a("\"")
-                    .lightRed()
-                    .a(" is still corrupted, please check the network.")
-                );
-            }
+        let target = info.channels[pack.channel];
+        ver = target[target.size() - 1];
+    }
+
+    if ((update && !pack.version.equals(ver) && !force) || pack.version.trim().equals("")) {
+        if (loader.cli.hasOption("q")) {
+            pack.removeFiles();
+        } else if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
+            let dir = new File(pack.type);
+            pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
+        }
+        pack.version = ver;
+        down = true;
+    }
+    if (!down && !pack.version.equals(ver)) {
+        loader.logger.warning(AnsiMsg.newMsg()
+            .lightRed()
+            .a("Package ")
+            .reset().gold().a("\"").a(pack.id).a("\"")
+            .reset().lightRed().a(" has newer version ")
+            .reset().gold().a("\"").a(ver).a("\"")
+        );
+        showNotice = true;
+    }
+    if (down) {
+        downloadFile(pack, info);
+        if (!Utility.checkLocalFile(pack)) {
+            loader.logger.error(AnsiMsg.newMsg()
+                .lightRed()
+                .a("The local file ")
+                .gold().a("\"").a(pack.id).a("\"")
+                .lightRed()
+                .a(" is still corrupted, please check the network.")
+            );
         }
     }
     loader.saveConfig();

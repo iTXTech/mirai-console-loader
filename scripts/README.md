@@ -5,6 +5,12 @@
 * `boot.js` - 用于启动`mirai console`
 * `repo.js` - 用于获取`mirai repo`仓库中的信息
 
+## 在`updater`中使用`maven`更新频道
+
+此功能可以自动从`Maven Repo`获取最新版本。
+
+`.\mcl --update-package 包名 --channel maven`
+
 ## 使用样例
 
 * 修改某个包的更新频道

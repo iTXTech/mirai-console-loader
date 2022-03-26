@@ -3,8 +3,13 @@ package org.itxtech.mcl.component;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.itxtech.mcl.Loader;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.StringReader;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -48,7 +53,11 @@ public class Repository {
 
     public Repository(Loader loader) {
         this.loader = loader;
-        client = loader.getProxy() == null ? HttpClient.newBuilder().build() : HttpClient.newBuilder().proxy(ProxySelector.of(loader.getProxy())).build();
+        client = (loader.getProxy() == null ?
+                HttpClient.newBuilder() :
+                HttpClient.newBuilder().proxy(ProxySelector.of(loader.getProxy())))
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
     }
 
     public Map<String, PackageInfo> fetchPackages() throws Exception {
@@ -69,13 +78,31 @@ public class Repository {
         }.getType());
     }
 
+    public Document fetchMavenMetadata(String id) throws Exception {
+        for (var repo : loader.config.mavenRepo) {
+            try {
+                var content = httpGet("/" + transformId(id) + "/maven-metadata.xml", repo);
+                var factory = DocumentBuilderFactory.newInstance();
+                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                return factory.newDocumentBuilder().parse(new InputSource(new StringReader(content)));
+            } catch (Exception e) {
+                loader.logger.logException(e);
+            }
+        }
+        throw new Exception("Cannot find valid maven metadata");
+    }
+
+    public String getLatestVersionFromMaven(String id) throws Exception {
+        return fetchMavenMetadata(id).getElementsByTagName("release").item(0).getTextContent();
+    }
+
     public Metadata getMetadataFromFile(File file) throws Exception {
         return new Gson().fromJson(Files.readString(file.toPath()), new TypeToken<Metadata>() {
         }.getType());
     }
 
     public String getSha1Url(Config.Package pkg, Package info, String jarUrl) {
-        if (info.repo != null) {
+        if (info != null && info.repo != null) {
             RepoInfo repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.sha1 != null && !repoInfo.sha1.isBlank()) {
                 return repoInfo.sha1;
@@ -85,7 +112,7 @@ public class Repository {
     }
 
     public String getJarUrl(Config.Package pkg, Package info) {
-        if (info.repo != null) {
+        if (info != null && info.repo != null) {
             RepoInfo repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.archive != null && !repoInfo.archive.isBlank()) {
                 return repoInfo.archive;
@@ -109,7 +136,7 @@ public class Repository {
     }
 
     public String getMetadataUrl(Config.Package pkg, Package info) {
-        if (info.repo != null) {
+        if (info != null && info.repo != null) {
             RepoInfo repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.metadata != null && !repoInfo.metadata.isBlank()) {
                 return repoInfo.metadata;
@@ -141,8 +168,12 @@ public class Repository {
     }
 
     private String httpGet(String url) throws Exception {
+        return httpGet(url, loader.config.miraiRepo);
+    }
+
+    private String httpGet(String url, String server) throws Exception {
         return client.send(
-                HttpRequest.newBuilder(URI.create(loader.config.miraiRepo + url))
+                HttpRequest.newBuilder(URI.create(server + url))
                         .timeout(Duration.ofSeconds(30))
                         .setHeader("User-Agent", USER_AGENT)
                         .build(),
