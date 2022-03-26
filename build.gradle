@@ -1,10 +1,10 @@
 plugins {
-    id 'net.mamoe.maven-central-publish' version "0.6.0-dev-2"
+    id 'me.him188.maven-central-publish' version "1.0.0-dev-3"
     id 'java'
 }
 
 group 'org.itxtech'
-version '1.2.2'
+version '1.2.3'
 description '模块化、轻量级且支持完全自定义的 mirai 加载器。'
 
 repositories {
@@ -12,10 +12,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.mozilla:rhino:1.7.13")
-    implementation("commons-cli:commons-cli:1.4")
-    implementation("com.google.code.gson:gson:2.8.7")
-    compileOnly('org.fusesource.jansi:jansi:2.3.4')
+    implementation('org.mozilla:rhino:1.7.13')
+    implementation('commons-cli:commons-cli:1.5.0')
+    implementation('com.google.code.gson:gson:2.9.0')
+    compileOnly('org.fusesource.jansi:jansi:2.4.0')
 }
 
 def getGitHash = { ->
@@ -42,14 +42,31 @@ task fatJar(type: Jar) {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+
+    exclude("META-INF/LICENSE.txt", "META-INF/NOTICE.txt", "META-INF/NOTICE-tools.txt")
+}
+
+task zipAll(type: Zip) {
+    from fileTree(dir: ".", includes: ["scripts/*", "README.md", "LICENSE", "mcl", "mcl.cmd"])
+    from("$buildDir/libs") {
+        include "mcl-${project.version}.jar"
+        rename { "mcl.jar" }
+    }
+    destinationDirectory = file("$buildDir/libs")
+    archiveFileName = "mirai-console-loader-${project.version}.zip"
 }
 
 assemble.dependsOn(fatJar)
+assemble.dependsOn(zipAll)
 
 mavenCentralPublish {
     singleDevGithubProject("iTXTech", "mirai-console-loader")
     licenseAGplV3()
     useCentralS01()
+
+    publication {
+        artifacts.artifact(tasks.getByName("zipAll"))
+    }
 }
 
 java {
