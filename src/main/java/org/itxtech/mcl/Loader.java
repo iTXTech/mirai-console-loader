@@ -64,7 +64,9 @@ public class Loader {
         var loader = new Loader();
         try {
             loader.loadConfig();
-            loader.detectLogger();
+            if (!"true".equals(System.getProperties().getProperty("mcl.disable-ansi"))) {
+                loader.detectLogger();
+            }
             loader.start(args);
         } catch (Exception e) {
             loader.logger.logException(e);

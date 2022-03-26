@@ -41,6 +41,14 @@ $ chmod +x mcl
 $ ./mcl
 ```
 
+### 禁用控制台颜色
+
+配置`mcl.disable-ansi`环境变量为`true`。
+
+```bash
+$ java "-Dmcl.disable-ansi=true" -jar mcl.jar
+```
+
 ## `Mirai Repo` 列表
 
 * [iTXTech](https://repo.itxtech.org) - **默认** - Cloudflare Pages
