@@ -31,7 +31,7 @@ importPackage(org.itxtech.mcl.utils);
 importPackage(org.apache.commons.cli);
 
 loader.options.addOption(Option.builder("u").desc("Update packages").longOpt("update").build());
-loader.options.addOption(Option.builder("k").desc("Disable progress bar").longOpt("--disable-progress-bar").build());
+loader.options.addOption(Option.builder("k").desc("Disable progress bar").longOpt("disable-progress-bar").build());
 let showNotice = false;
 
 phase.load = () => {
@@ -72,8 +72,8 @@ function check(pack) {
     }
     let ver = "";
     let info = null;
-    if (pack.channel.equals("maven")) {
-        ver = loader.repo.getLatestVersionFromMaven(pack.id);
+    if (pack.channel.startsWith("maven")) {
+        ver = loader.repo.getLatestVersionFromMaven(pack.id, pack.channel);
     } else {
         info = loader.repo.fetchPackage(pack.id);
         if (pack.type.equals("")) {

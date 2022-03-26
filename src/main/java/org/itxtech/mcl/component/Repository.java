@@ -92,8 +92,10 @@ public class Repository {
         throw new Exception("Cannot find valid maven metadata");
     }
 
-    public String getLatestVersionFromMaven(String id) throws Exception {
-        return fetchMavenMetadata(id).getElementsByTagName("release").item(0).getTextContent();
+    public String getLatestVersionFromMaven(String id, String channel) throws Exception {
+        var data = fetchMavenMetadata(id);
+        // TODO: stable, beta, nightly
+        return data.getElementsByTagName("release").item(0).getTextContent();
     }
 
     public Metadata getMetadataFromFile(File file) throws Exception {
