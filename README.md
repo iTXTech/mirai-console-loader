@@ -24,9 +24,22 @@
 ### 手动安装
 
 1. 安装 Java 运行时（版本必须 >= 11）
-1. 从 [Releases](https://github.com/iTXTech/mirai-console-loader/releases) 下载最新版本的`MCL`
-1. 解压到某处
-1. 在命令行中执行`.\mcl`以启动`MCL`
+2. 从 [Releases](https://github.com/iTXTech/mirai-console-loader/releases) 下载最新版本的`MCL`
+3. 解压到某处
+4. 在命令行中执行`.\mcl`以启动`MCL`
+
+在`*nix`下通过命令行安装
+
+```bash
+$ java -version # Check your java installation
+java version "17.0.2" 2022-01-18 LTS
+$ mkdir mcl
+$ cd mcl
+$ wget https://github.com/iTXTech/mirai-console-loader/releases/download/v1.2.2/mcl-1.2.2.zip
+$ unzip mcl-1.2.2.zip
+$ chmod +x mcl
+$ ./mcl
+```
 
 ## `Mirai Repo` 列表
 
