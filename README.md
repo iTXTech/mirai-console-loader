@@ -30,8 +30,9 @@
 
 ## `Mirai Repo` 列表
 
-* [Gitee](https://gitee.com/peratx/mirai-repo) - **默认**，如要镜像请完整拷贝该仓库文件即可
-* [GitHub](https://github.com/project-mirai/mirai-repo-mirror) - 位于`project-mirai`的镜像，国内首选`Gitee`
+* [iTXTech](https://repo.itxtech.org) - **默认** - Cloudflare Pages
+* [Mamoe](https://mcl.repo.mamoe.net) - GitHub Pages
+* [GitHub](https://github.com/project-mirai/mirai-repo-mirror) - 如要镜像请完整拷贝该仓库文件即可
 
 ## `Maven Repo` 列表
 
@@ -41,7 +42,8 @@
 
 ## 开源许可证
 
-    Copyright (C) 2020-2021 iTX Technologies
+    iTXTech Mirai Console Loader
+    Copyright (C) 2020-2022 iTX Technologies
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as

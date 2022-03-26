@@ -19,7 +19,7 @@ import java.util.HashMap;
  *
  * Mirai Console Loader
  *
- * Copyright (C) 2020-2021 iTX Technologies
+ * Copyright (C) 2020-2022 iTX Technologies
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -42,7 +42,7 @@ public class Config {
     @SerializedName("js_optimization_level")
     public int jsOptimizationLevel = -1;
     @SerializedName("mirai_repo")
-    public String miraiRepo = "https://gitee.com/peratx/mirai-repo/raw/master";
+    public String miraiRepo = "https://repo.itxtech.org";
     @SerializedName("maven_repo")
     public ArrayList<String> mavenRepo = new ArrayList<>() {{
         add("https://maven.aliyun.com/repository/public");
