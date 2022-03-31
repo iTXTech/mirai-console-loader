@@ -45,6 +45,21 @@ task fatJar(type: Jar) {
     exclude("META-INF/LICENSE.txt", "META-INF/NOTICE.txt", "META-INF/NOTICE-tools.txt")
 }
 
+task launchTest(type: JavaExec) {
+    dependsOn('fatJar')
+
+    jvmArgs(
+            '-Dmcl.no-anso-console-init=true',
+    )
+
+    mainClass.set('-jar')
+    args(fatJar.outputs.files.singleFile)
+
+    def wk = project.file('testing')
+    workingDir(wk)
+    doFirst { wk.mkdirs() }
+}
+
 task zipAll(type: Zip) {
     from fileTree(dir: ".", includes: ["scripts/*", "README.md", "LICENSE", "mcl", "mcl.cmd"])
     from("$buildDir/libs") {
