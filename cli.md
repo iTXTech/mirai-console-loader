@@ -6,6 +6,12 @@
 
 `.\mcl --update-package 包名 --channel maven`
 
+### `maven` 支持两个子频道
+
+* `stable` - 稳定版 - `.\mcl --update-package 包名 --channel maven-stable`
+* `prerelease` - 预发行版 - `.\mcl --update-package 包名 --channel maven-prerelease`
+* 留空或其他，则默认为最新版
+
 ## 使用样例
 
 * 修改某个包的更新频道

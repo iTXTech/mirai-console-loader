@@ -97,7 +97,32 @@ public class Repository {
 
     public String getLatestVersionFromMaven(String id, String channel) throws Exception {
         var data = fetchMavenMetadata(id);
-        // TODO: stable, beta, nightly
+        if (channel.contains("-")) {
+            var kind = SemVer.getVersionKindFromChannel(channel.split("-")[1]);
+            if (kind != SemVer.VersionKind.Nightly) {
+                var vers = data.getElementsByTagName("versions").item(0).getChildNodes();
+                var list = new ArrayList<SemVer>();
+                for (var i = 0; i < vers.getLength(); i++) {
+                    var ver = vers.item(i).getTextContent().trim();
+                    if (ver.length() > 0 && SemVer.isKind(ver, kind)) {
+                        var semVer = SemVer.parseFromText(ver);
+                        if (semVer != null) {
+                            list.add(semVer);
+                        } else {
+                            System.out.println(ver);
+                        }
+                    }
+                }
+                if (list.size() == 0) {
+                    loader.logger.error("Cannot find any version matches channel \"" + channel + "`\" for \"" + id + "\", using default version.");
+                } else {
+                    list.sort(SemVer::compareTo);
+                    for (var v : list) {
+                        return list.get(list.size() - 1).getRawVersion();
+                    }
+                }
+            }
+        }
         return data.getElementsByTagName("release").item(0).getTextContent();
     }
 
