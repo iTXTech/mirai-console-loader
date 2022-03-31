@@ -39,11 +39,11 @@ public class Updater extends MclModule {
         }
         if (showNotice) {
             loader.logger.warning(AnsiMsg.newMsg()
-                    .lightYellow()
+                    .fgYellow()
                     .a("Run ")
-                    .reset().gold()
+                    .reset().fgBrightYellow()
                     .a("./mcl -u")
-                    .reset().lightYellow()
+                    .reset().fgYellow()
                     .a(" to update packages.")
             );
         }
@@ -53,8 +53,9 @@ public class Updater extends MclModule {
         // "Verifying \"" + pack.id + "\" version " + pack.version
         loader.logger.info(AnsiMsg.newMsg()
                 .a("Verifying ")
-                .gold().a("\"").a(pack.id).a("\"").reset()
-                .a(" v").gold().a(pack.version)
+                .fgBrightYellow()
+                .a("\"").a(pack.id).a("\"").reset()
+                .a(" v").fgBrightYellow().a(pack.version)
         );
         var update = loader.cli.hasOption("u");
         var force = pack.isVersionLocked();
@@ -77,12 +78,12 @@ public class Updater extends MclModule {
             }
             if (!info.channels.containsKey(pack.channel)) {
                 loader.logger.error(AnsiMsg.newMsg()
-                        .lightRed()
+                        .fgBrightRed()
                         .a("Invalid update channel ")
-                        .lightBlue().append("\"").a(pack.channel).a("\"")
-                        .lightRed()
+                        .fgBrightBlue().append("\"").a(pack.channel).a("\"")
+                        .fgBrightRed()
                         .a(" for package ")
-                        .gold().a("\"").a(pack.id).a("\"")
+                        .fgBrightYellow().a("\"").a(pack.id).a("\"")
                 );
                 loader.saveConfig();
                 return;
@@ -103,11 +104,11 @@ public class Updater extends MclModule {
         }
         if (!down && !pack.version.equals(ver)) {
             loader.logger.warning(AnsiMsg.newMsg()
-                    .lightRed()
+                    .fgBrightRed()
                     .a("Package ")
-                    .reset().gold().a("\"").a(pack.id).a("\"")
-                    .reset().lightRed().a(" has newer version ")
-                    .reset().gold().a("\"").a(ver).a("\"")
+                    .reset().fgBrightYellow().a("\"").a(pack.id).a("\"")
+                    .reset().fgBrightRed().a(" has newer version ")
+                    .reset().fgBrightYellow().a("\"").a(ver).a("\"")
             );
             showNotice = true;
         }
@@ -115,10 +116,10 @@ public class Updater extends MclModule {
             downloadFile(pack, info);
             if (!Utility.checkLocalFile(pack)) {
                 loader.logger.error(AnsiMsg.newMsg()
-                        .lightRed()
+                        .fgBrightRed()
                         .a("The local file ")
-                        .gold().a("\"").a(pack.id).a("\"")
-                        .lightRed()
+                        .fgBrightYellow().a("\"").a(pack.id).a("\"")
+                        .fgBrightRed()
                         .a(" is still corrupted, please check the network.")
                 );
             }
@@ -141,7 +142,7 @@ public class Updater extends MclModule {
         } else {
             loader.logger.error(AnsiMsg.newMsg()
                     .a("Cannot download package ")
-                    .gold().a("\"").a(pack.id).a("\"")
+                    .fgBrightYellow().a("\"").a(pack.id).a("\"")
             );
         }
     }

@@ -1,7 +1,7 @@
 package org.itxtech.mcl.impl;
 
+import org.fusesource.jansi.Ansi;
 import org.itxtech.mcl.component.Logger;
-import org.itxtech.mcl.utils.AnsiMsg;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -40,35 +40,6 @@ public class DefaultLogger implements Logger {
     }
 
     @Override
-    public void log(Object info, int level) {
-        if (level < logLevel) {
-            return;
-        }
-        var date = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        var prefix = "INFO";
-        switch (level) {
-            case LOG_DEBUG:
-                prefix = "DEBUG";
-                break;
-            case LOG_INFO:
-                prefix = "INFO";
-                break;
-            case LOG_WARNING:
-                prefix = "WARN";
-                break;
-            case LOG_ERROR:
-                prefix = "ERROR";
-                break;
-        }
-        var log = " " + date + " [" + prefix + "] " + info;
-        if (level == LOG_ERROR) {
-            System.err.println(log);
-        } else {
-            System.out.println(log);
-        }
-    }
-
-    @Override
     public void info(Object info) {
         log(info, LOG_INFO);
     }
@@ -99,20 +70,58 @@ public class DefaultLogger implements Logger {
         }
     }
 
-    @Override
-    public void print(Object s) {
-        System.out.print(AnsiMsg.renderNoAnsi(s));
-    }
-
-    @Override
-    public void println(Object s) {
-        System.out.println(AnsiMsg.renderNoAnsi(s));
-    }
-
     public static String getExceptionMessage(Throwable e) {
         var stringWriter = new StringWriter();
         var printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);
         return stringWriter.toString();
+    }
+
+    @Override
+    public void log(Object info, int level) {
+        if (level < logLevel) {
+            return;
+        }
+        var ansi = Ansi.ansi().a(" ");
+        String prefix;
+        var date = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        switch (level) {
+            case LOG_DEBUG:
+                ansi = ansi.fgBrightBlack();
+                prefix = "DEBUG";
+                break;
+            case LOG_WARNING:
+                ansi = ansi.fgBrightYellow();
+                prefix = "WARN";
+                break;
+            case LOG_ERROR:
+                ansi = ansi.fgBrightRed();
+                prefix = "ERROR";
+                break;
+            case LOG_INFO:
+            default:
+                ansi = ansi.fgBrightGreen();
+                prefix = "INFO";
+                break;
+        }
+        ansi.a(" ").a(date).a(" [").a(prefix).a("] ");
+        if (level == LOG_INFO) ansi.reset();
+        ansi.a(info);
+        ansi.reset();
+        if (level == LOG_ERROR) {
+            System.err.println(ansi);
+        } else {
+            System.out.println(ansi);
+        }
+    }
+
+    @Override
+    public void print(Object s) {
+        System.out.print(s);
+    }
+
+    @Override
+    public void println(Object s) {
+        System.out.println(s);
     }
 }

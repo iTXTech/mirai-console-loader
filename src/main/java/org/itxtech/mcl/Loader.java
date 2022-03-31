@@ -1,18 +1,18 @@
 package org.itxtech.mcl;
 
 import org.apache.commons.cli.*;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.component.Downloader;
 import org.itxtech.mcl.component.Logger;
 import org.itxtech.mcl.component.Repository;
-import org.itxtech.mcl.impl.AnsiLogger;
 import org.itxtech.mcl.impl.DefaultDownloader;
 import org.itxtech.mcl.impl.DefaultLogger;
 import org.itxtech.mcl.module.ModuleManager;
 
 import java.io.File;
 import java.net.InetSocketAddress;
-import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /*
@@ -66,6 +66,8 @@ public class Loader {
             loader.loadConfig();
             if (!"true".equals(System.getProperties().getProperty("mcl.disable-ansi"))) {
                 loader.detectLogger();
+            } else {
+                Ansi.setEnabled(false);
             }
             loader.start(args);
         } catch (Exception e) {
@@ -96,17 +98,10 @@ public class Loader {
     }
 
     public void detectLogger() {
-        try {
-            for (var pkg : config.packages) {
-                if (pkg.id.equals("net.mamoe:mirai-console-terminal") && Utility.checkLocalFile(pkg)) {
-                    Agent.appendJarFile(new JarFile(pkg.getJarFile()));
-                    logger = new AnsiLogger();
-                    logger.setLogLevel(config.logLevel);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!Boolean.getBoolean("mcl.no-anso-console-init")) {
+            AnsiConsole.systemInstall();
         }
+        Ansi.setEnabled(true);
     }
 
     public void loadConfig() {
