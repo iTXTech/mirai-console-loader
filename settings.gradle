@@ -4,5 +4,5 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = 'mirai-console-loader'
+rootProject.name = 'mcl'
 

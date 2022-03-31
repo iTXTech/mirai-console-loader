@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.itxtech'
-version '1.2.3'
+version '2.0.0-beta.1'
 description '模块化、轻量级且支持完全自定义的 mirai 加载器。'
 
 repositories {
@@ -28,7 +28,7 @@ def getGitHash = { ->
 
 task fatJar(type: Jar) {
     from sourceSets.main.output
-    archiveBaseName.set("mcl")
+    archiveFileName = "mcl-${project.version}-all.jar"
 
     manifest {
         attributes "Main-Class": "org.itxtech.mcl.Loader"
@@ -63,11 +63,11 @@ task launchTest(type: JavaExec) {
 task zipAll(type: Zip) {
     from fileTree(dir: ".", includes: ["README.md", "LICENSE", "mcl", "mcl.cmd"])
     from("$buildDir/libs") {
-        include "mcl-${project.version}.jar"
+        include "mcl-${project.version}-all.jar"
         rename { "mcl.jar" }
     }
     destinationDirectory = file("$buildDir/libs")
-    archiveFileName = "mirai-console-loader-${project.version}.zip"
+    archiveFileName = "mcl-${project.version}.zip"
 }
 
 assemble.dependsOn(fatJar)
