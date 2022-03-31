@@ -65,7 +65,10 @@ public class Loader {
         try {
             loader.loadConfig();
             if (!Boolean.getBoolean("mcl.disable-ansi")) {
-                loader.detectLogger();
+                if (!Boolean.getBoolean("mcl.no-ansi-console-init")) {
+                    AnsiConsole.systemInstall();
+                }
+                Ansi.setEnabled(true);
             } else {
                 Ansi.setEnabled(false);
             }
@@ -95,14 +98,6 @@ public class Loader {
             } catch (ParseException ignored) {
             }
         }
-    }
-
-    public void detectLogger() {
-        if (!Boolean.getBoolean("mcl.no-ansi-console-init")) {
-            AnsiConsole.systemInstall();
-        }
-
-        Ansi.setEnabled(true);
     }
 
     public void loadConfig() {
@@ -154,9 +149,10 @@ public class Loader {
      * 启动 Mirai Console Loader，并加载脚本
      */
     public void start(String[] args) throws Exception {
-        logger.info("iTXTech Mirai Console Loader version " + getVersion());
+        logger.info(Ansi.ansi().fgBrightCyan().a("iTXTech Mirai Console Loader")
+                .reset().a(" version ").fgBrightYellow().a(getVersion()));
         logger.info("https://github.com/iTXTech/mirai-console-loader");
-        logger.info("This program is licensed under GNU AGPL v3");
+        logger.info(Ansi.ansi().a("This program is licensed under ").fgBrightMagenta().a("GNU AGPL v3"));
 
         options.addOption(Option.builder("z").desc("Skip boot phase").longOpt("dry-run").build());
 

@@ -48,8 +48,8 @@ public class Repo extends MclModule {
     @Override
     public void cli() {
         try {
-            var repo = new Repository(loader);
             if (loader.cli.hasOption("j")) {
+                var repo = new Repository(loader);
                 loader.logger.info("Fetching packages from " + loader.config.miraiRepo);
                 for (java.util.Map.Entry<String, Repository.PackageInfo> pkg : repo.fetchPackages().entrySet()) {
                     var info = pkg.getValue();
@@ -65,6 +65,7 @@ public class Repo extends MclModule {
             }
 
             if (loader.cli.hasOption("i")) {
+                var repo = new Repository(loader);
                 var pkg = loader.cli.getOptionValue("i");
                 loader.logger.info("Fetching channel info for package \"" + pkg + "\"");
                 for (java.util.Map.Entry<String, java.util.ArrayList<String>> chan : repo.fetchPackage(pkg).channels.entrySet()) {

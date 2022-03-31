@@ -77,11 +77,16 @@ public class ModuleManager {
         for (var pkg : loader.config.modulePackages) {
             var file = pkg.split(":");
             var clzPkg = file[1].replace(".", "/") + "/";
+            String filename;
             JarFile jarFile;
             if (file[0].equals("mcl")) {
-                jarFile = new JarFile(ModuleManager.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+                var jar = new File(ModuleManager.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+                filename = jar.getName();
+                jarFile = new JarFile(jar);
             } else {
-                jarFile = new JarFile(new File("modules/" + file[0] + ".jar"));
+                var jar = new File("modules/" + file[0] + ".jar");
+                filename = jar.getName();
+                jarFile = new JarFile(jar);
                 Agent.appendJarFile(jarFile);
             }
             var entries = jarFile.entries();
@@ -96,17 +101,17 @@ public class ModuleManager {
                         );
 
                         if (!MclModule.class.isAssignableFrom(clz)) {
-                            loader.logger.debug("Skipped " + clz.getName() + " from " + jarFile.getName() + " because it isn't a mcl module.");
+                            loader.logger.debug("Skipped " + clz.getName() + " from " + filename + " because it's not a mcl module.");
                             continue;
                         }
                         if (clz.isInterface() || Modifier.isAbstract(clz.getModifiers())) {
-                            loader.logger.debug("Skipped " + clz.getName() + " from " + jarFile.getName() + " because it is abstract.");
+                            loader.logger.debug("Skipped " + clz.getName() + " from " + filename + " because it's abstract.");
                             continue;
                         }
 
                         var module = (MclModule) clz.getDeclaredConstructor().newInstance();
                         if (!loader.config.disabledModules.contains(module.getName())) {
-                            loader.logger.debug("Loading module: \"" + module.getName() + "\" from \"" + jarFile.getName() + "\". Class: " + module.getClass().getCanonicalName());
+                            loader.logger.debug("Loading module: \"" + module.getName() + "\" from \"" + filename + "\". Class: " + module.getClass().getCanonicalName());
                             modules.put(module.getName(), module);
 
                             module.init(loader);

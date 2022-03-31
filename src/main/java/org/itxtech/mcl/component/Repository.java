@@ -58,6 +58,9 @@ public class Repository {
                 HttpClient.newBuilder().proxy(ProxySelector.of(loader.getProxy())))
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
+        if (loader.getProxy() != null) {
+            loader.logger.debug("HTTP client initialized with HTTP proxy " + loader.config.proxy);
+        }
     }
 
     public Map<String, PackageInfo> fetchPackages() throws Exception {
@@ -159,6 +162,7 @@ public class Repository {
     }
 
     private HttpResponse<Void> httpHead(String url) throws Exception {
+        loader.logger.debug("HTTP HEAD " + url);
         return client.send(
                 HttpRequest.newBuilder(URI.create(url))
                         .method("HEAD", HttpRequest.BodyPublishers.noBody())
@@ -174,6 +178,7 @@ public class Repository {
     }
 
     private String httpGet(String url, String server) throws Exception {
+        loader.logger.debug("HTTP GET " + server + url);
         return client.send(
                 HttpRequest.newBuilder(URI.create(server + url))
                         .timeout(Duration.ofSeconds(30))
