@@ -6,6 +6,7 @@ import org.itxtech.mcl.Agent;
 import org.itxtech.mcl.Loader;
 
 import java.io.File;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.jar.JarFile;
 
@@ -88,8 +89,21 @@ public class ModuleManager {
                 var entry = entries.nextElement().getRealName();
                 if (entry.startsWith(clzPkg) && entry.endsWith(".class") && !entry.contains("$")) {
                     try {
-                        var clz = Class.forName(entry.replace("/", ".")
-                                .replace(".class", ""));
+                        var clz = Class.forName(
+                                entry.replace("/", ".").replace(".class", ""),
+                                false,
+                                ClassLoader.getSystemClassLoader()
+                        );
+
+                        if (!MclModule.class.isAssignableFrom(clz)) {
+                            loader.logger.debug("Skipped " + clz.getName() + " from " + jarFile.getName() + " because it isn't a mcl module.");
+                            continue;
+                        }
+                        if (clz.isInterface() || Modifier.isAbstract(clz.getModifiers())) {
+                            loader.logger.debug("Skipped " + clz.getName() + " from " + jarFile.getName() + " because it is abstract.");
+                            continue;
+                        }
+
                         var module = (MclModule) clz.getDeclaredConstructor().newInstance();
                         if (!loader.config.disabledModules.contains(module.getName())) {
                             loader.logger.debug("Loading module: \"" + module.getName() + "\" from \"" + jarFile.getName() + "\". Class: " + module.getClass().getCanonicalName());
