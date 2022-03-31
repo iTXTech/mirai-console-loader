@@ -63,6 +63,14 @@ $ java "-Dmcl.disable-ansi=true" -jar mcl.jar
 * [Aliyun](https://maven.aliyun.com/repository/public) - **默认**，阿里云`Maven`镜像，国内访问速度快
 * [HuaweiCloud](https://mirrors.huaweicloud.com/repository/maven) - 华为云`Maven`镜像，阿里云不可用时的备选方案
 
+## 安装`MCL Module`扩展组件
+
+1. 在 `mcl` 运行目录下新建 `modules` 目录
+2. 将 目标Jar 放入该目录
+3. 编辑 `config.json` 中 `module_packages` 字段，添加入 `jar文件名（不带扩展名）:包名`
+
+如有扩展 `test.jar`，需要加载 `com.test` 包中的 `MclModule`，则添加的项为 `test:com.test`。
+
 ## 开源许可证
 
     iTXTech Mirai Console Loader

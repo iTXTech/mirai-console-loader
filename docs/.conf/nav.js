@@ -3,7 +3,7 @@ module.exports = {
     link: '/',
     items: [
         {text: '主页', link: '/'},
-        {text: 'MCL脚本', link: '/Script.html'},
+        {text: 'MCL模块', link: '/Module.html'},
         {text: 'MCL插件', link: '/Plugin.html'},
     ],
 };
