@@ -1,7 +1,6 @@
 package org.itxtech.mcl;
 
 import org.itxtech.mcl.component.Config;
-import org.mozilla.javascript.NativeArray;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -89,14 +88,12 @@ public class Utility {
         method.invoke(null, (Object) (args.trim().equals("") ? new String[0] : args.split(" ")));
     }
 
-    public static void bootMirai(NativeArray files, String entry, String args) throws Exception {
+    public static void bootMirai(ArrayList<File> files, String entry, String args) throws Exception {
         var f = new StringBuilder();
         var arr = new ArrayList<File>();
         for (var file : files) {
-            if (file instanceof File) {
-                arr.add((File) file);
-                f.append(((File) file).getName()).append(", ");
-            }
+            arr.add(file);
+            f.append(file.getName()).append(", ");
         }
         f.delete(f.length() - 2, f.length());
         Loader.getInstance().logger.debug("Boot Mirai Files: " + f + "; Args: \"" + args + "\"");

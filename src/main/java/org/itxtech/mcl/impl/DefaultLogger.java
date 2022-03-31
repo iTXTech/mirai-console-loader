@@ -2,8 +2,6 @@ package org.itxtech.mcl.impl;
 
 import org.itxtech.mcl.component.Logger;
 import org.itxtech.mcl.utils.AnsiMsg;
-import org.mozilla.javascript.IdScriptableObject;
-import org.mozilla.javascript.NativeJavaObject;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -34,16 +32,6 @@ import java.util.Date;
  *
  */
 public class DefaultLogger implements Logger {
-    private static final Class<?> C$NativeError;
-
-    static {
-        try {
-            C$NativeError = Class.forName("org.mozilla.javascript.NativeError");
-        } catch (Throwable throwable) {
-            throw new ExceptionInInitializerError(throwable);
-        }
-    }
-
     protected int logLevel = LOG_DEBUG;
 
     @Override
@@ -103,12 +91,6 @@ public class DefaultLogger implements Logger {
     @Override
     public void logException(Object e) {
         Object oe = e;
-        if (C$NativeError.isInstance(e)) {
-            e = ((IdScriptableObject) e).get("javaException");
-            if (e instanceof NativeJavaObject) {
-                e = ((NativeJavaObject) e).unwrap();
-            }
-        }
         if (e == null) e = oe;
         if (e instanceof Throwable) {
             error(getExceptionMessage((Throwable) e));

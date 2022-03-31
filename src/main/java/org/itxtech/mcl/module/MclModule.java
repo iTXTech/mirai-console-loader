@@ -1,4 +1,6 @@
-package org.itxtech.mcl.script;
+package org.itxtech.mcl.module;
+
+import org.itxtech.mcl.Loader;
 
 /*
  *
@@ -23,8 +25,21 @@ package org.itxtech.mcl.script;
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-public class Phase {
-    public Runnable cli;
-    public Runnable load;
-    public Runnable boot;
+public abstract class MclModule {
+    protected Loader loader;
+
+    public final void init(Loader l) {
+        loader = l;
+    }
+
+    public abstract String getName();
+
+    public void load() {
+    }
+
+    public void cli() {
+    }
+
+    public void boot() {
+    }
 }

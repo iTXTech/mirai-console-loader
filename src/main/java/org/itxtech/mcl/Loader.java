@@ -8,7 +8,7 @@ import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.impl.AnsiLogger;
 import org.itxtech.mcl.impl.DefaultDownloader;
 import org.itxtech.mcl.impl.DefaultLogger;
-import org.itxtech.mcl.script.ScriptManager;
+import org.itxtech.mcl.module.ModuleManager;
 
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -49,7 +49,7 @@ public class Loader {
     public Logger logger = new DefaultLogger();
     public File configFile = new File("config.json");
     public Config config;
-    public ScriptManager manager;
+    public ModuleManager manager;
     public Repository repo;
     public Options options = new Options();
     public CommandLine cli;
@@ -164,9 +164,9 @@ public class Loader {
 
         options.addOption(Option.builder("z").desc("Skip boot phase").longOpt("dry-run").build());
 
-        manager = new ScriptManager(this, new File("scripts"));
+        manager = new ModuleManager(this);
         parseCli(args, false);
-        tryCatching(() -> manager.readAllScripts()); //此阶段脚本只能修改loader中变量
+        tryCatching(() -> manager.loadAllModules()); //此阶段脚本只能修改loader中变量
         parseCli(args, true);
         tryCatching(() -> manager.phaseCli()); //此阶段脚本处理命令行参数
         repo = new Repository(this);

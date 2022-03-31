@@ -39,26 +39,35 @@ import java.util.HashMap;
  *
  */
 public class Config {
-    @SerializedName("js_optimization_level")
-    public int jsOptimizationLevel = -1;
+    @SerializedName("module_packages")
+    public ArrayList<String> modulePackages = new ArrayList<>() {{
+        add("mcl:org.itxtech.mcl.module.builtin");
+    }};
+
     @SerializedName("mirai_repo")
     public String miraiRepo = "https://repo.itxtech.org";
+
     @SerializedName("maven_repo")
     public ArrayList<String> mavenRepo = new ArrayList<>() {{
         add("https://maven.aliyun.com/repository/public");
     }};
+
     public ArrayList<Package> packages = new ArrayList<>() {{
         add(new Package("net.mamoe:mirai-console"));
         add(new Package("net.mamoe:mirai-console-terminal"));
         add(new Package("net.mamoe:mirai-core-all"));
     }};
-    @SerializedName("disabled_scripts")
-    public ArrayList<String> disabledScripts = new ArrayList<>();
+
+    @SerializedName("disabled_modules")
+    public ArrayList<String> disabledModules = new ArrayList<>();
+
     public String proxy = "";
+
     @SerializedName("log_level")
     public int logLevel = Logger.LOG_INFO;
-    @SerializedName("script_props")
-    public HashMap<String, String> scriptProps = new HashMap<>();
+
+    @SerializedName("modules_props")
+    public HashMap<String, String> modulesProps = new HashMap<>();
 
     public static Config load(File file) {
         try {
