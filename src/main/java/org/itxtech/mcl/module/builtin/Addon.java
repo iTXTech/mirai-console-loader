@@ -27,7 +27,7 @@ import org.itxtech.mcl.module.MclModule;
  *
  */
 public class Addon extends MclModule {
-    private static final String CURRENT_CHANNEL = "c122";
+    private static final String CURRENT_CHANNEL = "c200";
 
     @Override
     public String getName() {

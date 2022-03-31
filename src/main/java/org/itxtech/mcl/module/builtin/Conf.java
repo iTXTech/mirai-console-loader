@@ -65,8 +65,8 @@ public class Conf extends MclModule {
                 .longOpt("unlock").build());
         loader.options.addOptionGroup(lockGroup);
 
-        loader.options.addOption(Option.builder("q").desc("Devare old plugin and mirai files")
-                .longOpt("devare").build());
+        loader.options.addOption(Option.builder("q").desc("Delete old plugin and mirai files")
+                .longOpt("delete").build());
     }
 
     @Override
