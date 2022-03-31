@@ -91,6 +91,15 @@ public class Config {
         return new Config();
     }
 
+    public boolean hasPackage(String id) {
+        for (var pkg : packages) {
+            if (pkg.id.equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void save(File file) throws IOException {
         var writer = new FileWriter(file);
         new GsonBuilder().setPrettyPrinting().create().toJson(this, writer);

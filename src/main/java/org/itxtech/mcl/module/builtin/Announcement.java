@@ -1,3 +1,7 @@
+package org.itxtech.mcl.module.builtin;
+
+import org.itxtech.mcl.module.MclModule;
+
 /*
  *
  * Mirai Console Loader
@@ -21,27 +25,21 @@
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-
-importPackage(java.lang);
-importPackage(org.itxtech.mcl.component);
-
-//API Compatibility >= 1.2.2
-let currentChannel = "c122";
-
-let found = false;
-let pkgs = loader.config.packages;
-for (let i in pkgs) {
-    let pkg = pkgs[i];
-    if (pkg.id.equals("org.itxtech:mcl-addon")) {
-        found = true;
-        pkg.channel = currentChannel;
-        break;
+public class Announcement extends MclModule {
+    @Override
+    public String getName() {
+        return "announcement";
     }
-}
-if (!found) {
-    let p = new Config.Package("org.itxtech:mcl-addon", currentChannel);
-    p.type = Config.Package.TYPE_PLUGIN;
-    pkgs.add(p);
-    loader.logger.info("MCL Addon is installed! Website: https://github.com/iTXTech/mcl-addon");
-    loader.logger.warning("To remove MCL Addon, run \"./mcl --disable-script addon\" and \"./mcl --remove-package org.itxtech:mcl-addon --delete\"");
+
+    @Override
+    public void load() {
+        loader.logger.info("Fetching Mirai Console Loader Announcement...");
+        try {
+            var pkg = loader.repo.fetchPackage("org.itxtech:mcl");
+            loader.logger.info("Mirai Console Loader Announcement:");
+            loader.logger.println(pkg.announcement);
+        } catch (Exception e) {
+            loader.logger.error("Failed to fetch announcement.");
+        }
+    }
 }

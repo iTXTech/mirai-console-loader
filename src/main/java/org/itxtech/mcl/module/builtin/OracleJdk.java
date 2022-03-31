@@ -1,3 +1,8 @@
+package org.itxtech.mcl.module.builtin;
+
+import org.itxtech.mcl.component.Config;
+import org.itxtech.mcl.module.MclModule;
+
 /*
  *
  * Mirai Console Loader
@@ -21,24 +26,22 @@
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-
-importPackage(java.lang);
-importPackage(org.itxtech.mcl.component);
-
-if (System.getProperty("java.vm.vendor").contains("Oracle")) {
-    let found = false;
-    let pkgs = loader.config.packages;
-    for (let i in pkgs) {
-        let pkg = pkgs[i];
-        if (pkg.id.equals("org.bouncycastle:bcprov-jdk15on")) {
-            found = true;
-            break;
-        }
+public class OracleJdk extends MclModule {
+    @Override
+    public String getName() {
+        return "oraclejdk";
     }
-    if (!found) {
-        let p = new Config.Package("org.bouncycastle:bcprov-jdk15on");
-        p.type = Config.Package.TYPE_CORE;
-        pkgs.add(0, p);
-        loader.logger.info("BouncyCastle is installed because OracleJDK is detected.");
+
+    @Override
+    public void prepare() {
+        if (System.getProperty("java.vm.vendor").contains("Oracle")) {
+            var pkgs = loader.config.packages;
+            if (!loader.config.hasPackage("org.bouncycastle:bcprov-jdk15on")) {
+                var p = new Config.Package("org.bouncycastle:bcprov-jdk15on");
+                p.type = Config.Package.TYPE_CORE;
+                pkgs.add(0, p);
+                loader.logger.info("BouncyCastle is installed because OracleJDK is detected.");
+            }
+        }
     }
 }

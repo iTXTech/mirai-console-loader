@@ -1,9 +1,4 @@
-# 官方提供的脚本
-
-* `config.js` - 通过命令行传入配置
-* `updater.js` - 用于校验和下载`mirai`文件
-* `boot.js` - 用于启动`mirai console`
-* `repo.js` - 用于获取`mirai repo`仓库中的信息
+# MCL 命令行参数
 
 ## 在`updater`中使用`maven`更新频道
 

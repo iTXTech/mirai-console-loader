@@ -31,11 +31,11 @@ public class Addon extends MclModule {
 
     @Override
     public String getName() {
-        return "TEST";
+        return "addon";
     }
 
     @Override
-    public void load() {
+    public void prepare() {
         var found = false;
         var pkgs = loader.config.packages;
         for (var pkg : pkgs) {
@@ -50,7 +50,7 @@ public class Addon extends MclModule {
             p.type = Config.Package.TYPE_PLUGIN;
             pkgs.add(p);
             loader.logger.info("MCL Addon is installed! Website: https://github.com/iTXTech/mcl-addon");
-            loader.logger.warning("To remove MCL Addon, run \"./mcl --disable-script addon\" and \"./mcl --remove-package org.itxtech:mcl-addon --delete\"");
+            loader.logger.warning("To remove MCL Addon, run \"./mcl --disable-module addon\" and \"./mcl --remove-package org.itxtech:mcl-addon --delete\"");
         }
     }
 }

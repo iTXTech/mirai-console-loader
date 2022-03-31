@@ -86,7 +86,7 @@ public class ModuleManager {
             var entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 var entry = entries.nextElement().getRealName();
-                if (entry.startsWith(clzPkg) && entry.endsWith(".class")) {
+                if (entry.startsWith(clzPkg) && entry.endsWith(".class") && !entry.contains("$")) {
                     try {
                         var clz = Class.forName(entry.replace("/", ".")
                                 .replace(".class", ""));
@@ -94,6 +94,9 @@ public class ModuleManager {
                         if (!loader.config.disabledModules.contains(module.getName())) {
                             loader.logger.debug("Loading module: \"" + module.getName() + "\" from \"" + jarFile.getName() + "\". Class: " + module.getClass().getCanonicalName());
                             modules.put(module.getName(), module);
+
+                            module.init(loader);
+                            module.prepare();
                         }
                     } catch (Exception e) {
                         loader.logger.logException(e);
@@ -114,7 +117,6 @@ public class ModuleManager {
 
     public void phaseLoad() {
         for (var module : modules.values()) {
-            module.init(loader);
             module.load();
         }
     }

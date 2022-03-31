@@ -34,6 +34,9 @@ public abstract class MclModule {
 
     public abstract String getName();
 
+    public void prepare() {
+    }
+
     public void load() {
     }
 
