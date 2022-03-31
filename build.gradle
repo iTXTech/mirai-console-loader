@@ -46,10 +46,10 @@ task fatJar(type: Jar) {
 }
 
 task launchTest(type: JavaExec) {
-    dependsOn('fatJar')
+    dependsOn(fatJar)
 
     jvmArgs(
-            '-Dmcl.no-anso-console-init=true',
+            '-Dmcl.no-ansi-console-init=true',
     )
 
     mainClass.set('-jar')
@@ -61,7 +61,7 @@ task launchTest(type: JavaExec) {
 }
 
 task zipAll(type: Zip) {
-    from fileTree(dir: ".", includes: ["scripts/*", "README.md", "LICENSE", "mcl", "mcl.cmd"])
+    from fileTree(dir: ".", includes: ["README.md", "LICENSE", "mcl", "mcl.cmd"])
     from("$buildDir/libs") {
         include "mcl-${project.version}.jar"
         rename { "mcl.jar" }

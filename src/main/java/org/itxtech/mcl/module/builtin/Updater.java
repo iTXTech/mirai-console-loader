@@ -1,14 +1,37 @@
 package org.itxtech.mcl.module.builtin;
 
 import org.apache.commons.cli.Option;
+import org.fusesource.jansi.Ansi;
 import org.itxtech.mcl.Utility;
 import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.module.MclModule;
-import org.itxtech.mcl.utils.AnsiMsg;
 
 import java.io.File;
 
+/*
+ *
+ * Mirai Console Loader
+ *
+ * Copyright (C) 2020-2022 iTX Technologies
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author PeratX
+ * @website https://github.com/iTXTech/mirai-console-loader
+ *
+ */
 public class Updater extends MclModule {
     private boolean showNotice = false;
 
@@ -38,7 +61,7 @@ public class Updater extends MclModule {
             }
         }
         if (showNotice) {
-            loader.logger.warning(AnsiMsg.newMsg()
+            loader.logger.warning(Ansi.ansi()
                     .fgYellow()
                     .a("Run ")
                     .reset().fgBrightYellow()
@@ -51,7 +74,7 @@ public class Updater extends MclModule {
 
     public void check(Config.Package pack) throws Exception {
         // "Verifying \"" + pack.id + "\" version " + pack.version
-        loader.logger.info(AnsiMsg.newMsg()
+        loader.logger.info(Ansi.ansi()
                 .a("Verifying ")
                 .fgBrightYellow()
                 .a("\"").a(pack.id).a("\"").reset()
@@ -77,7 +100,7 @@ public class Updater extends MclModule {
                 pack.channel = Config.Package.getChannel(info.defaultChannel);
             }
             if (!info.channels.containsKey(pack.channel)) {
-                loader.logger.error(AnsiMsg.newMsg()
+                loader.logger.error(Ansi.ansi()
                         .fgBrightRed()
                         .a("Invalid update channel ")
                         .fgBrightBlue().append("\"").a(pack.channel).a("\"")
@@ -103,7 +126,7 @@ public class Updater extends MclModule {
             down = true;
         }
         if (!down && !pack.version.equals(ver)) {
-            loader.logger.warning(AnsiMsg.newMsg()
+            loader.logger.warning(Ansi.ansi()
                     .fgBrightRed()
                     .a("Package ")
                     .reset().fgBrightYellow().a("\"").a(pack.id).a("\"")
@@ -115,7 +138,7 @@ public class Updater extends MclModule {
         if (down) {
             downloadFile(pack, info);
             if (!Utility.checkLocalFile(pack)) {
-                loader.logger.error(AnsiMsg.newMsg()
+                loader.logger.error(Ansi.ansi()
                         .fgBrightRed()
                         .a("The local file ")
                         .fgBrightYellow().a("\"").a(pack.id).a("\"")
@@ -140,7 +163,7 @@ public class Updater extends MclModule {
                 down(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));
             }
         } else {
-            loader.logger.error(AnsiMsg.newMsg()
+            loader.logger.error(Ansi.ansi()
                     .a("Cannot download package ")
                     .fgBrightYellow().a("\"").a(pack.id).a("\"")
             );

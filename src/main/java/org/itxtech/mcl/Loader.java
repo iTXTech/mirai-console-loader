@@ -64,7 +64,7 @@ public class Loader {
         var loader = new Loader();
         try {
             loader.loadConfig();
-            if (!"true".equals(System.getProperties().getProperty("mcl.disable-ansi"))) {
+            if (!Boolean.getBoolean("mcl.disable-ansi")) {
                 loader.detectLogger();
             } else {
                 Ansi.setEnabled(false);
@@ -98,9 +98,10 @@ public class Loader {
     }
 
     public void detectLogger() {
-        if (!Boolean.getBoolean("mcl.no-anso-console-init")) {
+        if (!Boolean.getBoolean("mcl.no-ansi-console-init")) {
             AnsiConsole.systemInstall();
         }
+
         Ansi.setEnabled(true);
     }
 

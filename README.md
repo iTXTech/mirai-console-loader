@@ -49,6 +49,8 @@ $ ./mcl
 $ java "-Dmcl.disable-ansi=true" -jar mcl.jar
 ```
 
+仅禁用 `Windows CMD` 下 `ANSI` 初始化，请配置 `mcl.no-ansi-console-init` 环境变量为 `true`。
+
 ## `Mirai Repo` 列表
 
 * [iTXTech](https://repo.itxtech.org) - **默认** - Cloudflare Pages
