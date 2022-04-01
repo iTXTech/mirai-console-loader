@@ -55,24 +55,28 @@ usage: mcl
  -a,--update-package <PackageName>   Add or update package
  -b,--show-boot-props                Show Mirai Console boot properties
  -c,--log-level <level>              Set log level
- -d,--disable-script <ScriptName>    Disable script (exclude ".js")
- -e,--enable-script <ScriptName>     Enable script (exclude ".js")
+ -d,--disable-module <ModuleName>    Disable module
+ -e,--enable-module <ModuleName>     Enable module
  -f,--set-boot-entry <EntryClass>    Set Mirai Console boot entry
  -g,--set-boot-args <Arguments>      Set Mirai Console boot arguments
  -i,--package-info <PackageName>     Fetch info for specified package
  -j,--list-repo-packages             List available packages in Mirai Repo
- -l,--list-disabled-scripts          List disabled scripts
+ -k,--disable-progress-bar           Disable progress bar
+ -l,--list-disabled-modules          List disabled modules
  -m,--set-mirai-repo <Address>       Set Mirai Repo address
+    --mrm-list                       List all builtin Mirai Repo
+    --mrm-use <RepoId>               Change Mirai Repo
  -n,--channel <Channel>              Set update channel of package
  -o,--show-repos                     Show Mirai Repo and Maven Repo
  -p,--proxy <address>                Set HTTP proxy
+ -q,--delete                         Delete old plugin and mirai files
  -r,--remove-package <PackageName>   Remove package
  -s,--list-packages                  List configured packages
  -t,--type <Type>                    Set type of package
- -u,--disable-update                 Disable auto update
- -v,--set-maven-repo <Address>       Set Maven Repo address
+ -u,--update                         Update packages
  -w,--version <Version>              Set version of package
- -x,--force-version                  Force download specified version
+ -x,--lock                           Lock version of package
+ -y,--unlock                         Unlock version of package
  -z,--dry-run                        Skip boot phase
 ```
 

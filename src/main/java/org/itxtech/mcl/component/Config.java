@@ -125,10 +125,14 @@ public class Config {
             if (t == null) {
                 return TYPE_PLUGIN;
             }
-            if (t.contains("-")) {
-                t = t.split("-")[0];
+            var alias = TYPE_ALIAS.get(t);
+            if (alias == null) {
+                if (t.contains("-")) {
+                    t = t.split("-")[0];
+                }
+                return TYPE_ALIAS.getOrDefault(t, t);
             }
-            return TYPE_ALIAS.getOrDefault(t, t);
+            return alias;
         }
 
         public static String getChannel(String c) {

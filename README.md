@@ -51,6 +51,16 @@ $ java "-Dmcl.disable-ansi=true" -jar mcl.jar
 
 仅禁用 `Windows CMD` 下 `ANSI` 初始化，请配置 `mcl.no-ansi-console-init` 环境变量为 `true`。
 
+### 切换 `Mirai Repo`
+
+`MCL` 内置 `Mirai Repo Manager`，可通过以下命令调用。
+
+```bash
+$ ./mcl --mrm-list # 列出内置 Mirai Repo
+$ ./mcl --mrm-use forum # 使用 Mirai Forum 提供的 Mirai Repo 镜像
+$ ./mcl --set-mirai-repo https://repo.example.org # 使用自定义的 Mirai Repo
+```
+
 ## `Mirai Repo` 列表
 
 * [iTXTech](https://repo.itxtech.org) - **默认** - Cloudflare Pages
