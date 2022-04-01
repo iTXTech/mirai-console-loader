@@ -110,10 +110,12 @@ public class Config {
         public static final HashMap<String, String> TYPE_ALIAS = new HashMap<>() {{
             put("core", TYPE_CORE);
             put("plugin", TYPE_PLUGIN);
+            put("mcl-module", TYPE_MODULE);
         }};
 
         public static final String TYPE_CORE = "libs";
         public static final String TYPE_PLUGIN = "plugins";
+        public static final String TYPE_MODULE = "modules";
 
         public static final String CHAN_STABLE = "stable";
         public static final String CHAN_BETA = "beta";

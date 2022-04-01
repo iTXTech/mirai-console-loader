@@ -109,7 +109,7 @@ public class Repository {
                         if (semVer != null) {
                             list.add(semVer);
                         } else {
-                            System.out.println(ver);
+                            loader.logger.warning("Failed to parse version \"" + ver + "\" for \"" + id + "\"");
                         }
                     }
                 }
