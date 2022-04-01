@@ -57,7 +57,8 @@ public class Repo extends MclModule {
                     loader.logger.info("Name: " + info.name);
                     loader.logger.info("Description: " + info.description);
                     loader.logger.info("Website: " + info.website);
-                    loader.logger.info("Channels: " + Utility.join(", ", info.channels));
+                    loader.logger.info("Type: " + info.type);
+                    loader.logger.info("Default Channel: " + info.defaultChannel);
                     loader.logger.info("");
                 }
                 loader.exit(0);

@@ -217,7 +217,8 @@ public class Repository {
         public String name;
         public String description;
         public String website;
-        public List<String> channels;
+        public String type;
+        public String defaultChannel;
     }
 
     public static class Package {
