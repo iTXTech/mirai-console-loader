@@ -45,8 +45,10 @@ public class Updater extends MclModule {
 
     @Override
     public void prepare() {
-        loader.options.addOption(Option.builder("u").desc("Update packages").longOpt("update").build());
-        loader.options.addOption(Option.builder("k").desc("Disable progress bar").longOpt("disable-progress-bar").build());
+        loader.options.addOption(Option.builder("u").desc("Update packages")
+                .longOpt("update").build());
+        loader.options.addOption(Option.builder("k").desc("Disable progress bar")
+                .longOpt("disable-progress-bar").build());
     }
 
     @Override

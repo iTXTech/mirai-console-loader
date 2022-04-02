@@ -7,7 +7,7 @@
 ```groovy
 dependencies {
     //打包时排除mcl包，如果您的插件打包时不打包依赖，则可使用implementation
-    compileOnly("org.itxtech:mirai-console-loader:2.0.0")
+    compileOnly("org.itxtech:mcl:2.0.0")
 }
 ```
 
