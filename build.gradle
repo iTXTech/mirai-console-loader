@@ -28,6 +28,7 @@ def getGitHash = { ->
 
 task fatJar(type: Jar) {
     from sourceSets.main.output
+    archiveClassifier.set("all")
     archiveFileName = "mcl.jar"
 
     manifest {
@@ -80,6 +81,7 @@ mavenCentralPublish {
 
     publication {
         artifacts.artifact(tasks.getByName("zipAll"))
+        artifacts.artifact(tasks.getByName("fatJar"))
     }
 }
 
