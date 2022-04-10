@@ -1,7 +1,7 @@
 package org.itxtech.mcl.module.builtin;
 
-import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.module.MclModule;
+import org.itxtech.mcl.pkg.MclPackage;
 
 /*
  *
@@ -28,6 +28,7 @@ import org.itxtech.mcl.module.MclModule;
  */
 public class Addon extends MclModule {
     private static final String CURRENT_CHANNEL = "c200";
+    private static final String ADDON_ID = "org.itxtech:mcl-addon";
 
     @Override
     public String getName() {
@@ -36,19 +37,12 @@ public class Addon extends MclModule {
 
     @Override
     public void prepare() {
-        var found = false;
-        var pkgs = loader.config.packages;
-        for (var pkg : pkgs) {
-            if (pkg.id.equals("org.itxtech:mcl-addon")) {
-                found = true;
-                pkg.channel = CURRENT_CHANNEL;
-                break;
-            }
-        }
-        if (!found) {
-            var p = new Config.Package("org.itxtech:mcl-addon", CURRENT_CHANNEL);
-            p.type = Config.Package.TYPE_PLUGIN;
-            pkgs.add(p);
+        if (loader.packageManager.hasPackage(ADDON_ID)) {
+            loader.packageManager.getPackage(ADDON_ID).channel = CURRENT_CHANNEL;
+        } else {
+            var p = new MclPackage("org.itxtech:mcl-addon", CURRENT_CHANNEL);
+            p.type = MclPackage.TYPE_PLUGIN;
+            loader.packageManager.addPackage(p);
             loader.logger.info("MCL Addon is installed! Website: https://github.com/iTXTech/mcl-addon");
             loader.logger.warning("To remove MCL Addon, run \"./mcl --disable-module addon\" and \"./mcl --remove-package org.itxtech:mcl-addon --delete\"");
         }

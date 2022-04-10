@@ -1,6 +1,7 @@
 package org.itxtech.mcl;
 
 import org.itxtech.mcl.component.Config;
+import org.itxtech.mcl.pkg.MclPackage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,7 +65,7 @@ public class Utility {
         return fileSha1(baseFile).equals(checksum);
     }
 
-    public static boolean checkLocalFile(Config.Package pkg) throws Exception {
+    public static boolean checkLocalFile(MclPackage pkg) throws Exception {
         var dir = new File(pkg.type);
         dir.mkdirs();
         return Utility.check(pkg.getJarFile(), new File(dir, pkg.getBasename() + ".sha1"));

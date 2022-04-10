@@ -6,6 +6,9 @@ import org.itxtech.mcl.Utility;
 import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.module.MclModule;
 
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+
 /*
  *
  * Mirai Console Loader
@@ -49,9 +52,17 @@ public class Repo extends MclModule {
     public void cli() {
         try {
             if (loader.cli.hasOption("j")) {
-                var repo = new Repository(loader);
                 loader.logger.info("Fetching packages from " + loader.config.miraiRepo);
-                for (java.util.Map.Entry<String, Repository.PackageInfo> pkg : repo.fetchPackages().entrySet()) {
+                var index = new Repository(loader).fetchPackages();
+
+                loader.logger.info("---------- Mirai Repo Index Metadata ----------");
+                loader.logger.info("Name: " + index.metadata.name);
+                loader.logger.info("Revision: " + index.metadata.commit);
+                loader.logger.info("Time: " + DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                        .format(new Timestamp(index.metadata.timestamp).toLocalDateTime()));
+                loader.logger.info("");
+
+                for (java.util.Map.Entry<String, Repository.PackageIndex> pkg : index.packages.entrySet()) {
                     var info = pkg.getValue();
                     loader.logger.info("---------- Package: " + pkg.getKey() + " ----------");
                     loader.logger.info("Name: " + info.name);

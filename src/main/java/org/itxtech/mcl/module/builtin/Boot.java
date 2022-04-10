@@ -2,8 +2,8 @@ package org.itxtech.mcl.module.builtin;
 
 import org.apache.commons.cli.Option;
 import org.itxtech.mcl.Utility;
-import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.module.MclModule;
+import org.itxtech.mcl.pkg.MclPackage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,14 +85,13 @@ public class Boot extends MclModule {
     public void boot() {
         try {
             var files = new ArrayList<File>();
-            var pkgs = loader.config.packages;
             var pkgMap = new HashMap<String, String>();
-            for (var pkg : pkgs) {
-                if (pkg.type.equals(Config.Package.TYPE_CORE)) {
+            for (var pkg : loader.packageManager.getPackages()) {
+                if (pkg.type.equals(MclPackage.TYPE_CORE)) {
                     files.add(new File(new File(pkg.type), pkg.getBasename() + ".jar"));
                     pkgMap.put(pkg.id, pkg.version);
                 }
-                if (pkg.type.equals(Config.Package.TYPE_PLUGIN)) {
+                if (pkg.type.equals(MclPackage.TYPE_PLUGIN)) {
                     var file = new File(new File(pkg.type), pkg.getBasename() + ".metadata");
                     if (file.exists()) {
                         for (var s : loader.repo.getMetadataFromFile(file).dependencies) {

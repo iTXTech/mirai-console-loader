@@ -3,6 +3,7 @@ package org.itxtech.mcl.component;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.itxtech.mcl.Loader;
+import org.itxtech.mcl.pkg.MclPackage;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -63,8 +64,8 @@ public class Repository {
         }
     }
 
-    public Map<String, PackageInfo> fetchPackages() throws Exception {
-        return new Gson().fromJson(httpGet("/packages.json"), new TypeToken<Map<String, PackageInfo>>() {
+    public MclPackageIndex fetchPackages() throws Exception {
+        return new Gson().fromJson(httpGet("/packages.json"), new TypeToken<MclPackageIndex>() {
         }.getType());
     }
 
@@ -76,8 +77,8 @@ public class Repository {
         return id.split(":", 2)[1];
     }
 
-    public Package fetchPackage(String id) throws Exception {
-        return new Gson().fromJson(httpGet("/" + transformId(id) + "/package.json"), new TypeToken<Package>() {
+    public PackageInfo fetchPackage(String id) throws Exception {
+        return new Gson().fromJson(httpGet("/" + transformId(id) + "/package.json"), new TypeToken<PackageInfo>() {
         }.getType());
     }
 
@@ -131,7 +132,7 @@ public class Repository {
         }.getType());
     }
 
-    public String getSha1Url(Config.Package pkg, Package info, String jarUrl) {
+    public String getSha1Url(MclPackage pkg, PackageInfo info, String jarUrl) {
         if (info != null && info.repo != null) {
             RepoInfo repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.sha1 != null && !repoInfo.sha1.isBlank()) {
@@ -141,7 +142,7 @@ public class Repository {
         return jarUrl + ".sha1";
     }
 
-    public String getJarUrl(Config.Package pkg, Package info) {
+    public String getJarUrl(MclPackage pkg, PackageInfo info) {
         if (info != null && info.repo != null) {
             RepoInfo repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.archive != null && !repoInfo.archive.isBlank()) {
@@ -165,7 +166,7 @@ public class Repository {
         return "";
     }
 
-    public String getMetadataUrl(Config.Package pkg, Package info) {
+    public String getMetadataUrl(MclPackage pkg, PackageInfo info) {
         if (info != null && info.repo != null) {
             RepoInfo repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.metadata != null && !repoInfo.metadata.isBlank()) {
@@ -213,7 +214,18 @@ public class Repository {
         ).body();
     }
 
-    public static class PackageInfo {
+    public static class MclPackageIndex {
+        public MclPackageIndexMetadata metadata;
+        public Map<String, PackageIndex> packages;
+    }
+
+    public static class MclPackageIndexMetadata {
+        public String name;
+        public long timestamp;
+        public String commit;
+    }
+
+    public static class PackageIndex {
         public String name;
         public String description;
         public String website;
@@ -221,7 +233,7 @@ public class Repository {
         public String defaultChannel;
     }
 
-    public static class Package {
+    public static class PackageInfo {
         public String announcement;
         public String type;
         public String defaultChannel;

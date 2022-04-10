@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import org.itxtech.mcl.Loader;
+import org.itxtech.mcl.pkg.MclPackage;
 
 import java.io.File;
 import java.io.FileReader;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /*
  *
@@ -52,10 +54,10 @@ public class Config {
         add("https://maven.aliyun.com/repository/public");
     }};
 
-    public ArrayList<Package> packages = new ArrayList<>() {{
-        add(new Package("net.mamoe:mirai-console"));
-        add(new Package("net.mamoe:mirai-console-terminal"));
-        add(new Package("net.mamoe:mirai-core-all"));
+    public LinkedHashMap<String, MclPackage> packages = new LinkedHashMap<>() {{
+        new MclPackage("net.mamoe:mirai-console").addToMap(this);
+        new MclPackage("net.mamoe:mirai-console-terminal").addToMap(this);
+        new MclPackage("net.mamoe:mirai-core-all").addToMap(this);
     }};
 
     @SerializedName("disabled_modules")
@@ -74,6 +76,9 @@ public class Config {
             Config conf = new Gson().fromJson(new JsonReader(new FileReader(file)), new TypeToken<Config>() {
             }.getType());
             if (conf != null) {
+                for (var entry : conf.packages.entrySet()) {
+                    entry.getValue().id = entry.getKey();
+                }
                 return conf;
             }
         } catch (Exception e) {
@@ -91,101 +96,9 @@ public class Config {
         return new Config();
     }
 
-    public boolean hasPackage(String id) {
-        for (var pkg : packages) {
-            if (pkg.id.equals(id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void save(File file) throws IOException {
         var writer = new FileWriter(file);
         new GsonBuilder().setPrettyPrinting().create().toJson(this, writer);
         writer.close();
-    }
-
-    public static class Package {
-        public static final HashMap<String, String> TYPE_ALIAS = new HashMap<>() {{
-            put("core", TYPE_CORE);
-            put("plugin", TYPE_PLUGIN);
-            put("mcl-module", TYPE_MODULE);
-        }};
-
-        public static final String TYPE_CORE = "libs";
-        public static final String TYPE_PLUGIN = "plugins";
-        public static final String TYPE_MODULE = "modules";
-
-        public static final String CHAN_STABLE = "stable";
-        public static final String CHAN_BETA = "beta";
-        public static final String CHAN_NIGHTLY = "nightly";
-
-        public static String getType(String t) {
-            if (t == null) {
-                return TYPE_PLUGIN;
-            }
-            var alias = TYPE_ALIAS.get(t);
-            if (alias == null) {
-                if (t.contains("-")) {
-                    t = t.split("-")[0];
-                }
-                return TYPE_ALIAS.getOrDefault(t, t);
-            }
-            return alias;
-        }
-
-        public static String getChannel(String c) {
-            return c == null ? CHAN_STABLE : c;
-        }
-
-        public String id;
-        public String channel;
-        public String version = "";
-        public String type = "";
-        public boolean versionLocked = false;
-
-        public Package(String id) {
-            this(id, "");
-        }
-
-        public Package(String id, String channel) {
-            this.id = id;
-            this.channel = channel;
-        }
-
-        public boolean isVersionLocked() {
-            return versionLocked;
-        }
-
-        public String getName() {
-            return id.split(":", 2)[1];
-        }
-
-        public String getBasename() {
-            return getName() + "-" + version;
-        }
-
-        public File getJarFile() {
-            return new File(new File(type), getBasename() + ".jar");
-        }
-
-        public void removeFiles() {
-            var dir = new File(type);
-            deleteFile(dir, "jar");
-            deleteFile(dir, "sha1");
-            deleteFile(dir, "metadata");
-        }
-
-        public void deleteFile(File dir, String type) {
-            var f = new File(dir, getBasename() + "." + type);
-            if (f.exists()) {
-                if (f.delete()) {
-                    Loader.getInstance().logger.info("File \"" + f.getName() + "\" has been deleted.");
-                } else {
-                    Loader.getInstance().logger.error("Failed to delete \"" + f.getName() + "\". Please delete it manually.");
-                }
-            }
-        }
     }
 }

@@ -2,8 +2,8 @@ package org.itxtech.mcl.module.builtin;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
-import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.module.MclModule;
+import org.itxtech.mcl.pkg.MclPackage;
 
 /*
  *
@@ -97,8 +97,7 @@ public class Conf extends MclModule {
                 loader.saveConfig();
             }
             if (loader.cli.hasOption("s")) {
-                var pkgs = loader.config.packages;
-                for (var pkg : pkgs) {
+                for (var pkg : loader.packageManager.getPackages()) {
                     loader.logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type +
                             "  Version: " + pkg.version + "  Locked: " + (pkg.versionLocked ? "true" : "false"));
                 }
@@ -107,16 +106,14 @@ public class Conf extends MclModule {
             }
             if (loader.cli.hasOption("r")) {
                 var name = loader.cli.getOptionValue("r");
-                var pkgs = loader.config.packages;
-                for (var pkg : pkgs) {
-                    if (pkg.id.equals(name)) {
-                        pkg.removeFiles();
-                        pkgs.remove(pkg);
-                        loader.logger.info("Package \"" + pkg.id + "\" has been removed.");
-                        loader.saveConfig();
-                        loader.exit(0);
-                        return;
-                    }
+                var pkg = loader.packageManager.getPackage(name);
+                if (pkg != null) {
+                    pkg.removeFiles();
+                    loader.packageManager.removePackage(name);
+                    loader.logger.info("Package \"" + pkg.id + "\" has been removed.");
+                    loader.saveConfig();
+                    loader.exit(0);
+                    return;
                 }
                 loader.logger.error("Package \"" + name + "\" not found.");
                 loader.exit(1);
@@ -124,19 +121,17 @@ public class Conf extends MclModule {
             }
             if (loader.cli.hasOption("a")) {
                 var name = loader.cli.getOptionValue("a");
-                var pkgs = loader.config.packages;
-                for (var pkg : pkgs) {
-                    if (pkg.id.equals(name)) {
-                        updatePackage(pkg);
-                        loader.logger.info("Package \"" + pkg.id + "\" has been updated.");
-                        loader.saveConfig();
-                        loader.exit(0);
-                        return;
-                    }
+                var pkg = loader.packageManager.getPackage(name);
+                if (pkg != null) {
+                    updatePackage(pkg);
+                    loader.logger.info("Package \"" + pkg.id + "\" has been updated.");
+                    loader.saveConfig();
+                    loader.exit(0);
+                    return;
                 }
-                var pkg = new Config.Package(name);
+                pkg = new MclPackage(name);
                 updatePackage(pkg);
-                pkgs.add(pkg);
+                loader.packageManager.addPackage(pkg);
                 loader.logger.info("Package \"" + pkg.id + "\" has been added.");
                 loader.saveConfig();
                 loader.exit(0);
@@ -146,12 +141,12 @@ public class Conf extends MclModule {
         }
     }
 
-    public void updatePackage(Config.Package pkg) {
+    public void updatePackage(MclPackage pkg) {
         if (loader.cli.hasOption("n")) {
             pkg.channel = loader.cli.getOptionValue("n");
         }
         if (loader.cli.hasOption("t")) {
-            pkg.type = Config.Package.getType(loader.cli.getOptionValue("t"));
+            pkg.type = MclPackage.getType(loader.cli.getOptionValue("t"));
         }
         if (loader.cli.hasOption("w")) {
             pkg.version = loader.cli.getOptionValue("w");

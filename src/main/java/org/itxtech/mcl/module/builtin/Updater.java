@@ -6,6 +6,7 @@ import org.itxtech.mcl.Utility;
 import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.module.MclModule;
+import org.itxtech.mcl.pkg.MclPackage;
 
 import java.io.File;
 
@@ -53,8 +54,7 @@ public class Updater extends MclModule {
 
     @Override
     public void load() {
-        var packages = loader.config.packages;
-        for (var pkg : packages) {
+        for (var pkg : loader.packageManager.getPackages()) {
             try {
                 check(pkg);
             } catch (Exception e) {
@@ -74,7 +74,7 @@ public class Updater extends MclModule {
         }
     }
 
-    public void check(Config.Package pack) throws Exception {
+    public void check(MclPackage pack) throws Exception {
         // "Verifying \"" + pack.id + "\" version " + pack.version
         loader.logger.info(Ansi.ansi()
                 .a("Verifying ")
@@ -90,16 +90,16 @@ public class Updater extends MclModule {
             down = true;
         }
         var ver = "";
-        Repository.Package info = null;
+        Repository.PackageInfo info = null;
         if (pack.channel.startsWith("maven")) {
             ver = loader.repo.getLatestVersionFromMaven(pack.id, pack.channel);
         } else {
             info = loader.repo.fetchPackage(pack.id);
             if (pack.type.equals("")) {
-                pack.type = Config.Package.getType(info.type);
+                pack.type = MclPackage.getType(info.type);
             }
             if (pack.channel.equals("")) {
-                pack.channel = Config.Package.getChannel(info.defaultChannel);
+                pack.channel = MclPackage.getChannel(info.defaultChannel);
             }
             if (!info.channels.containsKey(pack.channel)) {
                 loader.logger.error(Ansi.ansi()
@@ -120,7 +120,7 @@ public class Updater extends MclModule {
         if ((update && !pack.version.equals(ver) && !force) || pack.version.trim().equals("")) {
             if (loader.cli.hasOption("q")) {
                 pack.removeFiles();
-            } else if (pack.type.equals(Config.Package.TYPE_PLUGIN)) {
+            } else if (pack.type.equals(MclPackage.TYPE_PLUGIN)) {
                 var dir = new File(pack.type);
                 pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
             }
@@ -152,7 +152,7 @@ public class Updater extends MclModule {
         loader.saveConfig();
     }
 
-    public void downloadFile(Config.Package pack, Repository.Package info) {
+    public void downloadFile(MclPackage pack, Repository.PackageInfo info) {
         var dir = new File(pack.type);
         dir.mkdirs();
         var ver = pack.version;

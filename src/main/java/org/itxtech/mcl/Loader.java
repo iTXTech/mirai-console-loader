@@ -10,6 +10,7 @@ import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.impl.DefaultDownloader;
 import org.itxtech.mcl.impl.DefaultLogger;
 import org.itxtech.mcl.module.ModuleManager;
+import org.itxtech.mcl.pkg.PackageManager;
 
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -50,6 +51,7 @@ public class Loader {
     public File configFile = new File("config.json");
     public Config config;
     public ModuleManager manager;
+    public PackageManager packageManager;
     public Repository repo;
     public Options options = new Options();
     public CommandLine cli;
@@ -155,6 +157,8 @@ public class Loader {
         logger.info(Ansi.ansi().a("This program is licensed under ").fgBrightMagenta().a("GNU AGPL v3"));
 
         options.addOption(Option.builder("z").desc("Skip boot phase").longOpt("dry-run").build());
+
+        packageManager = new PackageManager(this);
 
         manager = new ModuleManager(this);
         parseCli(args, false);

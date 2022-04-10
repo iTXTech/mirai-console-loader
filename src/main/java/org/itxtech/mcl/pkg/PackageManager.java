@@ -1,7 +1,8 @@
-package org.itxtech.mcl.module.builtin;
+package org.itxtech.mcl.pkg;
 
-import org.itxtech.mcl.module.MclModule;
-import org.itxtech.mcl.pkg.MclPackage;
+import org.itxtech.mcl.Loader;
+
+import java.util.Collection;
 
 /*
  *
@@ -26,24 +27,30 @@ import org.itxtech.mcl.pkg.MclPackage;
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-public class OracleJdk extends MclModule {
-    private static final String BC_ID = "org.bouncycastle:bcprov-jdk15on";
+public class PackageManager {
+    private final Loader loader;
 
-    @Override
-    public String getName() {
-        return "oraclejdk";
+    public PackageManager(Loader loader) {
+        this.loader = loader;
     }
 
-    @Override
-    public void prepare() {
-        if (System.getProperty("java.vm.vendor").contains("Oracle")) {
-            var pkgs = loader.config.packages;
-            if (!loader.packageManager.hasPackage(BC_ID)) {
-                var p = new MclPackage("org.bouncycastle:bcprov-jdk15on");
-                p.type = MclPackage.TYPE_CORE;
-                loader.packageManager.addPackage(p);
-                loader.logger.info("BouncyCastle is installed because OracleJDK is detected.");
-            }
-        }
+    public boolean hasPackage(String id) {
+        return loader.config.packages.containsKey(id);
+    }
+
+    public Collection<MclPackage> getPackages() {
+        return loader.config.packages.values();
+    }
+
+    public MclPackage getPackage(String id) {
+        return loader.config.packages.get(id);
+    }
+
+    public void removePackage(String id) {
+        loader.config.packages.remove(id);
+    }
+
+    public void addPackage(MclPackage pkg) {
+        loader.config.packages.put(pkg.id, pkg);
     }
 }
