@@ -187,7 +187,7 @@ public class Repository {
         return "";
     }
 
-    private HttpResponse<Void> httpHead(String url) throws Exception {
+    public HttpResponse<Void> httpHead(String url) throws Exception {
         loader.logger.debug("HTTP HEAD " + url);
         return client.send(
                 HttpRequest.newBuilder(URI.create(url))
@@ -199,11 +199,11 @@ public class Repository {
         );
     }
 
-    private String httpGet(String url) throws Exception {
+    public String httpGet(String url) throws Exception {
         return httpGet(url, loader.config.miraiRepo);
     }
 
-    private String httpGet(String url, String server) throws Exception {
+    public String httpGet(String url, String server) throws Exception {
         loader.logger.debug("HTTP GET " + server + url);
         return client.send(
                 HttpRequest.newBuilder(URI.create(server + url))

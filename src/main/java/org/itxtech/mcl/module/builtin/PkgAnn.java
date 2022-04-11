@@ -33,7 +33,7 @@ public class PkgAnn extends MclModule {
     }
 
     @Override
-    public void boot() {
+    public void load() {
         for (var pkg : loader.packageManager.getPackages()) {
             try {
                 if (!pkg.channel.startsWith("maven")) {
