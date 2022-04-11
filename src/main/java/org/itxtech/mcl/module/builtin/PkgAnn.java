@@ -36,10 +36,12 @@ public class PkgAnn extends MclModule {
     public void boot() {
         for (var pkg : loader.packageManager.getPackages()) {
             try {
-                var info = loader.repo.fetchPackage(pkg.id);
-                if (info.announcement != null) {
-                    loader.logger.info(Ansi.ansi().fgBrightYellow().a(info.getName(pkg.id)).reset().a(" Announcement:"));
-                    loader.logger.println(info.announcement);
+                if (!pkg.channel.startsWith("maven")) {
+                    var info = loader.repo.fetchPackage(pkg.id);
+                    if (info.announcement != null) {
+                        loader.logger.info(Ansi.ansi().fgBrightYellow().a(info.getName(pkg.id)).reset().a(" Announcement:"));
+                        loader.logger.println(info.announcement);
+                    }
                 }
             } catch (Exception e) {
                 loader.logger.error("Failed to fetch announcement for \"" + pkg.id + "\"");

@@ -52,7 +52,7 @@ public class Repo extends MclModule {
         try {
             if (loader.cli.hasOption("j")) {
                 loader.logger.info("Fetching packages from " + loader.config.miraiRepo);
-                var index = loader.repo.fetchPackages();
+                var index = loader.repo.fetchPackageIndex();
 
                 loader.logger.info("---------- Mirai Repo Index Metadata ----------");
                 loader.logger.info("Name: " + index.metadata.name);

@@ -35,20 +35,20 @@ public class RepoCache extends MclModule {
 
     @Override
     public String getName() {
-        return "repowithcache";
+        return "repocache";
     }
 
     @Override
     public void prepare() {
         var clearGroup = new OptionGroup();
-        clearGroup.addOption(Option.builder().desc("Disable Repo With Cache auto clear")
+        clearGroup.addOption(Option.builder().desc("Disable Repo Cache auto clear")
                 .longOpt("disable-auto-clear").build());
-        clearGroup.addOption(Option.builder().desc("Enable Repo With Cache auto clear")
+        clearGroup.addOption(Option.builder().desc("Enable Repo Cache auto clear")
                 .longOpt("enable-auto-clear").build());
         loader.options.addOptionGroup(clearGroup);
 
         loader.repo = new RepoWithCache(loader.repo);
-        loader.logger.debug("RepoWithCache has been initialized. Run \"./mcl --disable-module repowithcache\" to disable.");
+        loader.logger.debug("RepoCache has been initialized. Run \"./mcl --disable-module repocache\" to disable.");
     }
 
     @Override
@@ -63,26 +63,40 @@ public class RepoCache extends MclModule {
 
     @Override
     public void boot() {
-        if (loader.config.moduleProps.getOrDefault(AUTO_CLEAR_KEY, "true").equals("true")) {
+        if (loader.config.moduleProps.getOrDefault(AUTO_CLEAR_KEY, "true").equals("true") &&
+                loader.repo instanceof RepoWithCache) {
+            ((RepoWithCache) loader.repo).clearCache();
             loader.logger.debug("RepoWithCache has been cleared");
         }
     }
 
     public static class RepoWithCache extends Repository {
         private final HashMap<String, PackageInfo> packageInfoCache = new HashMap<>();
+        private MclPackageIndex indexCache = null;
 
         public RepoWithCache(Repository base) {
             super(base.loader);
         }
 
+        public void clearCache() {
+            indexCache = null;
+            packageInfoCache.clear();
+        }
+
         @Override
         public PackageInfo fetchPackage(String id) throws Exception {
-            if (packageInfoCache.containsKey(id)) {
-                return packageInfoCache.get(id);
+            if (!packageInfoCache.containsKey(id)) {
+                packageInfoCache.put(id, super.fetchPackage(id));
             }
-            var info = super.fetchPackage(id);
-            packageInfoCache.put(id, info);
-            return info;
+            return packageInfoCache.get(id);
+        }
+
+        @Override
+        public MclPackageIndex fetchPackageIndex() throws Exception {
+            if (indexCache == null) {
+                indexCache = super.fetchPackageIndex();
+            }
+            return indexCache;
         }
     }
 }

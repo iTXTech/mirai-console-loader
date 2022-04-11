@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.itxtech'
-version '2.0.0-beta.2'
+version '2.0.0-beta.3'
 description '模块化、轻量级且支持完全自定义的 mirai 加载器。'
 
 repositories {
@@ -62,6 +62,8 @@ task launchTest(type: JavaExec) {
 }
 
 task zipAll(type: Zip) {
+    dependsOn(fatJar)
+
     from fileTree(dir: ".", includes: ["README.md", "LICENSE", "mcl", "mcl.cmd"])
     from("$buildDir/libs") {
         include "mcl.jar"

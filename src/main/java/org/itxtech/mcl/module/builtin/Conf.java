@@ -113,19 +113,23 @@ public class Conf extends MclModule {
         }
         if (loader.cli.hasOption("a")) {
             var name = loader.cli.getOptionValue("a");
-            var pkg = loader.packageManager.getPackage(name);
-            if (pkg != null) {
+            if (!name.contains(":")) {
+                loader.logger.error("Invalid package \"" + name + "\"");
+            } else {
+                var pkg = loader.packageManager.getPackage(name);
+                if (pkg != null) {
+                    updatePackage(pkg);
+                    loader.logger.info("Package \"" + pkg.id + "\" has been updated.");
+                    loader.saveConfig();
+                    loader.exit(0);
+                    return;
+                }
+                pkg = new MclPackage(name);
                 updatePackage(pkg);
-                loader.logger.info("Package \"" + pkg.id + "\" has been updated.");
+                loader.packageManager.addPackage(pkg);
+                loader.logger.info("Package \"" + pkg.id + "\" has been added.");
                 loader.saveConfig();
-                loader.exit(0);
-                return;
             }
-            pkg = new MclPackage(name);
-            updatePackage(pkg);
-            loader.packageManager.addPackage(pkg);
-            loader.logger.info("Package \"" + pkg.id + "\" has been added.");
-            loader.saveConfig();
             loader.exit(0);
         }
     }

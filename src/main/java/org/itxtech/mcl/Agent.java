@@ -43,8 +43,4 @@ public class Agent {
             instrumentation.appendToSystemClassLoaderSearch(file);
         }
     }
-
-    public static Class[] getLoadedClasses() {
-        return instrumentation.getAllLoadedClasses();
-    }
 }

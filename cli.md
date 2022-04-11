@@ -56,7 +56,9 @@ usage: mcl
  -b,--show-boot-props                Show Mirai Console boot properties
  -c,--log-level <level>              Set log level
  -d,--disable-module <ModuleName>    Disable module
+    --disable-auto-clear             Disable Repo With Cache auto clear
  -e,--enable-module <ModuleName>     Enable module
+    --enable-auto-clear              Enable Repo With Cache auto clear
  -f,--set-boot-entry <EntryClass>    Set Mirai Console boot entry
  -g,--set-boot-args <Arguments>      Set Mirai Console boot arguments
  -i,--package-info <PackageName>     Fetch info for specified package
@@ -69,7 +71,7 @@ usage: mcl
  -n,--channel <Channel>              Set update channel of package
  -o,--show-repos                     Show Mirai Repo and Maven Repo
  -p,--proxy <address>                Set HTTP proxy
- -q,--delete                         Delete old plugin and mirai files
+ -q,--delete                         Remove outdated files while updating
  -r,--remove-package <PackageName>   Remove package
  -s,--list-packages                  List configured packages
  -t,--type <Type>                    Set type of package

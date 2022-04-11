@@ -64,7 +64,7 @@ public class Repository {
         }
     }
 
-    public MclPackageIndex fetchPackages() throws Exception {
+    public MclPackageIndex fetchPackageIndex() throws Exception {
         return new Gson().fromJson(httpGet("/packages.json"), new TypeToken<MclPackageIndex>() {
         }.getType());
     }
@@ -216,7 +216,7 @@ public class Repository {
 
     public static class MclPackageIndex {
         public MclPackageIndexMetadata metadata;
-        public Map<String, PackageIndex> packages;
+        public Map<String, MclPackageIndexInfo> packages;
     }
 
     public static class MclPackageIndexMetadata {
@@ -225,7 +225,7 @@ public class Repository {
         public String commit;
     }
 
-    public static class PackageIndex {
+    public static class MclPackageIndexInfo {
         public String name;
         public String description;
         public String website;
