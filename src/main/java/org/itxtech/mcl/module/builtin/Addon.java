@@ -27,7 +27,7 @@ import org.itxtech.mcl.pkg.MclPackage;
  *
  */
 public class Addon extends MclModule {
-    private static final String CURRENT_CHANNEL = "c200";
+    private static final String CURRENT_CHANNEL = "c2001";
     private static final String ADDON_ID = "org.itxtech:mcl-addon";
 
     @Override
@@ -44,7 +44,7 @@ public class Addon extends MclModule {
             p.type = MclPackage.TYPE_PLUGIN;
             loader.packageManager.addPackage(p);
             loader.logger.info("MCL Addon is installed! Website: https://github.com/iTXTech/mcl-addon");
-            loader.logger.warning("To remove MCL Addon, run \"./mcl --disable-module addon\" and \"./mcl --remove-package org.itxtech:mcl-addon --delete\"");
+            loader.logger.warning("To remove MCL Addon, run \"./mcl --disable-module addon\" and \"./mcl --remove-package org.itxtech:mcl-addon\"");
         }
     }
 }

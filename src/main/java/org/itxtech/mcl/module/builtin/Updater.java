@@ -50,6 +50,8 @@ public class Updater extends MclModule {
                 .longOpt("update").build());
         loader.options.addOption(Option.builder("k").desc("Disable progress bar")
                 .longOpt("disable-progress-bar").build());
+        loader.options.addOption(Option.builder("q").desc("Remove outdated files while updating")
+                .longOpt("delete").build());
     }
 
     @Override

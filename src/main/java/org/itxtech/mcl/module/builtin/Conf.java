@@ -64,80 +64,69 @@ public class Conf extends MclModule {
         lockGroup.addOption(Option.builder("y").desc("Unlock version of package")
                 .longOpt("unlock").build());
         loader.options.addOptionGroup(lockGroup);
-
-        loader.options.addOption(Option.builder("q").desc("Delete old plugin and mirai files")
-                .longOpt("delete").build());
     }
 
     @Override
     public void cli() {
-        try {
-            if (loader.cli.hasOption("p")) {
-                loader.config.proxy = loader.cli.getOptionValue("p", "");
-                loader.saveConfig();
+        if (loader.cli.hasOption("p")) {
+            loader.config.proxy = loader.cli.getOptionValue("p", "");
+            loader.saveConfig();
+        }
+        if (loader.cli.hasOption("o")) {
+            loader.logger.info("Mirai Repo: " + loader.config.miraiRepo);
+            loader.logger.info("Maven Repo: " + loader.config.mavenRepo);
+            loader.exit(0);
+            return;
+        }
+        if (loader.cli.hasOption("m")) {
+            loader.config.miraiRepo = loader.cli.getOptionValue("m");
+            loader.saveConfig();
+        }
+        if (loader.cli.hasOption("c")) {
+            var lvl = Integer.parseInt(loader.cli.getOptionValue("c"));
+            loader.logger.setLogLevel(lvl);
+            loader.config.logLevel = lvl;
+            loader.saveConfig();
+        }
+        if (loader.cli.hasOption("s")) {
+            for (var pkg : loader.packageManager.getPackages()) {
+                loader.logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type +
+                        "  Version: " + pkg.version + "  Locked: " + (pkg.versionLocked ? "true" : "false"));
             }
-            if (loader.cli.hasOption("o")) {
-                loader.logger.info("Mirai Repo: " + loader.config.miraiRepo);
-                loader.logger.info("Maven Repo: " + loader.config.mavenRepo);
+            loader.exit(0);
+            return;
+        }
+        if (loader.cli.hasOption("r")) {
+            var name = loader.cli.getOptionValue("r");
+            var pkg = loader.packageManager.getPackage(name);
+            if (pkg != null) {
+                pkg.removeFiles();
+                loader.packageManager.removePackage(name);
+                loader.logger.info("Package \"" + pkg.id + "\" has been removed.");
+                loader.saveConfig();
                 loader.exit(0);
                 return;
             }
-            if (loader.cli.hasOption("m")) {
-                loader.config.miraiRepo = loader.cli.getOptionValue("m");
-                loader.saveConfig();
-            }
-            // if (loader.cli.hasOption("v")) {
-            //     loader.config.mavenRepo = loader.cli.getOptionValue("v");
-            //     loader.saveConfig();
-            // }
-            if (loader.cli.hasOption("c")) {
-                var lvl = Integer.parseInt(loader.cli.getOptionValue("c"));
-                loader.logger.setLogLevel(lvl);
-                loader.config.logLevel = lvl;
-                loader.saveConfig();
-            }
-            if (loader.cli.hasOption("s")) {
-                for (var pkg : loader.packageManager.getPackages()) {
-                    loader.logger.info("Package: " + pkg.id + "  Channel: " + pkg.channel + "  Type: " + pkg.type +
-                            "  Version: " + pkg.version + "  Locked: " + (pkg.versionLocked ? "true" : "false"));
-                }
-                loader.exit(0);
-                return;
-            }
-            if (loader.cli.hasOption("r")) {
-                var name = loader.cli.getOptionValue("r");
-                var pkg = loader.packageManager.getPackage(name);
-                if (pkg != null) {
-                    pkg.removeFiles();
-                    loader.packageManager.removePackage(name);
-                    loader.logger.info("Package \"" + pkg.id + "\" has been removed.");
-                    loader.saveConfig();
-                    loader.exit(0);
-                    return;
-                }
-                loader.logger.error("Package \"" + name + "\" not found.");
-                loader.exit(1);
-                return;
-            }
-            if (loader.cli.hasOption("a")) {
-                var name = loader.cli.getOptionValue("a");
-                var pkg = loader.packageManager.getPackage(name);
-                if (pkg != null) {
-                    updatePackage(pkg);
-                    loader.logger.info("Package \"" + pkg.id + "\" has been updated.");
-                    loader.saveConfig();
-                    loader.exit(0);
-                    return;
-                }
-                pkg = new MclPackage(name);
+            loader.logger.error("Package \"" + name + "\" not found.");
+            loader.exit(1);
+            return;
+        }
+        if (loader.cli.hasOption("a")) {
+            var name = loader.cli.getOptionValue("a");
+            var pkg = loader.packageManager.getPackage(name);
+            if (pkg != null) {
                 updatePackage(pkg);
-                loader.packageManager.addPackage(pkg);
-                loader.logger.info("Package \"" + pkg.id + "\" has been added.");
+                loader.logger.info("Package \"" + pkg.id + "\" has been updated.");
                 loader.saveConfig();
                 loader.exit(0);
+                return;
             }
-        } catch (Exception e) {
-            loader.logger.logException(e);
+            pkg = new MclPackage(name);
+            updatePackage(pkg);
+            loader.packageManager.addPackage(pkg);
+            loader.logger.info("Package \"" + pkg.id + "\" has been added.");
+            loader.saveConfig();
+            loader.exit(0);
         }
     }
 

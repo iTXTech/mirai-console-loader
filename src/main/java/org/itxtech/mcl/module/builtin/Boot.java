@@ -62,22 +62,18 @@ public class Boot extends MclModule {
 
     @Override
     public void cli() {
-        try {
-            if (loader.cli.hasOption("f")) {
-                loader.config.modulesProps.put("boot.entry", loader.cli.getOptionValue("f"));
-                loader.saveConfig();
-            }
-            if (loader.cli.hasOption("g")) {
-                loader.config.modulesProps.put("boot.args", loader.cli.getOptionValue("g", ""));
-                loader.saveConfig();
-            }
-            if (loader.cli.hasOption("b")) {
-                loader.logger.info("Mirai Console boot entry: " + getBootEntry());
-                loader.logger.info("Mirai Console boot arguments: " + getBootArgs());
-                loader.exit(0);
-            }
-        } catch (Exception e) {
-            loader.logger.logException(e);
+        if (loader.cli.hasOption("f")) {
+            loader.config.modulesProps.put("boot.entry", loader.cli.getOptionValue("f"));
+            loader.saveConfig();
+        }
+        if (loader.cli.hasOption("g")) {
+            loader.config.modulesProps.put("boot.args", loader.cli.getOptionValue("g", ""));
+            loader.saveConfig();
+        }
+        if (loader.cli.hasOption("b")) {
+            loader.logger.info("Mirai Console boot entry: " + getBootEntry());
+            loader.logger.info("Mirai Console boot arguments: " + getBootArgs());
+            loader.exit(0);
         }
     }
 

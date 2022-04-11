@@ -66,28 +66,24 @@ public class Mrm extends MclModule {
 
     @Override
     public void cli() {
-        try {
-            if (loader.cli.hasOption("mrm-list")) {
-                loader.logger.info("");
-                for (var repo : repos.entrySet()) {
-                    loader.logger.info(Ansi.ansi().a(repo.getKey()).a(" - ").fgBrightCyan()
-                            .a(repo.getValue().url).reset().a(" - ").a(repo.getValue().desc));
-                }
-                loader.exit(0);
-                return;
+        if (loader.cli.hasOption("mrm-list")) {
+            loader.logger.info("");
+            for (var repo : repos.entrySet()) {
+                loader.logger.info(Ansi.ansi().a(repo.getKey()).a(" - ").fgBrightCyan()
+                        .a(repo.getValue().url).reset().a(" - ").a(repo.getValue().desc));
             }
-            if (loader.cli.hasOption("mrm-use")) {
-                var id = loader.cli.getOptionValue("mrm-use");
-                var r = repos.get(id);
-                if (r == null) {
-                    loader.logger.error("Fail to find Mirai Repo \"" + id + "\"");
-                } else {
-                    loader.config.miraiRepo = r.url;
-                    loader.saveConfig();
-                }
+            loader.exit(0);
+            return;
+        }
+        if (loader.cli.hasOption("mrm-use")) {
+            var id = loader.cli.getOptionValue("mrm-use");
+            var r = repos.get(id);
+            if (r == null) {
+                loader.logger.error("Fail to find Mirai Repo \"" + id + "\"");
+            } else {
+                loader.config.miraiRepo = r.url;
+                loader.saveConfig();
             }
-        } catch (Exception e) {
-            loader.logger.logException(e);
         }
     }
 }

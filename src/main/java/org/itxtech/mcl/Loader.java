@@ -13,6 +13,8 @@ import org.itxtech.mcl.module.ModuleManager;
 import org.itxtech.mcl.pkg.PackageManager;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetSocketAddress;
 import java.util.jar.Manifest;
 
@@ -92,13 +94,17 @@ public class Loader {
         } catch (ParseException e) {
             if (help) {
                 logger.error(e.getMessage());
-                new HelpFormatter().printHelp("mcl", options);
+                var stringWriter = new StringWriter();
+                var printWriter = new PrintWriter(stringWriter);
+                var formatter = new HelpFormatter();
+                formatter.printHelp(printWriter, formatter.getWidth(), "mcl", null,
+                        options, formatter.getLeftPadding(), formatter.getDescPadding(),
+                        null, false);
+                printWriter.flush();
+                logger.info(stringWriter.toString());
                 exit(1);
             }
-            try {
-                cli = new DefaultParser().parse(new Options(), new String[0]);
-            } catch (ParseException ignored) {
-            }
+            cli = new CommandLine.Builder().build();
         }
     }
 
@@ -131,15 +137,17 @@ public class Loader {
         return version;
     }
 
-    public void saveConfig() throws Exception {
-        config.save(configFile);
+    public boolean saveConfig() {
+        return tryCatching(() -> config.save(configFile));
     }
 
-    private void tryCatching(UnsafeRunnable r) {
+    private boolean tryCatching(UnsafeRunnable r) {
         try {
             r.run();
+            return true;
         } catch (Throwable e) {
             logger.logException(e);
+            return false;
         }
     }
 
