@@ -69,7 +69,7 @@ public class Config {
     public int logLevel = Logger.LOG_INFO;
 
     @SerializedName("modules_props")
-    public HashMap<String, String> modulesProps = new HashMap<>();
+    public HashMap<String, String> moduleProps = new HashMap<>();
 
     public static Config load(File file) {
         try {

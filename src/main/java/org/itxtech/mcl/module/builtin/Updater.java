@@ -3,7 +3,6 @@ package org.itxtech.mcl.module.builtin;
 import org.apache.commons.cli.Option;
 import org.fusesource.jansi.Ansi;
 import org.itxtech.mcl.Utility;
-import org.itxtech.mcl.component.Config;
 import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.module.MclModule;
 import org.itxtech.mcl.pkg.MclPackage;
@@ -115,8 +114,7 @@ public class Updater extends MclModule {
                 loader.saveConfig();
                 return;
             }
-            var target = info.channels.get(pack.channel);
-            ver = target.get(target.size() - 1);
+            ver = info.getLatestVersion(pack.channel);
         }
 
         if ((update && !pack.version.equals(ver) && !force) || pack.version.trim().equals("")) {

@@ -43,11 +43,12 @@ public class Boot extends MclModule {
     }
 
     public String getBootEntry() {
-        return loader.config.modulesProps.getOrDefault("boot.entry", "net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader");
+        return loader.config.moduleProps.getOrDefault("boot.entry",
+                "net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader");
     }
 
     public String getBootArgs() {
-        return loader.config.modulesProps.getOrDefault("boot.args", "");
+        return loader.config.moduleProps.getOrDefault("boot.args", "");
     }
 
     @Override
@@ -63,11 +64,11 @@ public class Boot extends MclModule {
     @Override
     public void cli() {
         if (loader.cli.hasOption("f")) {
-            loader.config.modulesProps.put("boot.entry", loader.cli.getOptionValue("f"));
+            loader.config.moduleProps.put("boot.entry", loader.cli.getOptionValue("f"));
             loader.saveConfig();
         }
         if (loader.cli.hasOption("g")) {
-            loader.config.modulesProps.put("boot.args", loader.cli.getOptionValue("g", ""));
+            loader.config.moduleProps.put("boot.args", loader.cli.getOptionValue("g", ""));
             loader.saveConfig();
         }
         if (loader.cli.hasOption("b")) {

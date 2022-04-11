@@ -50,7 +50,7 @@ public class Repository {
 
     public HttpClient client;
 
-    private final Loader loader;
+    public Loader loader;
 
     public Repository(Loader loader) {
         this.loader = loader;
@@ -134,7 +134,7 @@ public class Repository {
 
     public String getSha1Url(MclPackage pkg, PackageInfo info, String jarUrl) {
         if (info != null && info.repo != null) {
-            RepoInfo repoInfo = info.repo.get(pkg.version);
+            var repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.sha1 != null && !repoInfo.sha1.isBlank()) {
                 return repoInfo.sha1;
             }
@@ -144,7 +144,7 @@ public class Repository {
 
     public String getJarUrl(MclPackage pkg, PackageInfo info) {
         if (info != null && info.repo != null) {
-            RepoInfo repoInfo = info.repo.get(pkg.version);
+            var repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.archive != null && !repoInfo.archive.isBlank()) {
                 return repoInfo.archive;
             }
@@ -168,7 +168,7 @@ public class Repository {
 
     public String getMetadataUrl(MclPackage pkg, PackageInfo info) {
         if (info != null && info.repo != null) {
-            RepoInfo repoInfo = info.repo.get(pkg.version);
+            var repoInfo = info.repo.get(pkg.version);
             if (repoInfo != null && repoInfo.metadata != null && !repoInfo.metadata.isBlank()) {
                 return repoInfo.metadata;
             }
@@ -239,6 +239,11 @@ public class Repository {
         public String defaultChannel;
         public Map<String, ArrayList<String>> channels;
         public Map<String, RepoInfo> repo;
+
+        public String getLatestVersion(String chan) {
+            var c = channels.get(chan);
+            return c.get(c.size() - 1);
+        }
     }
 
     public static class RepoInfo {

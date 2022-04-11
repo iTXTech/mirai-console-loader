@@ -33,7 +33,7 @@ public class Announcement extends MclModule {
 
     @Override
     public void load() {
-        loader.logger.info("Fetching Mirai Console Loader Announcement...");
+        loader.logger.info("Fetching MCL Announcement...");
         try {
             var pkg = loader.repo.fetchPackage("org.itxtech:mcl");
             loader.logger.info("Mirai Console Loader Announcement:");

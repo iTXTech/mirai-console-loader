@@ -3,7 +3,6 @@ package org.itxtech.mcl.module.builtin;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.itxtech.mcl.Utility;
-import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.module.MclModule;
 
 import java.sql.Timestamp;
@@ -53,7 +52,7 @@ public class Repo extends MclModule {
         try {
             if (loader.cli.hasOption("j")) {
                 loader.logger.info("Fetching packages from " + loader.config.miraiRepo);
-                var index = new Repository(loader).fetchPackages();
+                var index = loader.repo.fetchPackages();
 
                 loader.logger.info("---------- Mirai Repo Index Metadata ----------");
                 loader.logger.info("Name: " + index.metadata.name);
@@ -62,7 +61,7 @@ public class Repo extends MclModule {
                         .format(new Timestamp(index.metadata.timestamp).toLocalDateTime()));
                 loader.logger.info("");
 
-                for (java.util.Map.Entry<String, Repository.PackageIndex> pkg : index.packages.entrySet()) {
+                for (var pkg : index.packages.entrySet()) {
                     var info = pkg.getValue();
                     loader.logger.info("---------- Package: " + pkg.getKey() + " ----------");
                     loader.logger.info("Name: " + info.name);
@@ -77,10 +76,9 @@ public class Repo extends MclModule {
             }
 
             if (loader.cli.hasOption("i")) {
-                var repo = new Repository(loader);
                 var pkg = loader.cli.getOptionValue("i");
                 loader.logger.info("Fetching channel info for package \"" + pkg + "\"");
-                for (java.util.Map.Entry<String, java.util.ArrayList<String>> chan : repo.fetchPackage(pkg).channels.entrySet()) {
+                for (var chan : loader.repo.fetchPackage(pkg).channels.entrySet()) {
                     loader.logger.info("---------- Channel: " + chan.getKey() + " ----------");
                     loader.logger.info("Version: " + Utility.join(", ", chan.getValue()));
                     loader.logger.info("");

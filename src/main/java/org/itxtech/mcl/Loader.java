@@ -167,17 +167,19 @@ public class Loader {
         options.addOption(Option.builder("z").desc("Skip boot phase").longOpt("dry-run").build());
 
         packageManager = new PackageManager(this);
-
+        repo = new Repository(this);
         manager = new ModuleManager(this);
+        downloader = new DefaultDownloader(this);
+
         parseCli(args, false);
         tryCatching(() -> manager.loadAllModules()); //此阶段脚本只能修改loader中变量
         parseCli(args, true);
         tryCatching(() -> manager.phaseCli()); //此阶段脚本处理命令行参数
-        repo = new Repository(this);
-        downloader = new DefaultDownloader(this);
         tryCatching(() -> manager.phaseLoad()); //此阶段脚本下载包
+
         saveConfig();
         boot = true;
+
         if (!cli.hasOption("z")) {
             tryCatching(() -> manager.phaseBoot()); //此阶段脚本启动mirai，且应该只有一个脚本实现
         }
