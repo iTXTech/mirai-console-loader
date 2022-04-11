@@ -66,7 +66,7 @@ public class RepoCache extends MclModule {
         if (loader.config.moduleProps.getOrDefault(AUTO_CLEAR_KEY, "true").equals("true") &&
                 loader.repo instanceof RepoWithCache) {
             ((RepoWithCache) loader.repo).clearCache();
-            loader.logger.debug("RepoWithCache has been cleared");
+            loader.logger.debug("RepoCache has been cleared");
         }
     }
 

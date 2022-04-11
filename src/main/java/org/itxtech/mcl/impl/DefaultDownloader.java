@@ -4,6 +4,7 @@ import org.itxtech.mcl.Loader;
 import org.itxtech.mcl.component.DownloadObserver;
 import org.itxtech.mcl.component.Downloader;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.Proxy;
@@ -45,7 +46,7 @@ public class DefaultDownloader implements Downloader {
             var proxy = loader.getProxy();
             var connection = proxy == null ? new URL(url).openConnection() : new URL(url).openConnection(new Proxy(Proxy.Type.HTTP, proxy));
             var totalLen = connection.getContentLength();
-            var is = connection.getInputStream();
+            var is = new BufferedInputStream(connection.getInputStream());
             var os = new FileOutputStream(file);
             var len = 0;
             var buff = new byte[1024];
@@ -58,6 +59,7 @@ public class DefaultDownloader implements Downloader {
                 }
             }
             os.close();
+            is.close();
         } catch (Throwable e) {
             loader.logger.logException(e);
         }
