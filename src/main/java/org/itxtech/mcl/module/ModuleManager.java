@@ -7,6 +7,8 @@ import org.itxtech.mcl.Loader;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.jar.JarFile;
 
@@ -80,7 +82,8 @@ public class ModuleManager {
             String filename;
             JarFile jarFile;
             if (file[0].equals("mcl")) {
-                var jar = new File(ModuleManager.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+                var jar = new File(URLDecoder.decode(ModuleManager.class.getProtectionDomain()
+                        .getCodeSource().getLocation().getFile(), StandardCharsets.UTF_8));
                 filename = jar.getName();
                 jarFile = new JarFile(jar);
             } else {
