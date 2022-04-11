@@ -7,8 +7,30 @@ import org.itxtech.mcl.module.MclModule;
 
 import java.util.HashMap;
 
+/*
+ *
+ * Mirai Console Loader
+ *
+ * Copyright (C) 2020-2022 iTX Technologies
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author PeratX
+ * @website https://github.com/iTXTech/mirai-console-loader
+ *
+ */
 public class RepoCache extends MclModule {
-    private static final String DISABLED_KEY = "repowithcache.disabled";
     private static final String AUTO_CLEAR_KEY = "repowithcache.auto-clear";
 
     @Override
@@ -18,14 +40,6 @@ public class RepoCache extends MclModule {
 
     @Override
     public void prepare() {
-        var mainGroup = new OptionGroup();
-        mainGroup.addOption(Option.builder().desc("Disable Repo With Cache")
-                .longOpt("disable-repo-with-cache").build());
-        mainGroup.addOption(Option.builder().desc("Enable Repo With Cache")
-                .longOpt("enable-repo-with-cache").build());
-        loader.options.addOptionGroup(mainGroup);
-
-
         var clearGroup = new OptionGroup();
         clearGroup.addOption(Option.builder().desc("Disable Repo With Cache auto clear")
                 .longOpt("disable-auto-clear").build());
@@ -33,23 +47,12 @@ public class RepoCache extends MclModule {
                 .longOpt("enable-auto-clear").build());
         loader.options.addOptionGroup(clearGroup);
 
-        if (loader.config.moduleProps.getOrDefault(DISABLED_KEY, "false").equals("false")) {
-            loader.repo = new RepoWithCache(loader.repo);
-            loader.logger.debug("RepoWithCache has been initialized");
-        }
+        loader.repo = new RepoWithCache(loader.repo);
+        loader.logger.debug("RepoWithCache has been initialized. Run \"./mcl --disable-module repowithcache\" to disable.");
     }
 
     @Override
     public void cli() {
-        if (loader.cli.hasOption("disable-repo-with-cache")) {
-            loader.config.moduleProps.put(DISABLED_KEY, "true");
-            loader.logger.info("RepoWithCache has been disabled. Restart MCL to take effect.");
-        }
-        if (loader.cli.hasOption("enable-repo-with-cache")) {
-            loader.config.moduleProps.put(DISABLED_KEY, "false");
-            loader.logger.info("RepoWithCache has been enabled. Restart MCL to take effect.");
-        }
-
         if (loader.cli.hasOption("enable-auto-clear")) {
             loader.config.moduleProps.put(AUTO_CLEAR_KEY, "true");
         }

@@ -234,6 +234,7 @@ public class Repository {
     }
 
     public static class PackageInfo {
+        public String name;
         public String announcement;
         public String type;
         public String defaultChannel;
@@ -243,6 +244,10 @@ public class Repository {
         public String getLatestVersion(String chan) {
             var c = channels.get(chan);
             return c.get(c.size() - 1);
+        }
+
+        public String getName(String id) {
+            return name == null ? id : name;
         }
     }
 

@@ -1,5 +1,6 @@
 package org.itxtech.mcl.module.builtin;
 
+import org.fusesource.jansi.Ansi;
 import org.itxtech.mcl.module.MclModule;
 
 /*
@@ -25,21 +26,24 @@ import org.itxtech.mcl.module.MclModule;
  * @website https://github.com/iTXTech/mirai-console-loader
  *
  */
-public class Announcement extends MclModule {
+public class PkgAnn extends MclModule {
     @Override
     public String getName() {
-        return "announcement";
+        return "pkgann";
     }
 
     @Override
-    public void load() {
-        loader.logger.debug("Fetching MCL Announcement...");
-        try {
-            var pkg = loader.repo.fetchPackage("org.itxtech:mcl");
-            loader.logger.info("Mirai Console Loader Announcement:");
-            loader.logger.println(pkg.announcement);
-        } catch (Exception e) {
-            loader.logger.error("Failed to fetch MCL announcement.");
+    public void boot() {
+        for (var pkg : loader.packageManager.getPackages()) {
+            try {
+                var info = loader.repo.fetchPackage(pkg.id);
+                if (info.announcement != null) {
+                    loader.logger.info(Ansi.ansi().fgBrightYellow().a(info.getName(pkg.id)).reset().a(" Announcement:"));
+                    loader.logger.println(info.announcement);
+                }
+            } catch (Exception e) {
+                loader.logger.error("Failed to fetch announcement for \"" + pkg.id + "\"");
+            }
         }
     }
 }
