@@ -164,7 +164,10 @@ public class Loader {
         logger.info("https://github.com/iTXTech/mirai-console-loader");
         logger.info(Ansi.ansi().a("This program is licensed under ").fgBrightMagenta().a("GNU AGPL v3"));
 
-        options.addOption(Option.builder("z").desc("Skip boot phase").longOpt("dry-run").build());
+        var bootGroup = new OptionGroup();
+        bootGroup.addOption(Option.builder("z").desc("Skip boot phase").longOpt("dry-run").build());
+        bootGroup.addOption(Option.builder().desc("Execute boot phase only").longOpt("boot-only").build());
+        options.addOptionGroup(bootGroup);
 
         packageManager = new PackageManager(this);
         repo = new Repository(this);
@@ -174,14 +177,17 @@ public class Loader {
         parseCli(args, false);
         tryCatching(() -> manager.loadAllModules()); //此阶段脚本只能修改loader中变量
         parseCli(args, true);
-        tryCatching(() -> manager.phaseCli()); //此阶段脚本处理命令行参数
-        tryCatching(() -> manager.phaseLoad()); //此阶段脚本下载包
 
-        saveConfig();
-        boot = true;
+        if (!cli.hasOption("boot-only")) {
+            tryCatching(() -> manager.phaseCli()); //此阶段脚本处理命令行参数
+            tryCatching(() -> manager.phaseLoad()); //此阶段脚本下载包
+            saveConfig();
+        }
 
         if (!cli.hasOption("z")) {
             tryCatching(() -> manager.phaseBoot()); //此阶段脚本启动mirai，且应该只有一个脚本实现
         }
+
+        boot = true;
     }
 }
