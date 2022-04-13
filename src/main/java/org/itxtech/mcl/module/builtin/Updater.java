@@ -76,18 +76,21 @@ public class Updater extends MclModule {
     }
 
     public void check(MclPackage pack) throws Exception {
-        // "Verifying \"" + pack.id + "\" version " + pack.version
-        loader.logger.info(Ansi.ansi()
+        var baseInfo = Ansi.ansi()
                 .a("Verifying ")
                 .fgBrightYellow()
-                .a("\"").a(pack.id).a("\"").reset()
-                .a(" v").fgBrightYellow().a(pack.version)
-        );
+                .a("\"").a(pack.id).a("\"");
+        if (!"".equals(pack.version)) {
+            baseInfo = baseInfo.reset().a(" v").fgBrightYellow().a(pack.version);
+        }
+        loader.logger.info(baseInfo);
         var update = loader.cli.hasOption("u");
         var force = pack.isVersionLocked();
         var down = false;
         if (!Utility.checkLocalFile(pack)) {
-            loader.logger.error("\"" + pack.id + "\" is corrupted.");
+            if (!"".equals(pack.version)) {
+                loader.logger.error("\"" + pack.id + "\" is corrupted.");
+            }
             down = true;
         }
         var ver = "";
@@ -138,7 +141,15 @@ public class Updater extends MclModule {
             showNotice = true;
         }
         if (down) {
-            downloadFile(pack, info);
+            loader.logger.info(Ansi.ansi()
+                    .a("Updating ")
+                    .fgBrightYellow()
+                    .a("\"").a(pack.id).a("\"").reset()
+                    .a(" to v").fgBrightYellow().a(pack.version)
+            );
+            if (!Utility.checkLocalFile(pack)) {
+                downloadFile(pack, info);
+            }
             if (!Utility.checkLocalFile(pack)) {
                 loader.logger.error(Ansi.ansi()
                         .fgBrightRed()
