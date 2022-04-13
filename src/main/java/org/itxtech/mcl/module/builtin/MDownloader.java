@@ -61,17 +61,17 @@ public class MDownloader extends MclModule {
                 loader.logger.error("Invalid Max Threads value");
             }
         }
-        loader.downloader = new MultithreadDownloaderImpl(loader.downloader,
+        loader.downloader = new MultithreadingDownloaderImpl(loader.downloader,
                 Integer.parseInt(loader.config.moduleProps.getOrDefault(MAX_THREADS_KEY, "16")));
     }
 
-    public static class MultithreadDownloaderImpl implements Downloader {
+    public static class MultithreadingDownloaderImpl implements Downloader {
         private static final int MIN_SIZE = 2 * 1024 * 1024; // < 2MB
 
         private int maxThreads;
         private Downloader defaultDownloader;
 
-        public MultithreadDownloaderImpl(Downloader defaultDownloader, int maxThreads) {
+        public MultithreadingDownloaderImpl(Downloader defaultDownloader, int maxThreads) {
             this.maxThreads = maxThreads;
             this.defaultDownloader = defaultDownloader;
         }

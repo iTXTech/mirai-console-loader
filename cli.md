@@ -4,7 +4,9 @@
 
 此功能可以自动从`Maven Repo`获取最新版本。
 
-`.\mcl --update-package 包名 --channel maven`
+```
+.\mcl --update-package 包名 --channel maven
+```
 
 ### `maven` 支持两个子频道
 
@@ -12,39 +14,75 @@
 * `prerelease` - 预发行版 - `.\mcl --update-package 包名 --channel maven-prerelease`
 * 留空或其他，则默认为最新版
 
+## 禁用控制台颜色
+
+配置`mcl.disable-ansi`环境变量为`true`。
+
+```bash
+$ java "-Dmcl.disable-ansi=true" -jar mcl.jar
+```
+
+仅禁用 `Windows CMD` 下 `ANSI` 初始化，请配置 `mcl.no-ansi-console-init` 环境变量为 `true`。
+
+## 切换 `Mirai Repo`
+
+`MCL` 内置 `Mirai Repo Manager`，可通过以下命令调用。
+
+```bash
+$ ./mcl --mrm-list # 列出内置 Mirai Repo
+$ ./mcl --mrm-use forum # 使用 Mirai Forum 提供的 Mirai Repo 镜像
+$ ./mcl --set-mirai-repo https://repo.example.org # 使用自定义的 Mirai Repo
+```
+
 ## 使用样例
 
 * 修改某个包的更新频道
 
-`.\mcl --update-package 包名 --channel 频道名`
+```
+.\mcl --update-package 包名 --channel 频道名
+```
 
 * 安装 `Mirai Native`
 
-`.\mcl --update-package org.itxtech:mirai-native --type plugin --channel stable`
+```
+.\mcl --update-package org.itxtech:mirai-native
+```
 
 * 安装 `Chat Command`
 
-`.\mcl --update-package net.mamoe:chat-command --type plugin --channel stable`
+```
+.\mcl --update-package net.mamoe:chat-command
+```
 
 * 指定 `mirai-console` 版本（指定的版本必须为该`Channel`中存在的版本）
 
-`.\mcl --update-package net.mamoe:mirai-console --channel stable --version 1.0.0`
+```
+.\mcl --update-package net.mamoe:mirai-console --channel stable --version 1.0.0
+```
 
-* 忽略版本更新
+* 执行包更新
 
-`.\mcl -u`
+```
+.\mcl -u
+```
 
-* 禁用`updater`脚本
+* 禁用 `updater` 模块
 
-`.\mcl --disable-script updater`
+```
+.\mcl --disable-module updater
+```
 
-* 启用 `updater` 脚本
+* 启用 `updater` 模块
 
-`.\mcl --enable-script updater`
+```
+.\mcl --enable-module updater
+```
 
 * 更新运行库但不启动
 
-`.\mcl --dry-run`
+```
+.\mcl --dry-run
+```
 
 * 查看帮助
 
@@ -54,11 +92,12 @@ PS > .\mcl -h
 usage: mcl
  -a,--update-package <PackageName>   Add or update package
  -b,--show-boot-props                Show Mirai Console boot properties
+    --boot-only                      Execute boot phase only
  -c,--log-level <level>              Set log level
  -d,--disable-module <ModuleName>    Disable module
-    --disable-auto-clear             Disable Repo With Cache auto clear
+    --disable-auto-clear             Disable Repo Cache auto clear
  -e,--enable-module <ModuleName>     Enable module
-    --enable-auto-clear              Enable Repo With Cache auto clear
+    --enable-auto-clear              Enable Repo Cache auto clear
  -f,--set-boot-entry <EntryClass>    Set Mirai Console boot entry
  -g,--set-boot-args <Arguments>      Set Mirai Console boot arguments
  -i,--package-info <PackageName>     Fetch info for specified package
@@ -74,6 +113,8 @@ usage: mcl
  -q,--delete                         Remove outdated files while updating
  -r,--remove-package <PackageName>   Remove package
  -s,--list-packages                  List configured packages
+    --set-max-threads <MaxThreads>   Set Max Threads of Multithreading
+                                     Downloader
  -t,--type <Type>                    Set type of package
  -u,--update                         Update packages
  -w,--version <Version>              Set version of package
