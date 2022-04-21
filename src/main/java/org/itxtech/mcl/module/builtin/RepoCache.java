@@ -31,7 +31,7 @@ import java.util.HashMap;
  *
  */
 public class RepoCache extends MclModule {
-    private static final String AUTO_CLEAR_KEY = "repowithcache.auto-clear";
+    private static final String AUTO_CLEAR_KEY = "repocache.auto-clear";
 
     @Override
     public String getName() {
@@ -48,7 +48,6 @@ public class RepoCache extends MclModule {
         loader.options.addOptionGroup(clearGroup);
 
         loader.repo = new RepoWithCache(loader.repo);
-        loader.logger.debug("RepoCache has been initialized. Run \"./mcl --disable-module repocache\" to disable.");
     }
 
     @Override
