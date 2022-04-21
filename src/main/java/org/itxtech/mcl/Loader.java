@@ -184,10 +184,9 @@ public class Loader {
             saveConfig();
         }
 
+        boot = true;
         if (!cli.hasOption("z")) {
             tryCatching(() -> manager.phaseBoot()); //此阶段脚本启动mirai，且应该只有一个脚本实现
         }
-
-        boot = true;
     }
 }
