@@ -5,13 +5,13 @@
 此功能可以自动从`Maven Repo`获取最新版本。
 
 ```
-.\mcl --update-package 包名 --channel maven
+./mcl --update-package 包名 --channel maven
 ```
 
 ### `maven` 支持两个子频道
 
-* `stable` - 稳定版 - `.\mcl --update-package 包名 --channel maven-stable`
-* `prerelease` - 预发行版 - `.\mcl --update-package 包名 --channel maven-prerelease`
+* `stable` - 稳定版 - `./mcl --update-package 包名 --channel maven-stable`
+* `prerelease` - 预发行版 - `./mcl --update-package 包名 --channel maven-prerelease`
 * 留空或其他，则默认为最新版
 
 ## 禁用控制台颜色
@@ -29,9 +29,9 @@ $ java "-Dmcl.disable-ansi=true" -jar mcl.jar
 `MCL` 内置 `Mirai Repo Manager`，可通过以下命令调用。
 
 ```bash
-$ ./mcl --mrm-list # 列出内置 Mirai Repo
-$ ./mcl --mrm-use forum # 使用 Mirai Forum 提供的 Mirai Repo 镜像
-$ ./mcl --set-mirai-repo https://repo.example.org # 使用自定义的 Mirai Repo
+./mcl --mrm-list # 列出内置 Mirai Repo
+./mcl --mrm-use forum # 使用 Mirai Forum 提供的 Mirai Repo 镜像
+./mcl --set-mirai-repo https://repo.example.org # 使用自定义的 Mirai Repo
 ```
 
 ## 使用样例
@@ -39,55 +39,55 @@ $ ./mcl --set-mirai-repo https://repo.example.org # 使用自定义的 Mirai Rep
 * 修改某个包的更新频道
 
 ```
-.\mcl --update-package 包名 --channel 频道名
+./mcl --update-package 包名 --channel 频道名
 ```
 
 * 安装 `Mirai Native`
 
 ```
-.\mcl --update-package org.itxtech:mirai-native
+./mcl --update-package org.itxtech:mirai-native
 ```
 
 * 安装 `Chat Command`
 
 ```
-.\mcl --update-package net.mamoe:chat-command
+./mcl --update-package net.mamoe:chat-command
 ```
 
 * 指定 `mirai-console` 版本（指定的版本必须为该`Channel`中存在的版本）
 
 ```
-.\mcl --update-package net.mamoe:mirai-console --channel stable --version 1.0.0
+./mcl --update-package net.mamoe:mirai-console --channel stable --version 1.0.0
 ```
 
 * 执行包更新
 
 ```
-.\mcl -u
+./mcl -u
 ```
 
 * 禁用 `updater` 模块
 
 ```
-.\mcl --disable-module updater
+./mcl --disable-module updater
 ```
 
 * 启用 `updater` 模块
 
 ```
-.\mcl --enable-module updater
+./mcl --enable-module updater
 ```
 
 * 更新运行库但不启动
 
 ```
-.\mcl --dry-run
+./mcl --dry-run
 ```
 
 * 查看帮助
 
-```
-PS > .\mcl -h
+```bash
+./mcl -h
 
 usage: mcl
  -a,--update-package <PackageName>   Add or update package
