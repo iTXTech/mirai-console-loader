@@ -60,6 +60,14 @@ public class Config {
         new MclPackage("net.mamoe:mirai-core-all").addToMap(this);
     }};
 
+    public ArrayList<String> archiveSuffix = new ArrayList<>() {{
+        add(".zip");
+        add(".mirai2.jar");
+        add(".mirai.jar");
+        add("-all.jar");
+        add(".jar");
+    }};
+
     @SerializedName("disabled_modules")
     public ArrayList<String> disabledModules = new ArrayList<>();
 

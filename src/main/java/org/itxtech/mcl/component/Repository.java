@@ -152,7 +152,7 @@ public class Repository {
         for (var repo : loader.config.mavenRepo) {
             var base = repo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
                     + getPackageFromId(pkg.id) + "-" + pkg.version;
-            for (var suf : new String[]{".zip", ".mirai.jar", "-all.jar", ".jar"}) {
+            for (var suf : loader.config.archiveSuffix) {
                 var real = base + suf;
                 try {
                     if (httpHead(real).statusCode() == 200) {
