@@ -67,7 +67,6 @@ public class Loader {
     public static void main(String[] args) {
         var loader = new Loader();
         try {
-            loader.loadConfig();
             if (!Boolean.getBoolean("mcl.disable-ansi")) {
                 if (!Boolean.getBoolean("mcl.no-ansi-console-init")) {
                     AnsiConsole.systemInstall();
@@ -76,6 +75,7 @@ public class Loader {
             } else {
                 Ansi.setEnabled(false);
             }
+            loader.loadConfig();
             loader.start(args);
         } catch (Exception e) {
             loader.logger.logException(e);
