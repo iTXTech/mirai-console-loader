@@ -49,8 +49,8 @@ public class Updater extends MclModule {
                 .longOpt("update").build());
         loader.options.addOption(Option.builder("k").desc("Disable progress bar")
                 .longOpt("disable-progress-bar").build());
-        loader.options.addOption(Option.builder("q").desc("Remove outdated files while updating")
-                .longOpt("delete").build());
+//        loader.options.addOption(Option.builder("q").desc("Remove outdated files while updating")
+//                .longOpt("delete").build());
     }
 
     @Override
@@ -121,12 +121,12 @@ public class Updater extends MclModule {
         }
 
         if ((update && !pack.version.equals(ver) && !force) || pack.version.trim().equals("")) {
-            if (loader.cli.hasOption("q")) {
-                pack.removeFiles();
-            } else if (pack.type.equals(MclPackage.TYPE_PLUGIN)) {
-                var dir = new File(pack.type);
-                pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
-            }
+//            if (loader.cli.hasOption("q")) {
+            pack.removeFiles();
+//            } else if (pack.type.equals(MclPackage.TYPE_PLUGIN)) {
+//                var dir = new File(pack.type);
+//                pack.getJarFile().renameTo(new File(dir, pack.getBasename() + ".jar.bak"));
+//            }
             pack.version = ver;
             down = true;
         }
