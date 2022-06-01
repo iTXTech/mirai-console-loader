@@ -3,7 +3,6 @@ package org.itxtech.mcl.module.builtin;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.itxtech.mcl.Utility;
-import org.itxtech.mcl.component.Repository;
 import org.itxtech.mcl.module.MclModule;
 
 import java.sql.Timestamp;
@@ -80,7 +79,7 @@ public class Repo extends MclModule {
                 var pkg = loader.cli.getOptionValue("i");
 
                 loader.logger.info("Fetching channel info for package \"" + pkg + "\"");
-                Repository.PackageInfo fetchedPackageInfo = loader.repo.fetchPackage(pkg);
+                var fetchedPackageInfo = loader.repo.fetchPackage(pkg);
                 if (null == fetchedPackageInfo) {
                     loader.logger.error("Package \"" + pkg + "\" is not found in MiraiRepo");
                     loader.exit(1);
