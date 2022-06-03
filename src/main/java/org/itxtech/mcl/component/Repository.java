@@ -70,7 +70,10 @@ public class Repository {
     }
 
     private static String transformId(String id) {
-        return id.replace(".", "/").replace(":", "/");
+        var arr =  id.split(":", 2);
+        var group = arr[0];
+        var name = arr[1];
+        return group.replace(".", "/") + "/" + name;
     }
 
     private static String getPackageFromId(String id) {
