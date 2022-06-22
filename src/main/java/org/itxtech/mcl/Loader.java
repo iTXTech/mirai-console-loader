@@ -69,7 +69,12 @@ public class Loader {
         try {
             if (!Boolean.getBoolean("mcl.disable-ansi")) {
                 if (!Boolean.getBoolean("mcl.no-ansi-console-init")) {
-                    AnsiConsole.systemInstall();
+                    try {
+                        AnsiConsole.systemInstall();
+                    } catch (Exception ansiException) {
+                        loader.logger.error("Fail to initialize JAnsi, set env mcl.no-ansi-console-init to true to disable the initialization.");
+                        loader.logger.logException(ansiException);
+                    }
                 }
                 Ansi.setEnabled(true);
             } else {
