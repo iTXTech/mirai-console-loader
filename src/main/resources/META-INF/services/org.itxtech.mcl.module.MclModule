@@ -1,0 +1,11 @@
+org.itxtech.mcl.module.builtin.Addon
+org.itxtech.mcl.module.builtin.Announcement
+org.itxtech.mcl.module.builtin.Boot
+org.itxtech.mcl.module.builtin.Conf
+org.itxtech.mcl.module.builtin.MDownloader
+org.itxtech.mcl.module.builtin.Mrm
+org.itxtech.mcl.module.builtin.OracleJdk
+org.itxtech.mcl.module.builtin.PkgAnn
+org.itxtech.mcl.module.builtin.Repo
+org.itxtech.mcl.module.builtin.RepoCache
+org.itxtech.mcl.module.builtin.Updater

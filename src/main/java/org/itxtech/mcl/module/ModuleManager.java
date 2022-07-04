@@ -6,10 +6,8 @@ import org.itxtech.mcl.Agent;
 import org.itxtech.mcl.Loader;
 
 import java.io.File;
-import java.lang.reflect.Modifier;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.ServiceLoader;
 import java.util.jar.JarFile;
 
 /*
@@ -76,56 +74,33 @@ public class ModuleManager {
             return;
         }
 
-        for (var pkg : loader.config.modulePackages) {
-            var file = pkg.split(":");
-            var clzPkg = file[1].replace(".", "/") + "/";
-            String filename;
-            JarFile jarFile;
-            if (file[0].equals("mcl")) {
-                var jar = new File(URLDecoder.decode(ModuleManager.class.getProtectionDomain()
-                        .getCodeSource().getLocation().getFile(), StandardCharsets.UTF_8));
-                filename = jar.getName();
-                jarFile = new JarFile(jar);
-            } else {
-                var jar = new File("modules/" + file[0] + ".jar");
-                filename = jar.getName();
-                jarFile = new JarFile(jar);
-                Agent.appendJarFile(jarFile);
-            }
-            var entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                var entry = entries.nextElement().getRealName();
-                if (entry.startsWith(clzPkg) && entry.endsWith(".class") && !entry.contains("$")) {
-                    try {
-                        var clz = Class.forName(
-                                entry.replace("/", ".").replace(".class", ""),
-                                false,
-                                ClassLoader.getSystemClassLoader()
-                        );
+        var folder = new File("modules");
+        folder.mkdir();
 
-                        if (!MclModule.class.isAssignableFrom(clz)) {
-                            loader.logger.debug("Skipped " + clz.getName() + " from " + filename + " because it's not a mcl module.");
-                            continue;
-                        }
-                        if (clz.isInterface() || Modifier.isAbstract(clz.getModifiers())) {
-                            loader.logger.debug("Skipped " + clz.getName() + " from " + filename + " because it's abstract.");
-                            continue;
-                        }
-
-                        var module = (MclModule) clz.getDeclaredConstructor().newInstance();
-                        if (!loader.config.disabledModules.contains(module.getName())) {
-                            loader.logger.debug("Loading module: \"" + module.getName() + "\" from \"" + filename + "\". Class: " + module.getClass().getCanonicalName());
-                            modules.put(module.getName(), module);
-
-                            module.init(loader);
-                            module.prepare();
-                        }
-                    } catch (Exception e) {
-                        loader.logger.logException(e);
-                    }
-                }
+        var list = folder.listFiles(file -> file.getName().endsWith(".jar"));
+        if (list != null) {
+            for (var file : list) {
+                var jar  = new JarFile(file);
+                Agent.appendJarFile(jar);
             }
         }
+
+        var serviceLoader = ServiceLoader.load(MclModule.class);
+
+        serviceLoader.stream().forEach(provider -> {
+            try {
+                var module = provider.get();
+                if (!loader.config.disabledModules.contains(module.getName())) {
+                    loader.logger.debug("Loading module: \"" + module.getName() + "\". Class: " + module.getClass().getCanonicalName());
+                    modules.put(module.getName(), module);
+
+                    module.init(loader);
+                    module.prepare();
+                }
+            } catch (Exception e) {
+                loader.logger.logException(e);
+            }
+        });
         if (modules.size() == 0) {
             loader.logger.warning("No module has been loaded. Exiting.");
         }
