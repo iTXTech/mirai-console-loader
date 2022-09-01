@@ -62,9 +62,9 @@ chmod +x mcl
 
 1. 在 `mcl` 运行目录下新建 `modules` 目录
 2. 将 目标Jar 放入该目录
-3. 编辑 `config.json` 中 `module_packages` 字段，添加入 `jar文件名（不带扩展名）:包名`
+3. ~~编辑 `config.json` 中 `module_packages` 字段，添加入 `jar文件名（不带扩展名）:包名`~~ 
 
-如有扩展 `test.jar`，需要加载 `com.test` 包中的 `MclModule`，则添加的项为 `test:com.test`。
+新版 MCL Module 加载将使用 Java SPI Service 的加载方式，不需要再配置 `module_packages` 字段
 
 ## `MCL` 默认支持 `Mirai 2.11` 及以上插件格式
 
