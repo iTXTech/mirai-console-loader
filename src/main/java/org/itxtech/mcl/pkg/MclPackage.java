@@ -111,13 +111,15 @@ public class MclPackage {
 
     public void removeFiles() {
         var dir = new File(type);
-        deleteFile(dir, "jar");
-        deleteFile(dir, "sha1");
-        deleteFile(dir, "metadata");
+        var name = getName();
+        deleteFile(dir, name, "jar");
+        deleteFile(dir, name, "zip");
+        deleteFile(dir, name,"sha1");
+        deleteFile(dir, name,"metadata");
     }
 
-    public void deleteFile(File dir, String type) {
-        var list = dir.listFiles((d, f) -> f.endsWith(type));
+    public void deleteFile(File dir, String name, String type) {
+        var list = dir.listFiles((d, f) -> f.startsWith(name) && f.endsWith(type));
         if (list == null) return;
         for (File source : list) {
             if (source.delete()) {
