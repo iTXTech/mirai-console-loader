@@ -90,14 +90,13 @@ public class MclPackage {
     }
 
     public File getJarFile() {
-        var dir = new File(type);
         var name = getName();
         var suffix = Loader.getInstance().config.archiveSuffix;
         for (String end : suffix) {
-            var file = new File(dir, name + "-" + version + end);
+            var file = new File(type, name + "-" + version + end);
             if (file.exists()) return file;
         }
-        return new File(dir, name + "-" + version + suffix.get(0));
+        return new File(type, name + "-" + version + suffix.get(0));
     }
 
     public File getSha1File() {
@@ -106,9 +105,8 @@ public class MclPackage {
     }
 
     public File getMetadataFile() {
-        var dir = new File(type);
         var name = getName();
-        return new File(dir, name + "-" + version + ".mirai.metadata");
+        return new File(type, name + "-" + version + ".mirai.metadata");
     }
 
     public void removeFiles() {
