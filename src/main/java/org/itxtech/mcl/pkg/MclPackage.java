@@ -89,12 +89,26 @@ public class MclPackage {
         return id.split(":", 2)[1];
     }
 
-    public String getBasename() {
-        return getName() + "-" + version;
+    public File getJarFile() {
+        var dir = new File(type);
+        var name = getName();
+        var suffix = Loader.getInstance().config.archiveSuffix;
+        for (String end : suffix) {
+            var file = new File(dir, name + "-" + version + end);
+            if (file.exists()) return file;
+        }
+        return new File(dir, name + "-" + version + suffix.get(0));
     }
 
-    public File getJarFile() {
-        return new File(new File(type), getBasename() + ".jar");
+    public File getSha1File() {
+        var jar = getJarFile();
+        return new File(jar.getParent(), jar.getName() + ".sha1");
+    }
+
+    public File getMetadataFile() {
+        var dir = new File(type);
+        var name = getName();
+        return new File(dir, name + "-" + version + ".mirai.metadata");
     }
 
     public void removeFiles() {
@@ -105,12 +119,13 @@ public class MclPackage {
     }
 
     public void deleteFile(File dir, String type) {
-        var f = new File(dir, getBasename() + "." + type);
-        if (f.exists()) {
-            if (f.delete()) {
-                Loader.getInstance().logger.info("File \"" + f.getName() + "\" has been deleted.");
+        var list = dir.listFiles((d, f) -> f.endsWith(type));
+        if (list == null) return;
+        for (File source : list) {
+            if (source.delete()) {
+                Loader.getInstance().logger.info("File \"" + source.getName() + "\" has been deleted.");
             } else {
-                Loader.getInstance().logger.error("Failed to delete \"" + f.getName() + "\". Please delete it manually.");
+                Loader.getInstance().logger.error("Failed to delete \"" + source.getName() + "\". Please delete it manually.");
             }
         }
     }

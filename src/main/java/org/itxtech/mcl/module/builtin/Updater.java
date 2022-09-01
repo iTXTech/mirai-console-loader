@@ -166,14 +166,13 @@ public class Updater extends MclModule {
     public void downloadFile(MclPackage pack, Repository.PackageInfo info) {
         var dir = new File(pack.type);
         dir.mkdirs();
-        var ver = pack.version;
         var jarUrl = loader.repo.getJarUrl(pack, info);
         if (!jarUrl.isEmpty()) {
-            down(jarUrl, new File(dir, pack.getName() + "-" + ver + ".jar"));
-            down(loader.repo.getSha1Url(pack, info, jarUrl), new File(dir, pack.getName() + "-" + ver + ".sha1"));
+            down(jarUrl, pack.getJarFile());
+            down(loader.repo.getSha1Url(pack, info, jarUrl), pack.getSha1File());
             var metadata = loader.repo.getMetadataUrl(pack, info);
-            if (!metadata.equals("")) {
-                down(metadata, new File(dir, pack.getName() + "-" + ver + ".metadata"));
+            if (!metadata.isEmpty()) {
+                down(metadata, pack.getMetadataFile());
             }
         } else {
             loader.logger.error(Ansi.ansi()
