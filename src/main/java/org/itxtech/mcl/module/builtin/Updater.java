@@ -166,20 +166,27 @@ public class Updater extends MclModule {
     public void downloadFile(MclPackage pack, Repository.PackageInfo info) {
         var dir = new File(pack.type);
         dir.mkdirs();
+        var name = pack.getName();
+
         var jarUrl = loader.repo.getJarUrl(pack, info);
-        if (!jarUrl.isEmpty()) {
-            down(jarUrl, pack.getJarFile());
-            down(loader.repo.getSha1Url(pack, info, jarUrl), pack.getSha1File());
-            var metadata = loader.repo.getMetadataUrl(pack, info);
-            if (!metadata.isEmpty()) {
-                down(metadata, pack.getMetadataFile());
-            }
-        } else {
+        if (jarUrl.isEmpty()) {
             loader.logger.error(Ansi.ansi()
                     .a("Cannot download package ")
                     .fgBrightYellow().a("\"").a(pack.id).a("\"")
             );
+            return;
         }
+        var jar = jarUrl.substring(jarUrl.lastIndexOf(name));
+        down(jarUrl, new File(dir, jar));
+
+        var sha1Url = loader.repo.getSha1Url(pack, info, jarUrl);
+        var sha1 = sha1Url.substring(sha1Url.lastIndexOf(name));
+        down(sha1Url, new File(dir, sha1));
+
+        var metadataUrl = loader.repo.getMetadataUrl(pack, info);
+        if (metadataUrl.isEmpty()) return;
+        var metadata = metadataUrl.substring(metadataUrl.lastIndexOf(name));
+        down(metadataUrl, new File(dir, metadata));
     }
 
     public String alignRight(String current, String total) {
