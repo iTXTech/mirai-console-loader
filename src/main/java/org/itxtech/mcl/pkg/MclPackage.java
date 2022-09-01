@@ -114,8 +114,8 @@ public class MclPackage {
         var name = getName();
         deleteFile(dir, name, "jar");
         deleteFile(dir, name, "zip");
-        deleteFile(dir, name,"sha1");
-        deleteFile(dir, name,"metadata");
+        deleteFile(dir, name, "sha1");
+        deleteFile(dir, name, "metadata");
     }
 
     public void deleteFile(File dir, String name, String type) {

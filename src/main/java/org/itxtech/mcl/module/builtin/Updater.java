@@ -167,6 +167,8 @@ public class Updater extends MclModule {
         var dir = new File(pack.type);
         dir.mkdirs();
         var name = pack.getName();
+        var jar = name + "-" + pack.version + ".jar";
+        var metadata = name + "-" + pack.version + ".mirai.metadata";
 
         var jarUrl = loader.repo.getJarUrl(pack, info);
         if (jarUrl.isEmpty()) {
@@ -176,16 +178,18 @@ public class Updater extends MclModule {
             );
             return;
         }
-        var jar = jarUrl.substring(jarUrl.lastIndexOf(name));
+        var index = jarUrl.lastIndexOf(name);
+        if (index != -1) {
+            jar = jarUrl.substring(index);
+        }
         down(jarUrl, new File(dir, jar));
 
         var sha1Url = loader.repo.getSha1Url(pack, info, jarUrl);
-        var sha1 = sha1Url.substring(sha1Url.lastIndexOf(name));
+        var sha1 = jar + ".sha1";
         down(sha1Url, new File(dir, sha1));
 
         var metadataUrl = loader.repo.getMetadataUrl(pack, info);
         if (metadataUrl.isEmpty()) return;
-        var metadata = metadataUrl.substring(metadataUrl.lastIndexOf(name));
         down(metadataUrl, new File(dir, metadata));
     }
 
