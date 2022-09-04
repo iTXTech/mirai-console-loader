@@ -85,13 +85,13 @@ public class Boot extends MclModule {
             var pkgMap = new HashMap<String, String>();
             for (var pkg : loader.packageManager.getPackages()) {
                 if (pkg.type.equals(MclPackage.TYPE_CORE)) {
-                    files.add(new File(new File(pkg.type), pkg.getBasename() + ".jar"));
+                    files.add(pkg.getJarFile());
                     pkgMap.put(pkg.id, pkg.version);
                 }
                 if (pkg.type.equals(MclPackage.TYPE_PLUGIN)) {
-                    var file = new File(new File(pkg.type), pkg.getBasename() + ".metadata");
-                    if (file.exists()) {
-                        for (var s : loader.repo.getMetadataFromFile(file).dependencies) {
+                    var metadata = pkg.getMetadataFile();
+                    if (metadata.exists()) {
+                        for (var s : loader.repo.getMetadataFromFile(metadata).dependencies) {
                             var dep = s.split(":");
                             var name = dep[0] + ":" + dep[1];
                             var version = dep[2];

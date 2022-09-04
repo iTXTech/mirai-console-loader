@@ -89,28 +89,43 @@ public class MclPackage {
         return id.split(":", 2)[1];
     }
 
-    public String getBasename() {
-        return getName() + "-" + version;
+    public File getJarFile() {
+        var name = getName();
+        var suffix = Loader.getInstance().config.archiveSuffix;
+        for (String end : suffix) {
+            var file = new File(type, name + "-" + version + end);
+            if (file.exists()) return file;
+        }
+        return new File(type, name + "-" + version + suffix.get(0));
     }
 
-    public File getJarFile() {
-        return new File(new File(type), getBasename() + ".jar");
+    public File getSha1File() {
+        var jar = getJarFile();
+        return new File(jar.getParent(), jar.getName() + ".sha1");
+    }
+
+    public File getMetadataFile() {
+        var name = getName();
+        return new File(type, name + "-" + version + ".mirai.metadata");
     }
 
     public void removeFiles() {
         var dir = new File(type);
-        deleteFile(dir, "jar");
-        deleteFile(dir, "sha1");
-        deleteFile(dir, "metadata");
+        var name = getName();
+        deleteFile(dir, name, "jar");
+        deleteFile(dir, name, "zip");
+        deleteFile(dir, name, "sha1");
+        deleteFile(dir, name, "metadata");
     }
 
-    public void deleteFile(File dir, String type) {
-        var f = new File(dir, getBasename() + "." + type);
-        if (f.exists()) {
-            if (f.delete()) {
-                Loader.getInstance().logger.info("File \"" + f.getName() + "\" has been deleted.");
+    public void deleteFile(File dir, String name, String type) {
+        var list = dir.listFiles((d, f) -> f.startsWith(name) && f.endsWith(type));
+        if (list == null) return;
+        for (File source : list) {
+            if (source.delete()) {
+                Loader.getInstance().logger.info("File \"" + source.getName() + "\" has been deleted.");
             } else {
-                Loader.getInstance().logger.error("Failed to delete \"" + f.getName() + "\". Please delete it manually.");
+                Loader.getInstance().logger.error("Failed to delete \"" + source.getName() + "\". Please delete it manually.");
             }
         }
     }
