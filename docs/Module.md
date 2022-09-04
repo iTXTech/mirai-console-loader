@@ -11,6 +11,8 @@ MCL 模块开发文档。
 ## `MclModule` 类
 
 * 每个模块类都需继承 `org.itxtech.mcl.module.MclModule`
+* 新版 MCL Module 加载将使用 Java SPI Service 的加载方式,   
+  可参考 [META-INF.services](../src/main/resources/META-INF/services/org.itxtech.mcl.module.MclModule) 将类注册 
 
 ### `prepare`
 
@@ -80,6 +82,5 @@ public class Test extends MclModule {
 
 ## 注意事项
 
-1. 建议将所有 `MclModule` 分功能组件放在不同 `package` 中，方便独立加载
-2. 一个包含 `MclModule` 的 `package` 中应仅包含 `MclModule`，因为 `MCL` 会将该 `package` 中所有 `class` 当作 `MclModule` 加载
-3. 包含 `MclModule` 的 `Jar` 会直接加载入 `MCL` 的 `SystemClassLoader` 中，被所有包共享
+1. `Jar` 会直接加载入 `MCL` 的 `SystemClassLoader` 中，被所有包共享
+2. `META-INF/services/org.itxtech.mcl.module.MclModule` 中一行对应一个 MclModule, 行的内容是 模块类 的完整类名
