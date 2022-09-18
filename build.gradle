@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.itxtech'
-version '2.1.0'
+version '2.1.1'
 description '模块化、轻量级且支持完全自定义的 mirai 加载器。'
 
 repositories {

@@ -40,8 +40,8 @@
 ```bash
 mkdir mcl
 cd mcl
-wget https://github.com/iTXTech/mirai-console-loader/releases/download/v2.1.0/mcl-2.1.0.zip
-unzip mcl-2.1.0.zip
+wget https://github.com/iTXTech/mirai-console-loader/releases/download/v2.1.1/mcl-2.1.1.zip
+unzip mcl-2.1.1.zip
 chmod +x mcl
 ./mcl
 ```
