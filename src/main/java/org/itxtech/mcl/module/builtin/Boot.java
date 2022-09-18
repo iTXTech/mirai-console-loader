@@ -85,7 +85,11 @@ public class Boot extends MclModule {
             var pkgMap = new HashMap<String, String>();
             for (var pkg : loader.packageManager.getPackages()) {
                 if (pkg.type.equals(MclPackage.TYPE_CORE)) {
-                    files.add(pkg.getJarFile());
+                    if (pkg.id.equals("org.bouncycastle:bcprov-jdk15on")) {
+                        files.add(0, pkg.getJarFile());
+                    } else {
+                        files.add(pkg.getJarFile());
+                    }
                     pkgMap.put(pkg.id, pkg.version);
                 }
                 if (pkg.type.equals(MclPackage.TYPE_PLUGIN)) {
