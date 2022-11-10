@@ -27,7 +27,7 @@ import org.itxtech.mcl.pkg.MclPackage;
  *
  */
 public class Addon extends MclModule {
-    private static final String CURRENT_CHANNEL = "c2001";
+    private static final String CURRENT_CHANNEL = "maven-stable";
     private static final String ADDON_ID = "org.itxtech:mcl-addon";
 
     @Override
