@@ -77,6 +77,12 @@ public class MclPackage {
         this.channel = channel;
     }
 
+    public MclPackage(String id, String channel, String type) {
+        this.id = id;
+        this.channel = channel;
+        this.type = type;
+    }
+
     public boolean isVersionLocked() {
         return versionLocked;
     }

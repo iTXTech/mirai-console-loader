@@ -52,14 +52,12 @@ public class Config {
     @SerializedName("maven_repo")
     public ArrayList<String> mavenRepo = new ArrayList<>() {{
         add("https://maven.aliyun.com/repository/public");
-        add("https://repo.huaweicloud.com/repository/maven");
-        add("https://repo1.maven.org/maven2");
     }};
 
     public LinkedHashMap<String, MclPackage> packages = new LinkedHashMap<>() {{
-        new MclPackage("net.mamoe:mirai-console", "maven-stable").addToMap(this);
-        new MclPackage("net.mamoe:mirai-console-terminal", "maven-stable").addToMap(this);
-        new MclPackage("net.mamoe:mirai-core-all", "maven-stable").addToMap(this);
+        new MclPackage("net.mamoe:mirai-console", "maven-stable", MclPackage.TYPE_CORE).addToMap(this);
+        new MclPackage("net.mamoe:mirai-console-terminal", "maven-stable", MclPackage.TYPE_CORE).addToMap(this);
+        new MclPackage("net.mamoe:mirai-core-all", "maven-stable", MclPackage.TYPE_CORE).addToMap(this);
     }};
 
     public ArrayList<String> archiveSuffix = new ArrayList<>() {{
