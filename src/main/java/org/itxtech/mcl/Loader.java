@@ -164,8 +164,10 @@ public class Loader {
      * 启动 Mirai Console Loader，并加载脚本
      */
     public void start(String[] args) throws Exception {
-        logger.info(Ansi.ansi().fgBrightCyan().a("iTXTech Mirai Console Loader")
-                .reset().a(" version ").fgBrightYellow().a(getVersion()));
+        logger.info(Ansi.ansi().fgBrightCyan().a("iTX Technologies Mirai Console Loader").reset()
+                .a(" version ").fgBrightYellow().a(getVersion()));
+        logger.info(Ansi.ansi().a("Runtime: ").fgBrightCyan().a(System.getProperty("java.vm.name")).a(" ")
+                .fgBrightYellow().a(System.getProperty("java.version")).reset().a(" (arch: ").a(System.getProperty("sun.arch.data.model")).a(")"));
         logger.info("https://github.com/iTXTech/mirai-console-loader");
         logger.info(Ansi.ansi().a("This program is licensed under ").fgBrightMagenta().a("GNU AGPL v3"));
 
