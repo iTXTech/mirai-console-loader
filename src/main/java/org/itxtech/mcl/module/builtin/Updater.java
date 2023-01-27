@@ -83,6 +83,9 @@ public class Updater extends MclModule {
         if (!"".equals(pack.version)) {
             baseInfo = baseInfo.reset().a(" v").fgBrightYellow().a(pack.version);
         }
+        if (!"".equals(pack.channel)) {
+            baseInfo = baseInfo.reset().a(" from ").fgBrightYellow().a(pack.channel);
+        }
         loader.logger.info(baseInfo);
         var update = loader.cli.hasOption("u");
         var force = pack.isVersionLocked();
