@@ -182,35 +182,25 @@ public final class SemVer implements Comparable<SemVer> {
 
 
     public static SemVer parseFromText(String text) {
-        if (text != null) {
-            int majorEndIdx = text.indexOf('.');
-            if (majorEndIdx >= 0) {
-                int minorEndIdx = text.indexOf('.', majorEndIdx + 1);
-                var hasPatch = true;
-                if (minorEndIdx == -1) {
-                    minorEndIdx = text.indexOf('-', majorEndIdx + 1);
-                    hasPatch = false;
-                }
-                if (minorEndIdx >= 0) {
-                    int preReleaseIdx, patch;
-                    if (hasPatch) {
-                        preReleaseIdx = text.indexOf('-', minorEndIdx + 1);
-                        int patchEndIdx = preReleaseIdx >= 0 ? preReleaseIdx : text.length();
-                        patch = parseInt(text.substring(minorEndIdx + 1, patchEndIdx), -1);
-                    } else {
-                        preReleaseIdx = minorEndIdx;
-                        patch = 0;
-                    }
+        if (text == null) return null;
 
-                    int major = parseInt(text.substring(0, majorEndIdx), -1);
-                    int minor = parseInt(text.substring(majorEndIdx + 1, minorEndIdx), -1);
-                    String preRelease = preReleaseIdx >= 0 ? text.substring(preReleaseIdx + 1) : null;
+        int majorEndIdx = text.indexOf('.');
+        if (majorEndIdx < 0) return null;
+        int major = parseInt(text.substring(0, majorEndIdx), -1);
 
-                    if (major >= 0 && minor >= 0) {
-                        return new SemVer(text, major, minor, patch, preRelease);
-                    }
-                }
-            }
+        int preReleaseIdx = text.indexOf('-');
+        var hasPreRelease = (preReleaseIdx != -1);
+        String preRelease = hasPreRelease ? text.substring(preReleaseIdx + 1) : null;
+        preReleaseIdx = hasPreRelease ? preReleaseIdx : text.length();
+
+        int minorEndIdx = text.indexOf('.', majorEndIdx + 1);
+        var hasPatch = (minorEndIdx != -1);
+        minorEndIdx = hasPatch ? minorEndIdx : preReleaseIdx;
+        int minor = parseInt(text.substring(majorEndIdx + 1, minorEndIdx), -1);
+        int patch = hasPatch ? parseInt(text.substring(minorEndIdx + 1, preReleaseIdx), -1) : 0;
+
+        if (major >= 0 && minor >= 0 && patch >= 0) {
+            return new SemVer(text, major, minor, patch, preRelease);
         }
 
         return null;
