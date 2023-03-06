@@ -18,15 +18,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
  *
  * Mirai Console Loader
  *
- * Copyright (C) 2020-2022 iTX Technologies
+ * Copyright (C) 2020-2023 iTX Technologies
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -105,25 +103,23 @@ public class Repository {
             var kind = SemVer.getVersionKindFromChannel(channel.split("-")[1]);
             if (kind != SemVer.VersionKind.Nightly) {
                 var vers = data.getElementsByTagName("versions").item(0).getChildNodes();
-                var list = new ArrayList<SemVer>();
+                var map = new TreeMap<SemVer, String>();
                 for (var i = 0; i < vers.getLength(); i++) {
                     var ver = vers.item(i).getTextContent().trim();
                     if (ver.length() > 0 && SemVer.isKind(ver, kind)) {
                         var semVer = SemVer.parseFromText(ver);
                         if (semVer != null) {
-                            list.add(semVer);
-                        } else {
-                            loader.logger.warning("Failed to parse version \"" + ver + "\" for \"" + id + "\"");
+                            map.put(semVer, ver);
+                            continue;
                         }
+
+                        loader.logger.warning("Failed to parse version \"" + ver + "\" for \"" + id + "\"");
                     }
                 }
-                if (list.size() == 0) {
+                if (map.size() == 0) {
                     loader.logger.error("Cannot find any version matches channel \"" + channel + "`\" for \"" + id + "\", using default version.");
                 } else {
-                    list.sort(SemVer::compareTo);
-                    for (var v : list) {
-                        return list.get(list.size() - 1).getRawVersion();
-                    }
+                    return map.lastEntry().getValue();
                 }
             }
         }
