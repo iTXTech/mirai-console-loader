@@ -115,6 +115,11 @@ public class Loader {
 
     public void loadConfig() {
         config = Config.load(configFile);
+        for (int i = 0; i < loader.config.mavenRepo.length; i ++) {
+            if(loader.config.mavenRepo[i].endsWith("/")){
+                loader.config.mavenRepo[i] = loader.config.mavenRepo[i].substring(0,loader.config.mavenRepo[i].length - 1);
+            }
+        }
         logger.setLogLevel(config.logLevel);
     }
 
