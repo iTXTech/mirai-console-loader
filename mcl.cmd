@@ -1,4 +1,5 @@
 @echo off
+chcp 65001
 setlocal
 set JAVA_BINARY=java
 %JAVA_BINARY% -jar mcl.jar %*
