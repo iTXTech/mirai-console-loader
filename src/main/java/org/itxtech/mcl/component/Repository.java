@@ -119,7 +119,7 @@ public class Repository {
                     }
                 }
                 if (map.size() == 0) {
-                    loader.logger.error("Cannot find any version matches channel \"" + channel + "`\" for \"" + id + "\", using default version.");
+                    loader.logger.error("Cannot find any version matches channel \"" + channel + "\" for \"" + id + "\", using default version.");
                 } else {
                     return map.lastEntry().getValue();
                 }
