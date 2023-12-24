@@ -157,7 +157,7 @@ public class Repository {
             var base = baseFolder + getPackageFromId(pkg.id) + "-" + pkg.version;
             if (pkg.version.endsWith("-SNAPSHOT")) {
                 try {
-                    var real = getSnapshotJarUrl(baseFolder);
+                    var real = getSnapshotJarUrl(baseFolder, getPackageFromId(pkg.id), pkg.version);
                     if (!real.isEmpty()) return real;
                 } catch (Exception e) {
                     loader.logger.logException(e);
@@ -209,7 +209,7 @@ public class Repository {
         for (int i = 0; i < nodes.getLength(); i++) {
             var node = nodes.item(i);
             if (node.getNodeName().equals(name)) {
-                return node.getNodeValue();
+                return node.getTextContent().trim();
             }
         }
         return defValue;
