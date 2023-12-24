@@ -125,6 +125,7 @@ public class Repository {
                     return map.lastEntry().getValue();
                 }
             }
+            else return data.getElementsByTagName("latest").item(0).getTextContent();
         }
         return data.getElementsByTagName("release").item(0).getTextContent();
     }
