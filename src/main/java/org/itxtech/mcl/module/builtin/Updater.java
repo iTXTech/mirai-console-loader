@@ -181,9 +181,15 @@ public class Updater extends MclModule {
             );
             return;
         }
-        var index = jarUrl.lastIndexOf(name);
-        if (index != -1) {
-            jar = jarUrl.substring(index);
+        if (jarUrl.contains("|")) {
+            var split = jarUrl.split("\\|");
+            jar = split[0];
+            jarUrl = split[1];
+        } else {
+            var index = jarUrl.lastIndexOf(name);
+            if (index != -1) {
+                jar = jarUrl.substring(index);
+            }
         }
         down(jarUrl, new File(dir, jar));
 

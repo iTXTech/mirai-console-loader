@@ -5,6 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import org.itxtech.mcl.Loader;
 import org.itxtech.mcl.pkg.MclPackage;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.xml.XMLConstants;
@@ -86,6 +88,7 @@ public class Repository {
     public Document fetchMavenMetadata(String id) throws Exception {
         for (var repo : loader.config.mavenRepo) {
             try {
+                if (httpHead(repo + "/" + transformId(id)+ "/maven-metadata.xml").statusCode() != 200) continue;
                 var content = httpGet("/" + transformId(id) + "/maven-metadata.xml", repo);
                 var factory = DocumentBuilderFactory.newInstance();
                 factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -117,11 +120,12 @@ public class Repository {
                     }
                 }
                 if (map.size() == 0) {
-                    loader.logger.error("Cannot find any version matches channel \"" + channel + "`\" for \"" + id + "\", using default version.");
+                    loader.logger.error("Cannot find any version matches channel \"" + channel + "\" for \"" + id + "\", using default version.");
                 } else {
                     return map.lastEntry().getValue();
                 }
             }
+            else return data.getElementsByTagName("latest").item(0).getTextContent();
         }
         return data.getElementsByTagName("release").item(0).getTextContent();
     }
@@ -149,8 +153,17 @@ public class Repository {
             }
         }
         for (var repo : loader.config.mavenRepo) {
-            var base = repo + "/" + transformId(pkg.id) + "/" + pkg.version + "/"
-                    + getPackageFromId(pkg.id) + "-" + pkg.version;
+            var baseFolder = repo + "/" + transformId(pkg.id) + "/" + pkg.version + "/";
+            var base = baseFolder + getPackageFromId(pkg.id) + "-" + pkg.version;
+            if (pkg.version.endsWith("-SNAPSHOT")) {
+                try {
+                    var real = getSnapshotJarUrl(baseFolder, getPackageFromId(pkg.id), pkg.version);
+                    if (!real.isEmpty()) return real;
+                } catch (Exception e) {
+                    loader.logger.logException(e);
+                }
+                continue;
+            }
             for (var suf : loader.config.archiveSuffix) {
                 var real = base + suf;
                 try {
@@ -163,6 +176,48 @@ public class Repository {
             }
         }
         return "";
+    }
+
+    private String getSnapshotJarUrl(String baseFolder, String packageName, String packageVersion) throws Exception {
+        if (httpHead(baseFolder + "maven-metadata.xml").statusCode() != 200) return "";
+        var content = httpGet(baseFolder + "maven-metadata.xml", "");
+        var factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        var document = factory.newDocumentBuilder().parse(new InputSource(new StringReader(content)));
+        var elements = document.getElementsByTagName("snapshotVersion");
+        var versions = new HashMap<String,String>();
+        for (int i = 0; i < elements.getLength(); i++) {
+            var version = elements.item(i).getChildNodes();
+            var classifier = findNodeValue(version, "classifier", "");
+            var extension = findNodeValue(version, "extension", "");
+            var value = findNodeValue(version, "value", "");
+            var suffix = (classifier.isEmpty() ? "" : ("-" + classifier)) + "." + extension;
+
+            var real = baseFolder + packageName + "-" + value + suffix;
+            versions.put(suffix, packageName + "-" + packageVersion + suffix + "|" + real);
+        }
+        for (var suf : loader.config.archiveSuffix) {
+            var real = versions.get(suf);
+            if (real == null) continue;
+            try {
+                if (httpHead(real.split("\\|")[1]).statusCode() == 200) {
+                    return real;
+                }
+            } catch (Exception e) {
+                loader.logger.logException(e);
+            }
+        }
+        return "";
+    }
+
+    public static String findNodeValue(NodeList nodes, String name, String defValue) {
+        for (int i = 0; i < nodes.getLength(); i++) {
+            var node = nodes.item(i);
+            if (node.getNodeName().equals(name)) {
+                return node.getTextContent().trim();
+            }
+        }
+        return defValue;
     }
 
     public String getMetadataUrl(MclPackage pkg, PackageInfo info) {
