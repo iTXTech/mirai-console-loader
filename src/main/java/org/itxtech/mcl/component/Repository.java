@@ -180,7 +180,7 @@ public class Repository {
 
     private String getSnapshotJarUrl(String baseFolder) throws Exception {
         if (httpHead(baseFolder + "maven-metadata.xml").statusCode() != 200) return "";
-        var content = httpGet(baseFolder + "maven-metadata.xml");
+        var content = httpGet(baseFolder + "maven-metadata.xml", "");
         var factory = DocumentBuilderFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         var document = factory.newDocumentBuilder().parse(new InputSource(new StringReader(content)));
