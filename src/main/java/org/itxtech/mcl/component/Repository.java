@@ -88,6 +88,7 @@ public class Repository {
     public Document fetchMavenMetadata(String id) throws Exception {
         for (var repo : loader.config.mavenRepo) {
             try {
+                if (httpHead(repo + "/" + transformId(id)+ "/maven-metadata.xml").statusCode() != 200) continue;
                 var content = httpGet("/" + transformId(id) + "/maven-metadata.xml", repo);
                 var factory = DocumentBuilderFactory.newInstance();
                 factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
