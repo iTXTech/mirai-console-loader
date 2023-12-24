@@ -178,28 +178,33 @@ public class Repository {
         return "";
     }
 
-    private String getSnapshotJarUrl(String baseFolder) throws Exception {
+    private String getSnapshotJarUrl(String baseFolder, String packageName, String packageVersion) throws Exception {
         if (httpHead(baseFolder + "maven-metadata.xml").statusCode() != 200) return "";
         var content = httpGet(baseFolder + "maven-metadata.xml", "");
         var factory = DocumentBuilderFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         var document = factory.newDocumentBuilder().parse(new InputSource(new StringReader(content)));
         var elements = document.getElementsByTagName("snapshotVersion");
+        var versions = new HashMap<String,String>();
         for (int i = 0; i < elements.getLength(); i++) {
             var version = elements.item(i).getChildNodes();
             var classifier = findNodeValue(version, "classifier", "");
             var extension = findNodeValue(version, "extension", "");
             var value = findNodeValue(version, "value", "");
             var suffix = (classifier.isEmpty() ? "" : ("-" + classifier)) + "." + extension;
-            if (loader.config.archiveSuffix.contains(suffix)) {
-                var real = baseFolder + value + suffix;
-                try {
-                    if (httpHead(real).statusCode() == 200) {
-                        return real;
-                    }
-                } catch (Exception e) {
-                    loader.logger.logException(e);
+
+            var real = baseFolder + packageName + "-" + value + suffix;
+            versions.put(suffix, packageName + "-" + packageVersion + suffix + "|" + real);
+        }
+        for (var suf : loader.config.archiveSuffix) {
+            var real = versions.get(suf);
+            if (real == null) continue;
+            try {
+                if (httpHead(real.split("\\|")[1]).statusCode() == 200) {
+                    return real;
                 }
+            } catch (Exception e) {
+                loader.logger.logException(e);
             }
         }
         return "";
